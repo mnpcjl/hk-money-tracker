@@ -79,7 +79,7 @@
             </div>
         </header>
 
-        <!-- Storage warning banner (shown only if localStorage is blocked) -->
+        <!-- Storage warning banner -->
         <div id="storageWarning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-200 text-sm flex items-start gap-3">
             <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
             <div>
@@ -289,11 +289,6 @@
             "Others": ["Refund / Return", "Custom Note"]
         };
 
-        /* ============================================================
-           NO MORE SEED / DEMO DATA.
-           The app now starts completely empty for every new visitor.
-           ============================================================ */
-
         let transactions = [];
         let currentMode = 'expense';
 
@@ -301,9 +296,6 @@
         const THEME_KEY = 'hk_tracker_theme';
 
         // ---------- SAFE STORAGE LAYER ----------
-        // localStorage can throw (sandboxed iframes, private mode, blocked
-        // third-party storage). Every access goes through these helpers so a
-        // failure degrades gracefully instead of wiping the page.
         let storageUsable = true;
 
         function storageGet(key) {
@@ -399,13 +391,10 @@
         // ---------- DATA LOAD / SAVE ----------
         function loadData() {
             const stored = storageGet(STORAGE_KEY);
-
-            // Brand new visitor, or storage blocked -> start empty. Never seed.
             if (!stored) {
                 transactions = [];
                 return;
             }
-
             try {
                 const parsed = JSON.parse(stored);
                 transactions = Array.isArray(parsed) ? parsed : [];
@@ -693,15 +682,29 @@
             dataDropdown.classList.add('hidden');
         });
 
+        // ---------- FIXED EXPORT FUNCTION ----------
         exportBtn.addEventListener('click', () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(transactions, null, 2));
+            const dataStr = JSON.stringify(transactions, null, 2);
+            
+            // Use Blob instead of data: URI for better mobile support
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
             const downloadAnchor = document.createElement('a');
             const todayStr = new Date().toISOString().split('T')[0];
-            downloadAnchor.setAttribute("href", dataStr);
+            
+            downloadAnchor.setAttribute("href", url);
             downloadAnchor.setAttribute("download", `hk_money_flow_backup_${todayStr}.json`);
+            downloadAnchor.style.display = 'none';
+            
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
-            downloadAnchor.remove();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(downloadAnchor);
+                URL.revokeObjectURL(url);
+            }, 100);
         });
 
         importFileInput.addEventListener('change', (e) => {
@@ -731,7 +734,7 @@
         cancelResetBtn.addEventListener('click', () => { confirmModal.classList.add('hidden'); });
         confirmResetBtn.addEventListener('click', () => {
             transactions = [];
-            saveData();               // writes "[]" so nothing ever comes back
+            saveData();
             updateDashboard();
             confirmModal.classList.add('hidden');
         });
@@ -743,13 +746,11 @@
         });
 
         window.addEventListener('load', function() {
-            // 1. Storage availability check (shown to the user if blocked)
             if (!testStorage()) {
                 storageUsable = false;
                 storageWarning.classList.remove('hidden');
             }
 
-            // 2. Theme
             const savedTheme = storageGet(THEME_KEY);
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -757,7 +758,6 @@
                 document.documentElement.classList.remove('dark');
             }
 
-            // 3. Init UI + data
             dateInput.value = getFormattedDate(0);
             checkDateStatus();
             setMode('expense');
