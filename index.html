@@ -245,10 +245,6 @@
                             <option value="date-asc">Sort: Date (Oldest)</option>
                             <option value="custom">Sort: Custom Order</option>
                         </select>
-                        
-                        <button id="doneEditOrderBtn" class="hidden text-xs px-2.5 py-1.5 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-600 transition items-center gap-1">
-                            <i class="fa-solid fa-check"></i> Done Editing Order
-                        </button>
 
                         <input type="month" id="monthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
                         <input type="text" id="searchInput" placeholder="Search notes..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-32 sm:w-36">
@@ -386,8 +382,54 @@
         </div>
     </div>
 
-    <!-- Delete Single Entry Modal -->
-    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+    <!-- Transaction Details Modal -->
+    <div id="detailModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div id="detailIcon" class="w-11 h-11 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0"></div>
+                    <div>
+                        <p id="detailType" class="text-xs uppercase font-semibold tracking-wider"></p>
+                        <p id="detailAmount" class="text-2xl font-extrabold tracking-tight leading-tight"></p>
+                    </div>
+                </div>
+                <button id="closeDetailBtn" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 py-4 border-t border-b border-slate-100 dark:border-slate-700">
+                <div class="flex justify-between gap-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Category</span>
+                    <span id="detailCategory" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                </div>
+                <div class="flex justify-between gap-4" id="detailSubcategoryRow">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Subcategory</span>
+                    <span id="detailSubcategory" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                </div>
+                <div class="flex justify-between gap-4">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Date</span>
+                    <span id="detailDate" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                </div>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-700">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Note</span>
+                    <p id="detailNote" class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed break-words"></p>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-5">
+                <button id="detailEditBtn" class="flex-1 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen"></i> Edit
+                </button>
+                <button id="detailDeleteBtn" class="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Delete this entry?</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Are you sure you want to remove this transaction? This action cannot be undone.</p>
@@ -424,6 +466,7 @@
         let sortMode = 'date-desc';
         let currentTab = 'dashboard';
         let pendingDeleteId = null;
+        let detailId = null;
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -469,7 +512,6 @@
         const donutChartContainer = document.getElementById('donutChartContainer');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
         const sortModeSelect = document.getElementById('sortModeSelect');
-        const doneEditOrderBtn = document.getElementById('doneEditOrderBtn');
         const historySubtitle = document.getElementById('historySubtitle');
         const toastContainer = document.getElementById('toastContainer');
 
@@ -481,6 +523,19 @@
         const confirmModal = document.getElementById('confirmModal');
         const cancelResetBtn = document.getElementById('cancelResetBtn');
         const confirmResetBtn = document.getElementById('confirmResetBtn');
+
+        const detailModal = document.getElementById('detailModal');
+        const closeDetailBtn = document.getElementById('closeDetailBtn');
+        const detailIcon = document.getElementById('detailIcon');
+        const detailType = document.getElementById('detailType');
+        const detailAmount = document.getElementById('detailAmount');
+        const detailCategory = document.getElementById('detailCategory');
+        const detailSubcategoryRow = document.getElementById('detailSubcategoryRow');
+        const detailSubcategory = document.getElementById('detailSubcategory');
+        const detailDate = document.getElementById('detailDate');
+        const detailNote = document.getElementById('detailNote');
+        const detailEditBtn = document.getElementById('detailEditBtn');
+        const detailDeleteBtn = document.getElementById('detailDeleteBtn');
 
         const deleteConfirmModal = document.getElementById('deleteConfirmModal');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
@@ -730,12 +785,8 @@
             else { emptyState.classList.add('hidden'); }
 
             if (sortMode === 'custom') {
-                doneEditOrderBtn.classList.remove('hidden');
-                doneEditOrderBtn.classList.add('flex');
-                historySubtitle.textContent = "Custom order active • Use arrows to move items, then click Done";
+                historySubtitle.textContent = "Custom order active • Use arrows to rearrange";
             } else {
-                doneEditOrderBtn.classList.add('hidden');
-                doneEditOrderBtn.classList.remove('flex');
                 historySubtitle.textContent = "Your logged cash transactions";
             }
 
@@ -751,11 +802,13 @@
                 const amountColor = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 
                 const card = document.createElement('div');
-                card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition group gap-2";
+                card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition group gap-2 cursor-pointer";
 
                 const masterIndex = transactions.findIndex(item => item.id === t.id);
                 const canMoveUp = masterIndex > 0;
                 const canMoveDown = masterIndex < transactions.length - 1;
+
+                card.setAttribute('onclick', `openDetail(${t.id})`);
 
                 card.innerHTML = `
                     <div class="flex items-center gap-3 flex-1 min-w-0">
@@ -775,24 +828,16 @@
                     </div>
                     <div class="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
                         <span class="text-base font-extrabold ${amountColor}">${amountPrefix}${formatCurrency(t.amount)}</span>
-                        <div class="flex items-center gap-1">
-                            ${sortMode === 'custom' ? `
-                                <div class="flex flex-col mr-1">
-                                    <button onclick="moveEntry(${t.id}, -1)" class="p-0.5 ${canMoveUp ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveUp ? 'disabled' : ''}>
-                                        <i class="fa-solid fa-chevron-up text-[10px]"></i>
-                                    </button>
-                                    <button onclick="moveEntry(${t.id}, 1)" class="p-0.5 ${canMoveDown ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveDown ? 'disabled' : ''}>
-                                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                    </button>
-                                </div>
-                            ` : ''}
-                            <button onclick="startEdit(${t.id})" class="p-1.5 text-slate-400 hover:text-blue-500 transition" title="Edit Entry">
-                                <i class="fa-solid fa-pen text-sm"></i>
-                            </button>
-                            <button onclick="deleteTransaction(${t.id})" class="p-1.5 text-slate-400 hover:text-rose-500 transition" title="Delete Entry">
-                                <i class="fa-solid fa-trash-can text-sm"></i>
-                            </button>
-                        </div>
+                        ${sortMode === 'custom' ? `
+                            <div class="flex flex-col ml-2" onclick="event.stopPropagation()">
+                                <button onclick="moveEntry(${t.id}, -1)" class="p-0.5 ${canMoveUp ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveUp ? 'disabled' : ''}>
+                                    <i class="fa-solid fa-chevron-up text-xs"></i>
+                                </button>
+                                <button onclick="moveEntry(${t.id}, 1)" class="p-0.5 ${canMoveDown ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveDown ? 'disabled' : ''}>
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
                 transactionList.appendChild(card);
@@ -820,6 +865,7 @@
         window.startEdit = function(id) {
             const t = transactions.find(item => item.id === id);
             if (!t) return;
+            closeDetail();
             switchTab('dashboard');
             editingId = id;
             setMode(t.type);
@@ -858,6 +904,58 @@
             updateDashboard();
         };
 
+        // ---------- DETAIL MODAL ----------
+        window.openDetail = function(id) {
+            const t = transactions.find(item => item.id === id);
+            if (!t) return;
+            detailId = id;
+
+            const isIncome = t.type === 'income';
+            detailIcon.className = `w-11 h-11 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0 ${isIncome ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400'}`;
+            detailIcon.innerHTML = `<i class="${isIncome ? 'fa-solid fa-arrow-down-left' : 'fa-solid fa-arrow-up-right'}"></i>`;
+            detailType.textContent = isIncome ? 'Income' : 'Expense';
+            detailType.className = `text-xs uppercase font-semibold tracking-wider ${isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
+            detailAmount.textContent = `${isIncome ? '+' : '-'}${formatCurrency(t.amount)}`;
+            detailAmount.className = `text-2xl font-extrabold tracking-tight leading-tight ${isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
+            detailCategory.textContent = t.category;
+            if (t.subcategory) {
+                detailSubcategoryRow.style.display = 'flex';
+                detailSubcategory.textContent = t.subcategory;
+            } else {
+                detailSubcategoryRow.style.display = 'none';
+            }
+            detailDate.textContent = t.date;
+
+            if (t.note && t.note.trim()) {
+                detailNote.textContent = t.note;
+                detailNote.className = 'text-sm text-slate-700 dark:text-slate-200 leading-relaxed break-words';
+            } else {
+                detailNote.textContent = 'No note added for this entry.';
+                detailNote.className = 'text-sm text-slate-400 dark:text-slate-500 italic leading-relaxed';
+            }
+
+            detailModal.classList.remove('hidden');
+        };
+
+        window.closeDetail = function() {
+            detailId = null;
+            detailModal.classList.add('hidden');
+        };
+
+        closeDetailBtn.addEventListener('click', closeDetail);
+        detailModal.addEventListener('click', (e) => { if (e.target === detailModal) closeDetail(); });
+
+        detailEditBtn.addEventListener('click', () => {
+            if (detailId !== null) startEdit(detailId);
+        });
+
+        detailDeleteBtn.addEventListener('click', () => {
+            if (detailId === null) return;
+            pendingDeleteId = detailId;
+            closeDetail();
+            deleteConfirmModal.classList.remove('hidden');
+        });
+
         window.deleteTransaction = function(id) {
             pendingDeleteId = id;
             deleteConfirmModal.classList.remove('hidden');
@@ -880,8 +978,10 @@
         categorySelect.addEventListener('change', populateSubcategories);
         dateInput.addEventListener('change', checkDateStatus);
         cancelEditBtn.addEventListener('click', cancelEdit);
-        sortModeSelect.addEventListener('change', (e) => { sortMode = e.target.value; updateDashboard(); });
-        doneEditOrderBtn.addEventListener('click', () => { sortMode = 'date-desc'; sortModeSelect.value = 'date-desc'; updateDashboard(); });
+        sortModeSelect.addEventListener('change', (e) => {
+            sortMode = e.target.value;
+            updateDashboard();
+        });
 
         flowForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -952,8 +1052,9 @@
                     const imported = JSON.parse(event.target.result);
                     if (Array.isArray(imported)) {
                         transactions = imported;
-                        sortMode = 'date-desc';
-                        sortModeSelect.value = 'date-desc';
+                        // Preserve exact order from the backup file
+                        sortMode = 'custom';
+                        sortModeSelect.value = 'custom';
                         saveData();
                         updateDashboard();
                         showToast('Backup restored successfully');
