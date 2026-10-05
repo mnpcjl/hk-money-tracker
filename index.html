@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HK Cash Flow & Money Flow Tracker</title>
+    
+    <!-- PWA Additions -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='68' font-family='Arial, sans-serif' font-size='48' font-weight='bold' fill='white' text-anchor='middle'>HK</text></svg>">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -712,7 +718,6 @@
                 emptyState.classList.add('hidden');
             }
 
-            // Update Sorting UI
             if (sortMode === 'custom') {
                 doneEditOrderBtn.classList.remove('hidden');
                 doneEditOrderBtn.classList.add('flex');
@@ -819,7 +824,6 @@
             const t = transactions.find(item => item.id === id);
             if (!t) return;
 
-            // Auto-switch to Dashboard tab so user can see the form
             switchTab('dashboard');
 
             editingId = id;
@@ -832,7 +836,6 @@
             noteInput.value = t.note;
             checkDateStatus();
 
-            // UI changes for Edit Mode
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-blue-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
@@ -846,7 +849,6 @@
             dateInput.value = getFormattedDate(0);
             checkDateStatus();
 
-            // Reset UI to Add Mode
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             
@@ -905,8 +907,6 @@
                     transactions[index] = { ...transactions[index], ...entryData };
                 }
                 cancelEdit();
-                // Optionally switch to history tab to show updated entry
-                // switchTab('history');
             } else {
                 const newEntry = {
                     id: Date.now(),
@@ -941,7 +941,6 @@
             updateDashboard();
         });
 
-        // Theme Toggle (both header and settings)
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
@@ -950,7 +949,6 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
 
-        // Export Function
         exportBtn.addEventListener('click', () => {
             const dataStr = JSON.stringify(transactions, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
@@ -1027,6 +1025,15 @@
             loadData();
             updateDashboard();
         });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(err => console.log('SW registration failed', err));
+            });
+        }
     </script>
 </body>
 </html>
