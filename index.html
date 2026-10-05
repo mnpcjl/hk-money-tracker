@@ -9,16 +9,16 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z' fill='white'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23ffffff'/><path d='M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z' fill='%230f172a'/></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter (body) + Momo Trust Display (brand) -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Momo+Trust+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -29,17 +29,13 @@
                         brand: { 50: '#f0fdf4', 500: '#22c55e', 600: '#16a34a' },
                         expense: { 50: '#fef2f2', 500: '#ef4444', 600: '#dc2626' }
                     },
-                    fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        brand: ['Momo Trust Display', 'sans-serif']
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .brand-font { font-family: 'Momo Trust Display', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -69,14 +65,14 @@
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-3">
-                <!-- Tally Icon -->
-                <div class="w-12 h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0">
+                <!-- Tally Icon — white bg, black T -->
+                <div class="w-12 h-12 bg-white text-slate-900 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0 border border-slate-200 dark:border-slate-700">
                     <svg viewBox="0 0 100 100" class="w-7 h-7">
                         <path d="M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z" fill="currentColor"/>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="brand-font text-3xl md:text-4xl text-slate-900 dark:text-white leading-none">Tally</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Tally</h1>
                     <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-1.5 uppercase tracking-widest font-medium">Money Flow Tracker</p>
                 </div>
             </div>
@@ -354,13 +350,13 @@
 
                     <!-- About -->
                     <div class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 text-center">
-                        <div class="w-12 h-12 mx-auto mb-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl flex items-center justify-center">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-white text-slate-900 rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-700">
                             <svg viewBox="0 0 100 100" class="w-7 h-7">
                                 <path d="M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z" fill="currentColor"/>
                             </svg>
                         </div>
-                        <p class="brand-font text-2xl text-slate-700 dark:text-slate-200 leading-none">Tally</p>
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 uppercase tracking-widest font-medium">Money Flow Tracker • v1.0</p>
+                        <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Tally</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest font-medium">Money Flow Tracker • v1.0</p>
                     </div>
                 </div>
             </div>
