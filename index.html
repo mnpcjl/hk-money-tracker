@@ -7,17 +7,18 @@
     
     <!-- PWA Additions -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><rect x='20' y='20' width='60' height='10' fill='white'/><rect x='44' y='20' width='12' height='62' fill='white'/></svg>">
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z' fill='white'/></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Inter -->
+    <!-- Google Fonts: Inter (body) + Momo Trust Display (brand) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Momo+Trust+Display&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -28,13 +29,17 @@
                         brand: { 50: '#f0fdf4', 500: '#22c55e', 600: '#16a34a' },
                         expense: { 50: '#fef2f2', 500: '#ef4444', 600: '#dc2626' }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    fontFamily: { 
+                        sans: ['Inter', 'sans-serif'],
+                        brand: ['Momo Trust Display', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .brand-font { font-family: 'Momo Trust Display', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -55,13 +60,6 @@
         }
         .toast-enter { animation: slideUp 0.3s ease-out forwards; }
         .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
-
-        @keyframes donutDraw {
-            from { stroke-dashoffset: 100; }
-        }
-        .donut-segment {
-            transition: stroke-dasharray 0.6s ease-out, stroke-dashoffset 0.6s ease-out;
-        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
@@ -74,13 +72,12 @@
                 <!-- Tally Icon -->
                 <div class="w-12 h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0">
                     <svg viewBox="0 0 100 100" class="w-7 h-7">
-                        <rect x="20" y="20" width="60" height="10" fill="currentColor"/>
-                        <rect x="44" y="20" width="12" height="62" fill="currentColor"/>
+                        <path d="M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z" fill="currentColor"/>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Tally</h1>
-                    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">Money Flow Tracker • Offline-Ready</p>
+                    <h1 class="brand-font text-3xl md:text-4xl text-slate-900 dark:text-white leading-none">Tally</h1>
+                    <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-1.5 uppercase tracking-widest font-medium">Money Flow Tracker</p>
                 </div>
             </div>
 
@@ -295,12 +292,10 @@
                     </select>
                 </div>
 
-                <!-- Donut Chart -->
                 <div id="donutChartWrapper" class="mb-6">
                     <div class="w-52 h-52 mx-auto" id="donutChartContainer"></div>
                 </div>
 
-                <!-- Bars -->
                 <div id="categoryBreakdownContainer" class="space-y-4"></div>
             </div>
         </section>
@@ -358,15 +353,14 @@
                     </div>
 
                     <!-- About -->
-                    <div class="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 text-center">
-                        <div class="w-10 h-10 mx-auto mb-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl flex items-center justify-center">
-                            <svg viewBox="0 0 100 100" class="w-6 h-6">
-                                <rect x="20" y="20" width="60" height="10" fill="currentColor"/>
-                                <rect x="44" y="20" width="12" height="62" fill="currentColor"/>
+                    <div class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 text-center">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl flex items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-7 h-7">
+                                <path d="M 22 22 L 78 22 Q 84 22 84 28 L 84 30 Q 84 36 78 36 L 62 36 L 62 76 Q 62 82 56 82 L 44 82 Q 38 82 38 76 L 38 36 L 22 36 Q 16 36 16 30 L 16 28 Q 16 22 22 22 Z" fill="currentColor"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Tally</p>
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Money Flow Tracker • v1.0</p>
+                        <p class="brand-font text-2xl text-slate-700 dark:text-slate-200 leading-none">Tally</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 uppercase tracking-widest font-medium">Money Flow Tracker • v1.0</p>
                     </div>
                 </div>
             </div>
@@ -709,7 +703,6 @@
                 ? ['#dc2626', '#ef4444', '#f97316', '#f59e0b', '#eab308', '#ec4899', '#d946ef', '#a855f7', '#8b5cf6', '#6366f1']
                 : ['#059669', '#10b981', '#22c55e', '#84cc16', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
 
-            // Build donut segments
             let cumulative = 0;
             let segments = '';
             sorted.forEach(([cat, sum], index) => {
@@ -717,7 +710,7 @@
                 const color = palette[index % palette.length];
                 const dashArray = `${percent} ${100 - percent}`;
                 const dashOffset = 25 - cumulative;
-                segments += `<circle class="donut-segment" cx="21" cy="21" r="15.9155" fill="transparent" stroke="${color}" stroke-width="6" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}" stroke-linecap="butt"></circle>`;
+                segments += `<circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="${color}" stroke-width="6" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}"></circle>`;
                 cumulative += percent;
             });
 
@@ -730,7 +723,6 @@
                 </svg>
             `;
 
-            // Build bars with matching color dots
             sorted.forEach(([cat, sum], index) => {
                 const percentage = Math.round((sum / total) * 100);
                 const color = palette[index % palette.length];
@@ -951,7 +943,6 @@
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             storageSet(THEME_KEY, isDark ? 'dark' : 'light');
-            // Re-render stats so donut center text updates theme colors
             renderCategoryBreakdown(getFilteredTransactions());
         }
         themeToggleBtn.addEventListener('click', toggleTheme);
