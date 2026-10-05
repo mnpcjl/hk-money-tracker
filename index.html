@@ -42,8 +42,20 @@
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-        .tab-active { color: #3b82f6; } /* Tailwind blue-500 */
-        .dark .tab-active { color: #60a5fa; } /* Tailwind blue-400 */
+        .tab-active { color: #3b82f6; }
+        .dark .tab-active { color: #60a5fa; }
+        
+        /* Toast Animation */
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .toast-enter { animation: slideUp 0.3s ease-out forwards; }
+        .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
@@ -371,6 +383,9 @@
         </button>
     </nav>
 
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full px-4"></div>
+
     <!-- Clear Data Modal -->
     <div id="confirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
@@ -379,6 +394,18 @@
             <div class="flex gap-3 justify-end">
                 <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition">Cancel</button>
                 <button id="confirmResetBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Single Entry Modal -->
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Delete this entry?</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Are you sure you want to remove this transaction? This action cannot be undone.</p>
+            <div class="flex gap-3 justify-end">
+                <button id="cancelDeleteBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition">Cancel</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Delete</button>
             </div>
         </div>
     </div>
@@ -408,6 +435,7 @@
         let editingId = null;
         let sortMode = 'date-desc';
         let currentTab = 'dashboard';
+        let pendingDeleteId = null;
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -477,6 +505,7 @@
         const sortModeSelect = document.getElementById('sortModeSelect');
         const doneEditOrderBtn = document.getElementById('doneEditOrderBtn');
         const historySubtitle = document.getElementById('historySubtitle');
+        const toastContainer = document.getElementById('toastContainer');
 
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const themeToggleBtnSettings = document.getElementById('themeToggleBtnSettings');
@@ -486,6 +515,10 @@
         const confirmModal = document.getElementById('confirmModal');
         const cancelResetBtn = document.getElementById('cancelResetBtn');
         const confirmResetBtn = document.getElementById('confirmResetBtn');
+
+        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
         function getFormattedDate(offsetDays = 0) {
             const date = new Date();
@@ -500,24 +533,43 @@
             return new Intl.NumberFormat('en-HK', { style: 'currency', currency: 'HKD', minimumFractionDigits: 2 }).format(amount);
         }
 
+        // ---------- TOAST NOTIFICATIONS ----------
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-rose-500 text-white';
+            toast.className = `${bgColor} px-5 py-3 rounded-xl shadow-lg font-semibold text-sm toast-enter flex items-center gap-2`;
+            
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${message}`;
+            
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => {
+                    if (toastContainer.contains(toast)) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, 2500);
+        }
+
         // ---------- TAB SWITCHING LOGIC ----------
         window.switchTab = function(tabId) {
             currentTab = tabId;
             
-            // Hide all views
             document.querySelectorAll('.tab-view').forEach(view => {
                 view.classList.add('hidden');
                 view.classList.remove('block');
             });
             
-            // Show target view
             const targetView = document.getElementById(tabId + '-view');
             if (targetView) {
                 targetView.classList.remove('hidden');
                 targetView.classList.add('block');
             }
 
-            // Update Desktop Tabs
             document.querySelectorAll('.desktop-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
                     btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-slate-50 dark:bg-slate-900";
@@ -526,7 +578,6 @@
                 }
             });
 
-            // Update Mobile Tabs
             document.querySelectorAll('.mobile-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
                     btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400";
@@ -535,7 +586,6 @@
                 }
             });
 
-            // Scroll to top when switching tabs
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -680,7 +730,15 @@
             categoryBreakdownContainer.innerHTML = '';
 
             if (total === 0) {
-                categoryBreakdownContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center italic">No ${viewType} entries available for breakdown.</div>`;
+                categoryBreakdownContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                            <i class="fa-solid fa-chart-simple text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No ${viewType} data yet</p>
+                        <p class="text-xs text-slate-400 mt-1">Log some ${viewType}s to see your breakdown here.</p>
+                    </div>
+                `;
                 return;
             }
 
@@ -869,6 +927,30 @@
             updateDashboard();
         };
 
+        // ---------- DELETE CONFIRMATION LOGIC ----------
+        window.deleteTransaction = function(id) {
+            pendingDeleteId = id;
+            deleteConfirmModal.classList.remove('hidden');
+        };
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            pendingDeleteId = null;
+            deleteConfirmModal.classList.add('hidden');
+        });
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (pendingDeleteId === null) return;
+            if (editingId === pendingDeleteId) cancelEdit();
+            
+            transactions = transactions.filter(t => t.id !== pendingDeleteId);
+            saveData();
+            updateDashboard();
+            
+            pendingDeleteId = null;
+            deleteConfirmModal.classList.add('hidden');
+            showToast('Entry deleted successfully', 'error');
+        });
+
         // Event Listeners
         toggleExpenseBtn.addEventListener('click', () => setMode('expense'));
         toggleIncomeBtn.addEventListener('click', () => setMode('income'));
@@ -907,6 +989,7 @@
                     transactions[index] = { ...transactions[index], ...entryData };
                 }
                 cancelEdit();
+                showToast('Entry updated successfully');
             } else {
                 const newEntry = {
                     id: Date.now(),
@@ -918,18 +1001,12 @@
                 amountInput.value = '';
                 noteInput.value = '';
                 amountInput.focus();
+                showToast('Entry saved successfully');
             }
 
             saveData();
             updateDashboard();
         });
-
-        window.deleteTransaction = function(id) {
-            if (editingId === id) cancelEdit();
-            transactions = transactions.filter(t => t.id !== id);
-            saveData();
-            updateDashboard();
-        };
 
         monthFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
@@ -968,6 +1045,7 @@
                 document.body.removeChild(downloadAnchor);
                 URL.revokeObjectURL(url);
             }, 100);
+            showToast('Backup exported!');
         });
 
         importFileInput.addEventListener('change', (e) => {
@@ -984,6 +1062,7 @@
                         sortModeSelect.value = 'date-desc';
                         saveData();
                         updateDashboard();
+                        showToast('Backup restored successfully');
                     } else {
                         alert("Invalid file format.");
                     }
@@ -1004,6 +1083,7 @@
             saveData();
             updateDashboard();
             confirmModal.classList.add('hidden');
+            showToast('All data cleared', 'error');
         });
 
         window.addEventListener('load', function() {
@@ -1026,7 +1106,6 @@
             updateDashboard();
         });
 
-        // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
