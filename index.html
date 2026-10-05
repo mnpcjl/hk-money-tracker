@@ -9,12 +9,13 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23ffffff'/><path d='M 19 20 L 81 20 Q 85 20 85 24 L 85 33 Q 85 37 81 37 L 57 37 L 57 77 Q 57 81 53 81 L 47 81 Q 43 81 43 77 L 43 37 L 19 37 Q 15 37 15 33 L 15 24 Q 15 20 19 20 Z' fill='%230f172a'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='70' font-family='Arial, sans-serif' font-size='55' font-weight='bold' fill='white' text-anchor='middle'>T</text></svg>">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter -->
+    <!-- Google Font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -44,7 +45,7 @@
         input[type="number"] { -moz-appearance: textfield; }
         .tab-active { color: #3b82f6; }
         .dark .tab-active { color: #60a5fa; }
-        
+
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -63,12 +64,12 @@
 
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-2">
-                <span class="px-3.5 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-xl md:text-2xl font-black leading-none">T</span>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Tally</h1>
-                    <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-1.5 uppercase tracking-widest font-medium">Money Flow Tracker</p>
-                </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                    <span class="p-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-lg md:text-xl font-black">T</span>
+                    Tally
+                </h1>
+                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Money Flow Tracker • Offline-Ready</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -340,13 +341,6 @@
                         <button id="resetBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-trash-can"></i> Clear Data
                         </button>
-                    </div>
-
-                    <!-- About -->
-                    <div class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 text-center">
-                        <span class="inline-block px-3.5 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-xl font-black leading-none">T</span>
-                        <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-3">Tally</p>
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest font-medium">Money Flow Tracker • v1.0</p>
                     </div>
                 </div>
             </div>
