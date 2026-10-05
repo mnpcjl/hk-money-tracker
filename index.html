@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HK Cash Flow & Money Flow Tracker</title>
+    <title>Tally — Money Flow Tracker</title>
     
     <!-- PWA Additions -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='68' font-family='Arial, sans-serif' font-size='48' font-weight='bold' fill='white' text-anchor='middle'>HK</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><rect x='20' y='20' width='60' height='10' fill='white'/><rect x='44' y='20' width='12' height='62' fill='white'/></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -45,7 +45,6 @@
         .tab-active { color: #3b82f6; }
         .dark .tab-active { color: #60a5fa; }
         
-        /* Toast Animation */
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -56,6 +55,13 @@
         }
         .toast-enter { animation: slideUp 0.3s ease-out forwards; }
         .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
+
+        @keyframes donutDraw {
+            from { stroke-dashoffset: 100; }
+        }
+        .donut-segment {
+            transition: stroke-dasharray 0.6s ease-out, stroke-dashoffset 0.6s ease-out;
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
@@ -64,12 +70,18 @@
 
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                    <span class="p-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-lg md:text-xl font-black">HK</span>
-                    Money Flow Tracker
-                </h1>
-                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Offline-Ready • Local Private Storage</p>
+            <div class="flex items-center gap-3">
+                <!-- Tally Icon -->
+                <div class="w-12 h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0">
+                    <svg viewBox="0 0 100 100" class="w-7 h-7">
+                        <rect x="20" y="20" width="60" height="10" fill="currentColor"/>
+                        <rect x="44" y="20" width="12" height="62" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Tally</h1>
+                    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">Money Flow Tracker • Offline-Ready</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-2">
@@ -105,11 +117,8 @@
             </div>
         </div>
 
-        <!-- ================= MAIN VIEWS ================= -->
-
         <!-- Tab 1: Dashboard -->
         <section id="dashboard-view" class="tab-view block">
-            <!-- Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
                     <div class="flex justify-between items-start">
@@ -157,7 +166,6 @@
                 </div>
             </div>
 
-            <!-- Form Card -->
             <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
                 <div class="flex justify-between items-center mb-5">
                     <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -170,7 +178,6 @@
                 </div>
 
                 <form id="flowForm" onsubmit="return false;">
-                    <!-- Mode Switch -->
                     <div class="mb-5">
                         <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Flow Type</label>
                         <div class="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
@@ -184,14 +191,12 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Amount Input -->
                         <div class="md:col-span-2">
                             <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="amountInput">Amount (HKD)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400 dark:text-slate-500">HK$</span>
                                 <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
                             </div>
-                            <!-- Quick Add Buttons -->
                             <div class="flex flex-wrap gap-1.5 mt-2.5">
                                 <span class="text-xs text-slate-400 self-center mr-1">Quick Add:</span>
                                 <button type="button" onclick="quickAddAmount(10)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+10</button>
@@ -202,25 +207,21 @@
                             </div>
                         </div>
 
-                        <!-- Category -->
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="categorySelect">Category</label>
                             <select id="categorySelect" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
                         </div>
 
-                        <!-- Subcategory -->
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory (Optional)</label>
                             <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
                         </div>
 
-                        <!-- Date Picker -->
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="dateInput">Date</label>
                             <input type="date" id="dateInput" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
                         </div>
 
-                        <!-- Remarks/Notes -->
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks / Custom Note (Optional)</label>
                             <input type="text" id="noteInput" placeholder="e.g. Lunch at Tsui Wah, Tutoring Student A..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
@@ -251,14 +252,12 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <!-- Sort Dropdown -->
                         <select id="sortModeSelect" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
                             <option value="date-desc">Sort: Date (Newest)</option>
                             <option value="date-asc">Sort: Date (Oldest)</option>
                             <option value="custom">Sort: Custom Order</option>
                         </select>
                         
-                        <!-- Done Editing Order Button -->
                         <button id="doneEditOrderBtn" class="hidden text-xs px-2.5 py-1.5 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-600 transition items-center gap-1">
                             <i class="fa-solid fa-check"></i> Done Editing Order
                         </button>
@@ -295,6 +294,13 @@
                         <option value="income">Income Breakdown</option>
                     </select>
                 </div>
+
+                <!-- Donut Chart -->
+                <div id="donutChartWrapper" class="mb-6">
+                    <div class="w-52 h-52 mx-auto" id="donutChartContainer"></div>
+                </div>
+
+                <!-- Bars -->
                 <div id="categoryBreakdownContainer" class="space-y-4"></div>
             </div>
         </section>
@@ -307,7 +313,6 @@
                 </h3>
 
                 <div class="space-y-6">
-                    <!-- Theme Section -->
                     <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50">
                         <div>
                             <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Appearance</p>
@@ -321,7 +326,6 @@
                         </button>
                     </div>
 
-                    <!-- Export Section -->
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
                         <div>
                             <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Export Backup</p>
@@ -332,7 +336,6 @@
                         </button>
                     </div>
 
-                    <!-- Import Section -->
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
                         <div>
                             <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Restore Backup</p>
@@ -344,7 +347,6 @@
                         </label>
                     </div>
 
-                    <!-- Reset Section -->
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-rose-50 dark:bg-rose-950/20 rounded-xl border border-rose-100 dark:border-rose-900/50 gap-3">
                         <div>
                             <p class="text-sm font-bold text-rose-700 dark:text-rose-400">Clear All Data</p>
@@ -354,12 +356,24 @@
                             <i class="fa-solid fa-trash-can"></i> Clear Data
                         </button>
                     </div>
+
+                    <!-- About -->
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 text-center">
+                        <div class="w-10 h-10 mx-auto mb-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl flex items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-6 h-6">
+                                <rect x="20" y="20" width="60" height="10" fill="currentColor"/>
+                                <rect x="44" y="20" width="12" height="62" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Tally</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Money Flow Tracker • v1.0</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <footer class="mt-8 text-center text-xs text-slate-400 dark:text-slate-600 py-4">
-            HK Money Flow Tracker • Stored Locally in Your Browser • Private & Safe
+            Tally • Stored Locally in Your Browser • Private & Safe
         </footer>
     </div>
 
@@ -440,40 +454,18 @@
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
 
-        // ---------- SAFE STORAGE LAYER ----------
         let storageUsable = true;
 
         function storageGet(key) {
-            try {
-                return window.localStorage.getItem(key);
-            } catch (e) {
-                storageUsable = false;
-                return null;
-            }
+            try { return window.localStorage.getItem(key); } catch (e) { storageUsable = false; return null; }
         }
-
         function storageSet(key, value) {
-            try {
-                window.localStorage.setItem(key, value);
-                return true;
-            } catch (e) {
-                storageUsable = false;
-                return false;
-            }
+            try { window.localStorage.setItem(key, value); return true; } catch (e) { storageUsable = false; return false; }
         }
-
         function testStorage() {
-            try {
-                const probe = '__hk_probe__';
-                window.localStorage.setItem(probe, '1');
-                window.localStorage.removeItem(probe);
-                return true;
-            } catch (e) {
-                return false;
-            }
+            try { const p = '__hk_probe__'; window.localStorage.setItem(p, '1'); window.localStorage.removeItem(p); return true; } catch (e) { return false; }
         }
 
-        // DOM elements
         const formHeaderIcon = document.getElementById('formHeaderIcon');
         const toggleExpenseBtn = document.getElementById('toggleExpenseBtn');
         const toggleIncomeBtn = document.getElementById('toggleIncomeBtn');
@@ -492,7 +484,6 @@
         const totalExpenseDisplay = document.getElementById('totalExpenseDisplay');
         const incomeCountDisplay = document.getElementById('incomeCountDisplay');
         const expenseCountDisplay = document.getElementById('expenseCountDisplay');
-        const balanceIcon = document.getElementById('balanceIcon');
         const storageWarning = document.getElementById('storageWarning');
 
         const monthFilter = document.getElementById('monthFilter');
@@ -501,6 +492,7 @@
         const transactionList = document.getElementById('transactionList');
         const emptyState = document.getElementById('emptyState');
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
+        const donutChartContainer = document.getElementById('donutChartContainer');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
         const sortModeSelect = document.getElementById('sortModeSelect');
         const doneEditOrderBtn = document.getElementById('doneEditOrderBtn');
@@ -533,42 +525,32 @@
             return new Intl.NumberFormat('en-HK', { style: 'currency', currency: 'HKD', minimumFractionDigits: 2 }).format(amount);
         }
 
-        // ---------- TOAST NOTIFICATIONS ----------
+        function formatCurrencyCompact(amount) {
+            const abs = Math.abs(amount);
+            if (abs >= 1000000) return 'HK$' + (amount / 1000000).toFixed(1) + 'M';
+            if (abs >= 10000) return 'HK$' + (amount / 1000).toFixed(1) + 'k';
+            return formatCurrency(amount);
+        }
+
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-rose-500 text-white';
             toast.className = `${bgColor} px-5 py-3 rounded-xl shadow-lg font-semibold text-sm toast-enter flex items-center gap-2`;
-            
             const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
             toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${message}`;
-            
             toastContainer.appendChild(toast);
-
             setTimeout(() => {
                 toast.classList.remove('toast-enter');
                 toast.classList.add('toast-exit');
-                setTimeout(() => {
-                    if (toastContainer.contains(toast)) {
-                        toastContainer.removeChild(toast);
-                    }
-                }, 300);
+                setTimeout(() => { if (toastContainer.contains(toast)) toastContainer.removeChild(toast); }, 300);
             }, 2500);
         }
 
-        // ---------- TAB SWITCHING LOGIC ----------
         window.switchTab = function(tabId) {
             currentTab = tabId;
-            
-            document.querySelectorAll('.tab-view').forEach(view => {
-                view.classList.add('hidden');
-                view.classList.remove('block');
-            });
-            
+            document.querySelectorAll('.tab-view').forEach(view => { view.classList.add('hidden'); view.classList.remove('block'); });
             const targetView = document.getElementById(tabId + '-view');
-            if (targetView) {
-                targetView.classList.remove('hidden');
-                targetView.classList.add('block');
-            }
+            if (targetView) { targetView.classList.remove('hidden'); targetView.classList.add('block'); }
 
             document.querySelectorAll('.desktop-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
@@ -577,7 +559,6 @@
                     btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white";
                 }
             });
-
             document.querySelectorAll('.mobile-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
                     btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400";
@@ -585,31 +566,21 @@
                     btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200";
                 }
             });
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // ---------- DATA LOAD / SAVE ----------
         function loadData() {
             const stored = storageGet(STORAGE_KEY);
-            if (!stored) {
-                transactions = [];
-                return;
-            }
+            if (!stored) { transactions = []; return; }
             try {
                 const parsed = JSON.parse(stored);
                 transactions = Array.isArray(parsed) ? parsed : [];
-            } catch (e) {
-                console.error('Failed to parse saved data, starting empty.', e);
-                transactions = [];
-            }
+            } catch (e) { transactions = []; }
         }
 
         function saveData() {
             const ok = storageSet(STORAGE_KEY, JSON.stringify(transactions));
-            if (!ok) {
-                storageWarning.classList.remove('hidden');
-            }
+            if (!ok) storageWarning.classList.remove('hidden');
             return ok;
         }
 
@@ -651,13 +622,11 @@
             const categories = currentMode === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
             const selectedCat = categorySelect.value;
             const subcats = categories[selectedCat] || [];
-
             subcategorySelect.innerHTML = '';
             const defaultOpt = document.createElement('option');
             defaultOpt.value = '';
             defaultOpt.textContent = '-- General / None --';
             subcategorySelect.appendChild(defaultOpt);
-
             subcats.forEach(sub => {
                 const opt = document.createElement('option');
                 opt.value = sub;
@@ -675,7 +644,6 @@
             const selectedDate = new Date(dateInput.value);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-
             if (selectedDate > today) {
                 dateStatusBadge.textContent = "Scheduled / Future";
                 dateStatusBadge.className = "text-xs px-2.5 py-1 rounded-full font-medium bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300";
@@ -687,37 +655,22 @@
 
         function updateDashboard() {
             const filtered = getFilteredTransactions();
-
-            let totalIncome = 0;
-            let totalExpense = 0;
-            let incomeCount = 0;
-            let expenseCount = 0;
-
+            let totalIncome = 0, totalExpense = 0, incomeCount = 0, expenseCount = 0;
             filtered.forEach(t => {
-                if (t.type === 'income') {
-                    totalIncome += t.amount;
-                    incomeCount++;
-                } else {
-                    totalExpense += t.amount;
-                    expenseCount++;
-                }
+                if (t.type === 'income') { totalIncome += t.amount; incomeCount++; }
+                else { totalExpense += t.amount; expenseCount++; }
             });
-
             const netBalance = totalIncome - totalExpense;
-
             netBalanceDisplay.textContent = formatCurrency(netBalance);
             totalIncomeDisplay.textContent = `+${formatCurrency(totalIncome)}`;
             totalExpenseDisplay.textContent = `-${formatCurrency(totalExpense)}`;
-
             incomeCountDisplay.textContent = `${incomeCount} entries`;
             expenseCountDisplay.textContent = `${expenseCount} entries`;
-
             if (netBalance < 0) {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400";
             } else {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white";
             }
-
             renderCategoryBreakdown(filtered);
             renderTransactionFeed(filtered);
         }
@@ -727,14 +680,20 @@
             const list = filtered.filter(t => t.type === viewType);
             const total = list.reduce((acc, curr) => acc + curr.amount, 0);
 
+            donutChartContainer.innerHTML = '';
             categoryBreakdownContainer.innerHTML = '';
 
             if (total === 0) {
-                categoryBreakdownContainer.innerHTML = `
-                    <div class="text-center py-8">
-                        <div class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                donutChartContainer.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center text-center">
+                        <div class="w-14 h-14 mb-2 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
                             <i class="fa-solid fa-chart-simple text-xl"></i>
                         </div>
+                        <p class="text-xs text-slate-400">No data to visualize</p>
+                    </div>
+                `;
+                categoryBreakdownContainer.innerHTML = `
+                    <div class="text-center py-4">
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No ${viewType} data yet</p>
                         <p class="text-xs text-slate-400 mt-1">Log some ${viewType}s to see your breakdown here.</p>
                     </div>
@@ -744,22 +703,49 @@
 
             const categorySums = {};
             list.forEach(t => { categorySums[t.category] = (categorySums[t.category] || 0) + t.amount; });
-
             const sorted = Object.entries(categorySums).sort((a, b) => b[1] - a[1]);
 
-            sorted.forEach(([cat, sum]) => {
-                const percentage = Math.round((sum / total) * 100);
-                const barColor = viewType === 'expense' ? 'bg-rose-500' : 'bg-emerald-500';
+            const palette = viewType === 'expense'
+                ? ['#dc2626', '#ef4444', '#f97316', '#f59e0b', '#eab308', '#ec4899', '#d946ef', '#a855f7', '#8b5cf6', '#6366f1']
+                : ['#059669', '#10b981', '#22c55e', '#84cc16', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
 
+            // Build donut segments
+            let cumulative = 0;
+            let segments = '';
+            sorted.forEach(([cat, sum], index) => {
+                const percent = (sum / total) * 100;
+                const color = palette[index % palette.length];
+                const dashArray = `${percent} ${100 - percent}`;
+                const dashOffset = 25 - cumulative;
+                segments += `<circle class="donut-segment" cx="21" cy="21" r="15.9155" fill="transparent" stroke="${color}" stroke-width="6" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}" stroke-linecap="butt"></circle>`;
+                cumulative += percent;
+            });
+
+            donutChartContainer.innerHTML = `
+                <svg viewBox="0 0 42 42" class="w-full h-full">
+                    <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="currentColor" stroke-width="6" class="text-slate-100 dark:text-slate-700"></circle>
+                    ${segments}
+                    <text x="21" y="20" text-anchor="middle" font-size="3.2" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
+                    <text x="21" y="24.5" text-anchor="middle" font-size="2" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${viewType === 'expense' ? 'Total Spent' : 'Total Earned'}</text>
+                </svg>
+            `;
+
+            // Build bars with matching color dots
+            sorted.forEach(([cat, sum], index) => {
+                const percentage = Math.round((sum / total) * 100);
+                const color = palette[index % palette.length];
                 const row = document.createElement('div');
                 row.className = 'space-y-1.5';
                 row.innerHTML = `
                     <div class="flex justify-between text-xs font-medium">
-                        <span class="text-slate-700 dark:text-slate-200">${escapeHtml(cat)}</span>
-                        <span class="text-slate-500 dark:text-slate-400">${formatCurrency(sum)} (${percentage}%)</span>
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color};"></span>
+                            <span class="text-slate-700 dark:text-slate-200 truncate">${escapeHtml(cat)}</span>
+                        </div>
+                        <span class="text-slate-500 dark:text-slate-400 flex-shrink-0 ml-2">${formatCurrency(sum)} (${percentage}%)</span>
                     </div>
                     <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                        <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                        <div class="h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${color};"></div>
                     </div>
                 `;
                 categoryBreakdownContainer.appendChild(row);
@@ -768,13 +754,8 @@
 
         function renderTransactionFeed(filtered) {
             transactionList.innerHTML = '';
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
+            if (filtered.length === 0) { emptyState.classList.remove('hidden'); return; }
+            else { emptyState.classList.add('hidden'); }
 
             if (sortMode === 'custom') {
                 doneEditOrderBtn.classList.remove('hidden');
@@ -787,16 +768,11 @@
             }
 
             let displayList = [...filtered];
-            
-            if (sortMode === 'date-desc') {
-                displayList.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
-            } else if (sortMode === 'date-asc') {
-                displayList.sort((a, b) => new Date(a.date) - new Date(b.date) || a.id - b.id);
-            } else if (sortMode === 'custom') {
-                displayList.sort((a, b) => transactions.findIndex(t => t.id === a.id) - transactions.findIndex(t => t.id === b.id));
-            }
+            if (sortMode === 'date-desc') displayList.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+            else if (sortMode === 'date-asc') displayList.sort((a, b) => new Date(a.date) - new Date(b.date) || a.id - b.id);
+            else if (sortMode === 'custom') displayList.sort((a, b) => transactions.findIndex(t => t.id === a.id) - transactions.findIndex(t => t.id === b.id));
 
-            displayList.forEach((t, index) => {
+            displayList.forEach((t) => {
                 const isIncome = t.type === 'income';
                 const badgeColor = isIncome ? 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300';
                 const amountPrefix = isIncome ? '+' : '-';
@@ -847,16 +823,13 @@
                         </div>
                     </div>
                 `;
-
                 transactionList.appendChild(card);
             });
         }
 
         function getFilteredTransactions() {
             let result = [...transactions];
-            if (monthFilter.value) {
-                result = result.filter(t => t.date.startsWith(monthFilter.value));
-            }
+            if (monthFilter.value) result = result.filter(t => t.date.startsWith(monthFilter.value));
             const query = searchInput.value.trim().toLowerCase();
             if (query) {
                 result = result.filter(t =>
@@ -869,31 +842,22 @@
         }
 
         function escapeHtml(str) {
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // ---------- EDIT & SORT FUNCTIONS ----------
         window.startEdit = function(id) {
             const t = transactions.find(item => item.id === id);
             if (!t) return;
-
             switchTab('dashboard');
-
             editingId = id;
             setMode(t.type);
             amountInput.value = t.amount;
             categorySelect.value = t.category;
-            populateSubcategories(); 
+            populateSubcategories();
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
             noteInput.value = t.note;
             checkDateStatus();
-
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-blue-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
@@ -906,74 +870,51 @@
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
             checkDateStatus();
-
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
-            
             setMode(currentMode);
         }
 
         window.moveEntry = function(id, direction) {
             if (sortMode !== 'custom') return;
-
             const index = transactions.findIndex(t => t.id === id);
             if (index === -1) return;
             const newIndex = index + direction;
             if (newIndex < 0 || newIndex >= transactions.length) return;
-
             [transactions[index], transactions[newIndex]] = [transactions[newIndex], transactions[index]];
-            
             saveData();
             updateDashboard();
         };
 
-        // ---------- DELETE CONFIRMATION LOGIC ----------
         window.deleteTransaction = function(id) {
             pendingDeleteId = id;
             deleteConfirmModal.classList.remove('hidden');
         };
 
-        cancelDeleteBtn.addEventListener('click', () => {
-            pendingDeleteId = null;
-            deleteConfirmModal.classList.add('hidden');
-        });
-
+        cancelDeleteBtn.addEventListener('click', () => { pendingDeleteId = null; deleteConfirmModal.classList.add('hidden'); });
         confirmDeleteBtn.addEventListener('click', () => {
             if (pendingDeleteId === null) return;
             if (editingId === pendingDeleteId) cancelEdit();
-            
             transactions = transactions.filter(t => t.id !== pendingDeleteId);
             saveData();
             updateDashboard();
-            
             pendingDeleteId = null;
             deleteConfirmModal.classList.add('hidden');
             showToast('Entry deleted successfully', 'error');
         });
 
-        // Event Listeners
         toggleExpenseBtn.addEventListener('click', () => setMode('expense'));
         toggleIncomeBtn.addEventListener('click', () => setMode('income'));
         categorySelect.addEventListener('change', populateSubcategories);
         dateInput.addEventListener('change', checkDateStatus);
         cancelEditBtn.addEventListener('click', cancelEdit);
-        
-        sortModeSelect.addEventListener('change', (e) => {
-            sortMode = e.target.value;
-            updateDashboard();
-        });
-
-        doneEditOrderBtn.addEventListener('click', () => {
-            sortMode = 'date-desc';
-            sortModeSelect.value = 'date-desc';
-            updateDashboard();
-        });
+        sortModeSelect.addEventListener('change', (e) => { sortMode = e.target.value; updateDashboard(); });
+        doneEditOrderBtn.addEventListener('click', () => { sortMode = 'date-desc'; sortModeSelect.value = 'date-desc'; updateDashboard(); });
 
         flowForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) return;
-
             const entryData = {
                 date: dateInput.value,
                 type: currentMode,
@@ -982,19 +923,13 @@
                 amount: amount,
                 note: noteInput.value.trim()
             };
-
             if (editingId !== null) {
                 const index = transactions.findIndex(t => t.id === editingId);
-                if (index !== -1) {
-                    transactions[index] = { ...transactions[index], ...entryData };
-                }
+                if (index !== -1) transactions[index] = { ...transactions[index], ...entryData };
                 cancelEdit();
                 showToast('Entry updated successfully');
             } else {
-                const newEntry = {
-                    id: Date.now(),
-                    ...entryData
-                };
+                const newEntry = { id: Date.now(), ...entryData };
                 transactions.unshift(newEntry);
                 sortMode = 'date-desc';
                 sortModeSelect.value = 'date-desc';
@@ -1003,7 +938,6 @@
                 amountInput.focus();
                 showToast('Entry saved successfully');
             }
-
             saveData();
             updateDashboard();
         });
@@ -1011,17 +945,14 @@
         monthFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
         breakdownTypeFilter.addEventListener('change', updateDashboard);
-
-        clearFiltersBtn.addEventListener('click', () => {
-            monthFilter.value = '';
-            searchInput.value = '';
-            updateDashboard();
-        });
+        clearFiltersBtn.addEventListener('click', () => { monthFilter.value = ''; searchInput.value = ''; updateDashboard(); });
 
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             storageSet(THEME_KEY, isDark ? 'dark' : 'light');
+            // Re-render stats so donut center text updates theme colors
+            renderCategoryBreakdown(getFilteredTransactions());
         }
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
@@ -1030,28 +961,20 @@
             const dataStr = JSON.stringify(transactions, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
-            
             const downloadAnchor = document.createElement('a');
             const todayStr = new Date().toISOString().split('T')[0];
-            
             downloadAnchor.setAttribute("href", url);
-            downloadAnchor.setAttribute("download", `hk_money_flow_backup_${todayStr}.json`);
+            downloadAnchor.setAttribute("download", `tally_backup_${todayStr}.json`);
             downloadAnchor.style.display = 'none';
-            
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
-            
-            setTimeout(() => {
-                document.body.removeChild(downloadAnchor);
-                URL.revokeObjectURL(url);
-            }, 100);
+            setTimeout(() => { document.body.removeChild(downloadAnchor); URL.revokeObjectURL(url); }, 100);
             showToast('Backup exported!');
         });
 
         importFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
@@ -1063,12 +986,8 @@
                         saveData();
                         updateDashboard();
                         showToast('Backup restored successfully');
-                    } else {
-                        alert("Invalid file format.");
-                    }
-                } catch (err) {
-                    alert("Error loading backup: " + err.message);
-                }
+                    } else { alert("Invalid file format."); }
+                } catch (err) { alert("Error loading backup: " + err.message); }
             };
             reader.readAsText(file);
             importFileInput.value = '';
@@ -1087,18 +1006,13 @@
         });
 
         window.addEventListener('load', function() {
-            if (!testStorage()) {
-                storageUsable = false;
-                storageWarning.classList.remove('hidden');
-            }
-
+            if (!testStorage()) { storageUsable = false; storageWarning.classList.remove('hidden'); }
             const savedTheme = storageGet(THEME_KEY);
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
             }
-
             dateInput.value = getFormattedDate(0);
             checkDateStatus();
             setMode('expense');
