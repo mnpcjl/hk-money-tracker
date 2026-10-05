@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hk-tracker-v2';
+const CACHE_NAME = 'tally-v1';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
