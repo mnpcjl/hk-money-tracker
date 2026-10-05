@@ -36,12 +36,15 @@
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
+        .tab-active { color: #3b82f6; } /* Tailwind blue-500 */
+        .dark .tab-active { color: #60a5fa; } /* Tailwind blue-400 */
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
 
     <div id="app" class="max-w-4xl mx-auto px-4 py-6 md:py-8">
 
+        <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
@@ -56,28 +59,24 @@
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
                 </button>
-                <div class="relative group">
-                    <button id="dataMenuBtn" class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition flex items-center gap-1.5 text-sm font-medium">
-                        <i class="fa-solid fa-database"></i>
-                        <span class="hidden sm:inline">Data & Backup</span>
-                        <i class="fa-solid fa-chevron-down text-xs ml-0.5"></i>
-                    </button>
-                    <div id="dataDropdown" class="hidden absolute right-0 mt-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 z-50">
-                        <button id="exportBtn" class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center gap-2">
-                            <i class="fa-solid fa-download text-emerald-500"></i> Export Backup (JSON)
-                        </button>
-                        <label for="importFileInput" class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-upload text-blue-500"></i> Restore Backup
-                            <input type="file" id="importFileInput" accept=".json" class="hidden">
-                        </label>
-                        <hr class="my-1 border-slate-100 dark:border-slate-700">
-                        <button id="resetBtn" class="w-full text-left px-4 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2">
-                            <i class="fa-solid fa-trash-can"></i> Clear All Data
-                        </button>
-                    </div>
-                </div>
             </div>
         </header>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="hidden md:flex gap-2 mb-6 bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <button onclick="switchTab('dashboard')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-slate-50 dark:bg-slate-900" data-tab="dashboard">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </button>
+            <button onclick="switchTab('history')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="history">
+                <i class="fa-solid fa-clock-rotate-left"></i> History
+            </button>
+            <button onclick="switchTab('stats')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="stats">
+                <i class="fa-solid fa-chart-pie"></i> Stats
+            </button>
+            <button onclick="switchTab('settings')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="settings">
+                <i class="fa-solid fa-gear"></i> Settings
+            </button>
+        </nav>
 
         <!-- Storage warning banner -->
         <div id="storageWarning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-200 text-sm flex items-start gap-3">
@@ -88,167 +87,256 @@
             </div>
         </div>
 
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
-                <div class="flex justify-between items-start">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Net Cash Flow</span>
-                    <span id="balanceIcon" class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-scale-balanced"></i>
-                    </span>
-                </div>
-                <div class="mt-2">
-                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
-                </div>
-                <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                    <i class="fa-solid fa-shield-halved text-slate-400"></i> Real-time balance
-                </div>
-            </div>
+        <!-- ================= MAIN VIEWS ================= -->
 
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
-                <div class="flex justify-between items-start">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Income</span>
-                    <span class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-arrow-down-left"></i>
-                    </span>
-                </div>
-                <div class="mt-2">
-                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="totalIncomeDisplay">+HK$ 0.00</span>
-                </div>
-                <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="incomeCountDisplay">
-                    0 entries
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
-                <div class="flex justify-between items-start">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Expenses</span>
-                    <span class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-arrow-up-right"></i>
-                    </span>
-                </div>
-                <div class="mt-2">
-                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400" id="totalExpenseDisplay">-HK$ 0.00</span>
-                </div>
-                <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="expenseCountDisplay">
-                    0 entries
-                </div>
-            </div>
-        </section>
-
-        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
-                    Log New Money Flow
-                </h2>
-                <span id="dateStatusBadge" class="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                    Settled
-                </span>
-            </div>
-
-            <form id="flowForm" onsubmit="return false;">
-                <!-- Mode Switch -->
-                <div class="mb-5">
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Flow Type</label>
-                    <div class="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
-                        <button type="button" id="toggleExpenseBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm">
-                            <i class="fa-solid fa-minus text-xs"></i> Expense
-                        </button>
-                        <button type="button" id="toggleIncomeBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-                            <i class="fa-solid fa-plus text-xs"></i> Income
-                        </button>
+        <!-- Tab 1: Dashboard -->
+        <section id="dashboard-view" class="tab-view block">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Net Cash Flow</span>
+                        <span id="balanceIcon" class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
+                    </div>
+                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-shield-halved text-slate-400"></i> Real-time balance
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Amount Input -->
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="amountInput">Amount (HKD)</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400 dark:text-slate-500">HK$</span>
-                            <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
-                        </div>
-                        <!-- Quick Add Buttons -->
-                        <div class="flex flex-wrap gap-1.5 mt-2.5">
-                            <span class="text-xs text-slate-400 self-center mr-1">Quick Add:</span>
-                            <button type="button" onclick="quickAddAmount(10)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+10</button>
-                            <button type="button" onclick="quickAddAmount(20)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+20</button>
-                            <button type="button" onclick="quickAddAmount(50)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+50</button>
-                            <button type="button" onclick="quickAddAmount(100)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+100</button>
-                            <button type="button" onclick="quickAddAmount(500)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+500</button>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Income</span>
+                        <span class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-arrow-down-left"></i>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="totalIncomeDisplay">+HK$ 0.00</span>
+                    </div>
+                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="incomeCountDisplay">
+                        0 entries
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Expenses</span>
+                        <span class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-arrow-up-right"></i>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400" id="totalExpenseDisplay">-HK$ 0.00</span>
+                    </div>
+                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="expenseCountDisplay">
+                        0 entries
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
+                        Log New Money Flow
+                    </h2>
+                    <span id="dateStatusBadge" class="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                        Settled
+                    </span>
+                </div>
+
+                <form id="flowForm" onsubmit="return false;">
+                    <!-- Mode Switch -->
+                    <div class="mb-5">
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Flow Type</label>
+                        <div class="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
+                            <button type="button" id="toggleExpenseBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm">
+                                <i class="fa-solid fa-minus text-xs"></i> Expense
+                            </button>
+                            <button type="button" id="toggleIncomeBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                                <i class="fa-solid fa-plus text-xs"></i> Income
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Category -->
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="categorySelect">Category</label>
-                        <select id="categorySelect" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Amount Input -->
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="amountInput">Amount (HKD)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400 dark:text-slate-500">HK$</span>
+                                <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                            </div>
+                            <!-- Quick Add Buttons -->
+                            <div class="flex flex-wrap gap-1.5 mt-2.5">
+                                <span class="text-xs text-slate-400 self-center mr-1">Quick Add:</span>
+                                <button type="button" onclick="quickAddAmount(10)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+10</button>
+                                <button type="button" onclick="quickAddAmount(20)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+20</button>
+                                <button type="button" onclick="quickAddAmount(50)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+50</button>
+                                <button type="button" onclick="quickAddAmount(100)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+100</button>
+                                <button type="button" onclick="quickAddAmount(500)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+500</button>
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="categorySelect">Category</label>
+                            <select id="categorySelect" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                        </div>
+
+                        <!-- Subcategory -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory (Optional)</label>
+                            <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                        </div>
+
+                        <!-- Date Picker -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="dateInput">Date</label>
+                            <input type="date" id="dateInput" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                        </div>
+
+                        <!-- Remarks/Notes -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks / Custom Note (Optional)</label>
+                            <input type="text" id="noteInput" placeholder="e.g. Lunch at Tsui Wah, Tutoring Student A..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                        </div>
                     </div>
 
-                    <!-- Subcategory -->
+                    <div class="flex gap-3 mt-5">
+                        <button type="submit" id="submitFlowBtn" class="flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-check"></i> Save Record
+                        </button>
+                        <button type="button" id="cancelEditBtn" class="hidden px-5 py-3.5 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-sm shadow-sm transition-all duration-200 flex items-center justify-center">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </section>
+
+        <!-- Tab 2: History -->
+        <section id="history-view" class="tab-view hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory (Optional)</label>
-                        <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ul text-slate-400"></i> Money Flow History
+                        </h3>
+                        <p class="text-xs text-slate-400" id="historySubtitle">Your logged cash transactions</p>
                     </div>
 
-                    <!-- Date Picker -->
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="dateInput">Date</label>
-                        <input type="date" id="dateInput" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
-                    </div>
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <!-- Sort Dropdown -->
+                        <select id="sortModeSelect" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
+                            <option value="date-desc">Sort: Date (Newest)</option>
+                            <option value="date-asc">Sort: Date (Oldest)</option>
+                            <option value="custom">Sort: Custom Order</option>
+                        </select>
+                        
+                        <!-- Done Editing Order Button -->
+                        <button id="doneEditOrderBtn" class="hidden text-xs px-2.5 py-1.5 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-600 transition items-center gap-1">
+                            <i class="fa-solid fa-check"></i> Done Editing Order
+                        </button>
 
-                    <!-- Remarks/Notes -->
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks / Custom Note (Optional)</label>
-                        <input type="text" id="noteInput" placeholder="e.g. Lunch at Tsui Wah, Tutoring Student A..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                        <input type="month" id="monthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
+                        <input type="text" id="searchInput" placeholder="Search notes..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-32 sm:w-36">
+                        <button id="clearFiltersBtn" title="Reset Filters" class="p-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" id="submitFlowBtn" class="w-full mt-5 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check"></i> Save Record
-                </button>
-            </form>
-        </section>
+                <div id="transactionList" class="space-y-2.5"></div>
 
-        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5 mb-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-indigo-500"></i> Category Distribution
-                </h3>
-                <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                    <option value="expense">Expense Breakdown</option>
-                    <option value="income">Income Breakdown</option>
-                </select>
+                <div id="emptyState" class="hidden py-12 text-center">
+                    <div class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                        <i class="fa-solid fa-receipt text-xl"></i>
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No transactions found</p>
+                    <p class="text-xs text-slate-400 mt-1">Add a transaction in the Dashboard tab to start tracking!</p>
+                </div>
             </div>
-            <div id="categoryBreakdownContainer" class="space-y-3"></div>
         </section>
 
-        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-                <div>
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul text-slate-400"></i> Money Flow History
+        <!-- Tab 3: Stats -->
+        <section id="stats-view" class="tab-view hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                    <h3 class="text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-indigo-500"></i> Category Distribution
                     </h3>
-                    <p class="text-xs text-slate-400">Your logged cash transactions</p>
+                    <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
+                        <option value="expense">Expense Breakdown</option>
+                        <option value="income">Income Breakdown</option>
+                    </select>
                 </div>
-
-                <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                    <input type="month" id="monthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                    <input type="text" id="searchInput" placeholder="Search notes..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-32 sm:w-36">
-                    <button id="clearFiltersBtn" title="Reset Filters" class="p-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                </div>
+                <div id="categoryBreakdownContainer" class="space-y-4"></div>
             </div>
+        </section>
 
-            <div id="transactionList" class="space-y-2.5"></div>
+        <!-- Tab 4: Settings -->
+        <section id="settings-view" class="tab-view hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
+                <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-6">
+                    <i class="fa-solid fa-gear text-slate-400"></i> Settings & Data Management
+                </h3>
 
-            <div id="emptyState" class="hidden py-12 text-center">
-                <div class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
-                    <i class="fa-solid fa-receipt text-xl"></i>
+                <div class="space-y-6">
+                    <!-- Theme Section -->
+                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                        <div>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Appearance</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Toggle between light and dark mode</p>
+                        </div>
+                        <button id="themeToggleBtnSettings" class="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-sm font-semibold flex items-center gap-2">
+                            <i class="fa-solid fa-moon dark:hidden"></i>
+                            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                            <span class="dark:hidden">Dark Mode</span>
+                            <span class="hidden dark:inline">Light Mode</span>
+                        </button>
+                    </div>
+
+                    <!-- Export Section -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
+                        <div>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Export Backup</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Download your data as a JSON file. Keep this safe!</p>
+                        </div>
+                        <button id="exportBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Export Data
+                        </button>
+                    </div>
+
+                    <!-- Import Section -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
+                        <div>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Restore Backup</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Upload a previously exported JSON file to restore your data.</p>
+                        </div>
+                        <label for="importFileInput" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-upload"></i> Import Data
+                            <input type="file" id="importFileInput" accept=".json" class="hidden">
+                        </label>
+                    </div>
+
+                    <!-- Reset Section -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-rose-50 dark:bg-rose-950/20 rounded-xl border border-rose-100 dark:border-rose-900/50 gap-3">
+                        <div>
+                            <p class="text-sm font-bold text-rose-700 dark:text-rose-400">Clear All Data</p>
+                            <p class="text-xs text-rose-500 dark:text-rose-400/80 mt-0.5">Permanently delete all logged entries. Cannot be undone.</p>
+                        </div>
+                        <button id="resetBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-trash-can"></i> Clear Data
+                        </button>
+                    </div>
                 </div>
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No transactions found</p>
-                <p class="text-xs text-slate-400 mt-1">Add a transaction above to start tracking!</p>
             </div>
         </section>
 
@@ -257,8 +345,28 @@
         </footer>
     </div>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 md:hidden flex justify-around py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onclick="switchTab('dashboard')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400" data-tab="dashboard">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-medium">Dashboard</span>
+        </button>
+        <button onclick="switchTab('history')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="history">
+            <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+            <span class="text-[10px] font-medium">History</span>
+        </button>
+        <button onclick="switchTab('stats')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="stats">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
+            <span class="text-[10px] font-medium">Stats</span>
+        </button>
+        <button onclick="switchTab('settings')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="settings">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[10px] font-medium">Settings</span>
+        </button>
+    </nav>
+
     <!-- Clear Data Modal -->
-    <div id="confirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="confirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Clear All Data?</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">This will permanently delete all your logged money flow entries. This action cannot be undone unless you exported a JSON backup.</p>
@@ -291,6 +399,9 @@
 
         let transactions = [];
         let currentMode = 'expense';
+        let editingId = null;
+        let sortMode = 'date-desc';
+        let currentTab = 'dashboard';
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -317,14 +428,6 @@
             }
         }
 
-        function storageRemove(key) {
-            try {
-                window.localStorage.removeItem(key);
-            } catch (e) {
-                storageUsable = false;
-            }
-        }
-
         function testStorage() {
             try {
                 const probe = '__hk_probe__';
@@ -347,6 +450,7 @@
         const dateInput = document.getElementById('dateInput');
         const noteInput = document.getElementById('noteInput');
         const submitFlowBtn = document.getElementById('submitFlowBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
         const dateStatusBadge = document.getElementById('dateStatusBadge');
 
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
@@ -364,10 +468,12 @@
         const emptyState = document.getElementById('emptyState');
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
+        const sortModeSelect = document.getElementById('sortModeSelect');
+        const doneEditOrderBtn = document.getElementById('doneEditOrderBtn');
+        const historySubtitle = document.getElementById('historySubtitle');
 
         const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const dataMenuBtn = document.getElementById('dataMenuBtn');
-        const dataDropdown = document.getElementById('dataDropdown');
+        const themeToggleBtnSettings = document.getElementById('themeToggleBtnSettings');
         const exportBtn = document.getElementById('exportBtn');
         const importFileInput = document.getElementById('importFileInput');
         const resetBtn = document.getElementById('resetBtn');
@@ -387,6 +493,45 @@
         function formatCurrency(amount) {
             return new Intl.NumberFormat('en-HK', { style: 'currency', currency: 'HKD', minimumFractionDigits: 2 }).format(amount);
         }
+
+        // ---------- TAB SWITCHING LOGIC ----------
+        window.switchTab = function(tabId) {
+            currentTab = tabId;
+            
+            // Hide all views
+            document.querySelectorAll('.tab-view').forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('block');
+            });
+            
+            // Show target view
+            const targetView = document.getElementById(tabId + '-view');
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                targetView.classList.add('block');
+            }
+
+            // Update Desktop Tabs
+            document.querySelectorAll('.desktop-tab').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-slate-50 dark:bg-slate-900";
+                } else {
+                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white";
+                }
+            });
+
+            // Update Mobile Tabs
+            document.querySelectorAll('.mobile-tab').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400";
+                } else {
+                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200";
+                }
+            });
+
+            // Scroll to top when switching tabs
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
 
         // ---------- DATA LOAD / SAVE ----------
         function loadData() {
@@ -417,15 +562,19 @@
             if (mode === 'expense') {
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm";
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
-                submitFlowBtn.className = "w-full mt-5 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Expense';
-                formHeaderIcon.className = "fa-solid fa-minus-circle text-rose-500";
+                submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+                if (editingId === null) {
+                    submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Expense';
+                    formHeaderIcon.className = "fa-solid fa-minus-circle text-rose-500";
+                }
             } else {
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-emerald-500 text-white shadow-sm";
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
-                submitFlowBtn.className = "w-full mt-5 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Income';
-                formHeaderIcon.className = "fa-solid fa-plus-circle text-emerald-500";
+                submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+                if (editingId === null) {
+                    submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Income';
+                    formHeaderIcon.className = "fa-solid fa-plus-circle text-emerald-500";
+                }
             }
             populateCategories();
         }
@@ -525,7 +674,7 @@
             categoryBreakdownContainer.innerHTML = '';
 
             if (total === 0) {
-                categoryBreakdownContainer.innerHTML = `<div class="text-xs text-slate-400 py-2 text-center italic">No ${viewType} entries available for breakdown.</div>`;
+                categoryBreakdownContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center italic">No ${viewType} entries available for breakdown.</div>`;
                 return;
             }
 
@@ -539,14 +688,14 @@
                 const barColor = viewType === 'expense' ? 'bg-rose-500' : 'bg-emerald-500';
 
                 const row = document.createElement('div');
-                row.className = 'space-y-1';
+                row.className = 'space-y-1.5';
                 row.innerHTML = `
                     <div class="flex justify-between text-xs font-medium">
                         <span class="text-slate-700 dark:text-slate-200">${escapeHtml(cat)}</span>
                         <span class="text-slate-500 dark:text-slate-400">${formatCurrency(sum)} (${percentage}%)</span>
                     </div>
-                    <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                        <div class="${barColor} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                        <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
                     </div>
                 `;
                 categoryBreakdownContainer.appendChild(row);
@@ -563,38 +712,76 @@
                 emptyState.classList.add('hidden');
             }
 
-            const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+            // Update Sorting UI
+            if (sortMode === 'custom') {
+                doneEditOrderBtn.classList.remove('hidden');
+                doneEditOrderBtn.classList.add('flex');
+                historySubtitle.textContent = "Custom order active • Use arrows to move items, then click Done";
+            } else {
+                doneEditOrderBtn.classList.add('hidden');
+                doneEditOrderBtn.classList.remove('flex');
+                historySubtitle.textContent = "Your logged cash transactions";
+            }
 
-            sorted.forEach(t => {
+            let displayList = [...filtered];
+            
+            if (sortMode === 'date-desc') {
+                displayList.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+            } else if (sortMode === 'date-asc') {
+                displayList.sort((a, b) => new Date(a.date) - new Date(b.date) || a.id - b.id);
+            } else if (sortMode === 'custom') {
+                displayList.sort((a, b) => transactions.findIndex(t => t.id === a.id) - transactions.findIndex(t => t.id === b.id));
+            }
+
+            displayList.forEach((t, index) => {
                 const isIncome = t.type === 'income';
                 const badgeColor = isIncome ? 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300';
                 const amountPrefix = isIncome ? '+' : '-';
                 const amountColor = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 
                 const card = document.createElement('div');
-                card.className = "flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition group";
+                card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition group gap-2";
+
+                const masterIndex = transactions.findIndex(item => item.id === t.id);
+                const canMoveUp = masterIndex > 0;
+                const canMoveDown = masterIndex < transactions.length - 1;
 
                 card.innerHTML = `
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
                         <div class="w-10 h-10 rounded-xl ${isIncome ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400'} flex items-center justify-center text-sm font-bold flex-shrink-0">
                             <i class="${isIncome ? 'fa-solid fa-arrow-down-left' : 'fa-solid fa-arrow-up-right'}"></i>
                         </div>
-                        <div>
+                        <div class="min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">${escapeHtml(t.category)}</span>
-                                ${t.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeColor}">${escapeHtml(t.subcategory)}</span>` : ''}
+                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(t.category)}</span>
+                                ${t.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeColor} truncate">${escapeHtml(t.subcategory)}</span>` : ''}
                             </div>
                             <div class="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
                                 <span><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
-                                ${t.note ? `<span>•</span><span class="italic text-slate-500 dark:text-slate-400">${escapeHtml(t.note)}</span>` : ''}
+                                ${t.note ? `<span>•</span><span class="italic text-slate-500 dark:text-slate-400 truncate">${escapeHtml(t.note)}</span>` : ''}
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0">
                         <span class="text-base font-extrabold ${amountColor}">${amountPrefix}${formatCurrency(t.amount)}</span>
-                        <button onclick="deleteTransaction(${t.id})" class="p-1.5 text-slate-400 hover:text-rose-500 transition" title="Delete Entry">
-                            <i class="fa-solid fa-trash-can text-sm"></i>
-                        </button>
+                        <div class="flex items-center gap-1">
+                            ${sortMode === 'custom' ? `
+                                <div class="flex flex-col mr-1">
+                                    <button onclick="moveEntry(${t.id}, -1)" class="p-0.5 ${canMoveUp ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveUp ? 'disabled' : ''}>
+                                        <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                                    </button>
+                                    <button onclick="moveEntry(${t.id}, 1)" class="p-0.5 ${canMoveDown ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveDown ? 'disabled' : ''}>
+                                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                            <button onclick="startEdit(${t.id})" class="p-1.5 text-slate-400 hover:text-blue-500 transition" title="Edit Entry">
+                                <i class="fa-solid fa-pen text-sm"></i>
+                            </button>
+                            <button onclick="deleteTransaction(${t.id})" class="p-1.5 text-slate-400 hover:text-rose-500 transition" title="Delete Entry">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
 
@@ -627,19 +814,83 @@
                 .replace(/'/g, "&#039;");
         }
 
+        // ---------- EDIT & SORT FUNCTIONS ----------
+        window.startEdit = function(id) {
+            const t = transactions.find(item => item.id === id);
+            if (!t) return;
+
+            // Auto-switch to Dashboard tab so user can see the form
+            switchTab('dashboard');
+
+            editingId = id;
+            setMode(t.type);
+            amountInput.value = t.amount;
+            categorySelect.value = t.category;
+            populateSubcategories(); 
+            subcategorySelect.value = t.subcategory || '';
+            dateInput.value = t.date;
+            noteInput.value = t.note;
+            checkDateStatus();
+
+            // UI changes for Edit Mode
+            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-blue-500" id="formHeaderIcon"></i> Edit Money Flow';
+            submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
+            submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+            cancelEditBtn.classList.remove('hidden');
+        };
+
+        function cancelEdit() {
+            editingId = null;
+            amountInput.value = '';
+            noteInput.value = '';
+            dateInput.value = getFormattedDate(0);
+            checkDateStatus();
+
+            // Reset UI to Add Mode
+            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
+            cancelEditBtn.classList.add('hidden');
+            
+            setMode(currentMode);
+        }
+
+        window.moveEntry = function(id, direction) {
+            if (sortMode !== 'custom') return;
+
+            const index = transactions.findIndex(t => t.id === id);
+            if (index === -1) return;
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= transactions.length) return;
+
+            [transactions[index], transactions[newIndex]] = [transactions[newIndex], transactions[index]];
+            
+            saveData();
+            updateDashboard();
+        };
+
         // Event Listeners
         toggleExpenseBtn.addEventListener('click', () => setMode('expense'));
         toggleIncomeBtn.addEventListener('click', () => setMode('income'));
         categorySelect.addEventListener('change', populateSubcategories);
         dateInput.addEventListener('change', checkDateStatus);
+        cancelEditBtn.addEventListener('click', cancelEdit);
+        
+        sortModeSelect.addEventListener('change', (e) => {
+            sortMode = e.target.value;
+            updateDashboard();
+        });
+
+        doneEditOrderBtn.addEventListener('click', () => {
+            sortMode = 'date-desc';
+            sortModeSelect.value = 'date-desc';
+            updateDashboard();
+        });
 
         flowForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) return;
 
-            const newEntry = {
-                id: Date.now(),
+            const entryData = {
                 date: dateInput.value,
                 type: currentMode,
                 category: categorySelect.value,
@@ -648,16 +899,33 @@
                 note: noteInput.value.trim()
             };
 
-            transactions.unshift(newEntry);
+            if (editingId !== null) {
+                const index = transactions.findIndex(t => t.id === editingId);
+                if (index !== -1) {
+                    transactions[index] = { ...transactions[index], ...entryData };
+                }
+                cancelEdit();
+                // Optionally switch to history tab to show updated entry
+                // switchTab('history');
+            } else {
+                const newEntry = {
+                    id: Date.now(),
+                    ...entryData
+                };
+                transactions.unshift(newEntry);
+                sortMode = 'date-desc';
+                sortModeSelect.value = 'date-desc';
+                amountInput.value = '';
+                noteInput.value = '';
+                amountInput.focus();
+            }
+
             saveData();
             updateDashboard();
-
-            amountInput.value = '';
-            noteInput.value = '';
-            amountInput.focus();
         });
 
         window.deleteTransaction = function(id) {
+            if (editingId === id) cancelEdit();
             transactions = transactions.filter(t => t.id !== id);
             saveData();
             updateDashboard();
@@ -673,20 +941,18 @@
             updateDashboard();
         });
 
-        dataMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dataDropdown.classList.toggle('hidden');
-        });
+        // Theme Toggle (both header and settings)
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            storageSet(THEME_KEY, isDark ? 'dark' : 'light');
+        }
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnSettings.addEventListener('click', toggleTheme);
 
-        document.addEventListener('click', () => {
-            dataDropdown.classList.add('hidden');
-        });
-
-        // ---------- FIXED EXPORT FUNCTION ----------
+        // Export Function
         exportBtn.addEventListener('click', () => {
             const dataStr = JSON.stringify(transactions, null, 2);
-            
-            // Use Blob instead of data: URI for better mobile support
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             
@@ -700,7 +966,6 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             
-            // Clean up
             setTimeout(() => {
                 document.body.removeChild(downloadAnchor);
                 URL.revokeObjectURL(url);
@@ -717,6 +982,8 @@
                     const imported = JSON.parse(event.target.result);
                     if (Array.isArray(imported)) {
                         transactions = imported;
+                        sortMode = 'date-desc';
+                        sortModeSelect.value = 'date-desc';
                         saveData();
                         updateDashboard();
                     } else {
@@ -734,15 +1001,11 @@
         cancelResetBtn.addEventListener('click', () => { confirmModal.classList.add('hidden'); });
         confirmResetBtn.addEventListener('click', () => {
             transactions = [];
+            sortMode = 'date-desc';
+            sortModeSelect.value = 'date-desc';
             saveData();
             updateDashboard();
             confirmModal.classList.add('hidden');
-        });
-
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            storageSet(THEME_KEY, isDark ? 'dark' : 'light');
         });
 
         window.addEventListener('load', function() {
