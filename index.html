@@ -81,7 +81,7 @@
                     <span class="w-9 h-9 md:w-10 md:h-10 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl flex items-center justify-center text-lg md:text-xl font-black leading-none flex-shrink-0">T</span>
                     Tally
                 </h1>
-                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Money Flow Tracker • Offline-Ready</p>
+                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Money Flow Tracker</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -167,15 +167,10 @@
             </div>
 
             <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
-                <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
-                        Log New Money Flow
-                    </h2>
-                    <span id="dateStatusBadge" class="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                        Settled
-                    </span>
-                </div>
+                <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-5">
+                    <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
+                    Log New Money Flow
+                </h2>
 
                 <form id="flowForm" onsubmit="return false;">
                     <div class="mb-5">
@@ -197,14 +192,7 @@
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400 dark:text-slate-500">HK$</span>
                                 <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
                             </div>
-                            <div class="flex flex-wrap gap-1.5 mt-2.5">
-                                <span class="text-xs text-slate-400 self-center mr-1">Quick Add:</span>
-                                <button type="button" onclick="quickAddAmount(10)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+10</button>
-                                <button type="button" onclick="quickAddAmount(20)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+20</button>
-                                <button type="button" onclick="quickAddAmount(50)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+50</button>
-                                <button type="button" onclick="quickAddAmount(100)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+100</button>
-                                <button type="button" onclick="quickAddAmount(500)" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">+500</button>
-                            </div>
+                            <div id="quickAddContainer" class="hidden flex-wrap gap-1.5 mt-2.5"></div>
                         </div>
 
                         <div class="min-w-0">
@@ -243,24 +231,23 @@
         <!-- Tab 2: History -->
         <section id="history-view" class="tab-view hidden">
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-                    <div>
-                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                            <i class="fa-solid fa-list-ul text-slate-400"></i> Money Flow History
-                        </h3>
-                        <p class="text-xs text-slate-400" id="historySubtitle">Your logged cash transactions</p>
-                    </div>
+                <div class="mb-4">
+                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul text-slate-400"></i> Money Flow History
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5" id="historySubtitle">Your logged cash transactions</p>
+                </div>
 
-                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <select id="sortModeSelect" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                            <option value="date-desc">Sort: Date (Newest)</option>
-                            <option value="date-asc">Sort: Date (Oldest)</option>
-                            <option value="custom">Sort: Custom Order</option>
+                <div class="flex flex-col sm:flex-row gap-2 mb-5">
+                    <input type="text" id="searchInput" placeholder="Search notes or dates..." class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:flex-1">
+                    <div class="flex items-center gap-2">
+                        <select id="sortModeSelect" class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 sm:flex-none">
+                            <option value="date-desc">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
+                            <option value="custom">Custom Order</option>
                         </select>
-
-                        <input type="month" id="monthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                        <input type="text" id="searchInput" placeholder="Search notes or dates..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-36 sm:w-44">
-                        <button id="clearFiltersBtn" title="Reset Filters" class="p-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                        <input type="month" id="monthFilter" class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 sm:flex-none">
+                        <button id="clearFiltersBtn" title="Reset Filters" class="p-2 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex-shrink-0">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
                     </div>
@@ -285,18 +272,22 @@
                     <h3 class="text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-indigo-500"></i> Category Distribution
                     </h3>
-                    <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                        <option value="expense">Expense Breakdown</option>
-                        <option value="income">Income Breakdown</option>
+                    <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
                     </select>
                 </div>
 
-                <!-- Period filter -->
-                <div class="flex flex-wrap items-center gap-2 mb-6 pb-5 border-b border-slate-100 dark:border-slate-700">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">Period</span>
-                    <input type="month" id="statsMonthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                    <button id="statsAllTimeBtn" class="text-xs px-3 py-1.5 rounded-lg font-medium transition">All Time</button>
+                <!-- Segmented period control -->
+                <div class="inline-flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 gap-1 mb-5">
+                    <button id="statsAllTimeBtn" class="text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">All Time</button>
+                    <label class="relative cursor-pointer">
+                        <span id="statsMonthBtn" class="block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">Month</span>
+                        <input type="month" id="statsMonthFilter" class="absolute inset-0 opacity-0 cursor-pointer" style="width:100%;height:100%;">
+                    </label>
                 </div>
+
+                <p id="donutPeriodLabel" class="text-center text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-3">All Time</p>
 
                 <div id="donutChartWrapper" class="mb-6">
                     <div class="w-52 h-52 mx-auto" id="donutChartContainer"></div>
@@ -480,17 +471,18 @@
         };
 
         let transactions = [];
+        let quickAdds = { expense: [], income: [] };
         let currentMode = 'expense';
         let editingId = null;
         let sortMode = 'date-desc';
         let currentTab = 'dashboard';
         let pendingDeleteId = null;
         let detailId = null;
-        let statsMonthFilter = '';       // '' means All Time
-        let cameFromHistory = false;     // used to redirect back after edit
+        let cameFromHistory = false;
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
+        const QUICKADD_KEY = 'hk_tracker_quickadd_v1';
 
         let storageUsable = true;
 
@@ -515,7 +507,7 @@
         const noteInput = document.getElementById('noteInput');
         const submitFlowBtn = document.getElementById('submitFlowBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const dateStatusBadge = document.getElementById('dateStatusBadge');
+        const quickAddContainer = document.getElementById('quickAddContainer');
 
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
@@ -531,9 +523,11 @@
         const emptyState = document.getElementById('emptyState');
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
         const donutChartContainer = document.getElementById('donutChartContainer');
+        const donutPeriodLabel = document.getElementById('donutPeriodLabel');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
-        const statsMonthFilterInput = document.getElementById('statsMonthFilter');
         const statsAllTimeBtn = document.getElementById('statsAllTimeBtn');
+        const statsMonthBtn = document.getElementById('statsMonthBtn');
+        const statsMonthFilterInput = document.getElementById('statsMonthFilter');
         const sortModeSelect = document.getElementById('sortModeSelect');
         const historySubtitle = document.getElementById('historySubtitle');
         const toastContainer = document.getElementById('toastContainer');
@@ -584,7 +578,18 @@
             return formatCurrency(amount);
         }
 
-        function formatMonthLabel(ym) {
+        function formatMonthShort(ym) {
+            if (!ym) return 'Month';
+            const parts = ym.split('-');
+            if (parts.length !== 2) return 'Month';
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            if (isNaN(year) || isNaN(month)) return 'Month';
+            const date = new Date(year, month - 1, 1);
+            return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function formatMonthLong(ym) {
             if (!ym) return 'All Time';
             const parts = ym.split('-');
             if (parts.length !== 2) return ym;
@@ -647,6 +652,70 @@
             return ok;
         }
 
+        // ---------- QUICK ADD ----------
+        function loadQuickAdds() {
+            const stored = storageGet(QUICKADD_KEY);
+            if (!stored) { quickAdds = { expense: [], income: [] }; return; }
+            try {
+                const parsed = JSON.parse(stored);
+                quickAdds = {
+                    expense: Array.isArray(parsed.expense) ? parsed.expense.filter(n => typeof n === 'number').slice(0, 3) : [],
+                    income: Array.isArray(parsed.income) ? parsed.income.filter(n => typeof n === 'number').slice(0, 3) : []
+                };
+            } catch (e) { quickAdds = { expense: [], income: [] }; }
+        }
+
+        function saveQuickAdds() {
+            storageSet(QUICKADD_KEY, JSON.stringify(quickAdds));
+        }
+
+        function addToQuickAdd(mode, amount) {
+            const rounded = Math.round(amount * 100) / 100;
+            const list = quickAdds[mode] || [];
+            // Remove existing duplicate (if any)
+            const filtered = list.filter(v => Math.abs(v - rounded) > 0.001);
+            // Prepend new amount, cap at 3
+            quickAdds[mode] = [rounded, ...filtered].slice(0, 3);
+            saveQuickAdds();
+            renderQuickAddButtons();
+        }
+
+        window.removeQuickAdd = function(mode, amount) {
+            const list = quickAdds[mode] || [];
+            quickAdds[mode] = list.filter(v => Math.abs(v - amount) > 0.001);
+            saveQuickAdds();
+            renderQuickAddButtons();
+        };
+
+        window.fillAmountFromQuickAdd = function(amount) {
+            amountInput.value = amount;
+            amountInput.focus();
+        };
+
+        function renderQuickAddButtons() {
+            const list = quickAdds[currentMode] || [];
+            if (list.length === 0) {
+                quickAddContainer.classList.add('hidden');
+                quickAddContainer.classList.remove('flex');
+                quickAddContainer.innerHTML = '';
+                return;
+            }
+            quickAddContainer.classList.remove('hidden');
+            quickAddContainer.classList.add('flex');
+            let html = '<span class="text-xs text-slate-400 self-center mr-1">Recent:</span>';
+            list.forEach(amt => {
+                html += `
+                    <button type="button" onclick="fillAmountFromQuickAdd(${amt})" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
+                        <span>${amt}</span>
+                        <span onclick="event.stopPropagation(); removeQuickAdd('${currentMode}', ${amt})" class="text-slate-400 hover:text-rose-500 transition leading-none">
+                            <i class="fa-solid fa-xmark" style="font-size:9px;"></i>
+                        </span>
+                    </button>
+                `;
+            });
+            quickAddContainer.innerHTML = html;
+        }
+
         function setMode(mode) {
             currentMode = mode;
             if (mode === 'expense') {
@@ -667,6 +736,7 @@
                 }
             }
             populateCategories();
+            renderQuickAddButtons();
         }
 
         function populateCategories() {
@@ -698,32 +768,17 @@
             });
         }
 
-        function quickAddAmount(val) {
-            const current = parseFloat(amountInput.value) || 0;
-            amountInput.value = (current + val).toFixed(2);
-        }
-
-        function checkDateStatus() {
-            const selectedDate = new Date(dateInput.value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            if (selectedDate > today) {
-                dateStatusBadge.textContent = "Scheduled / Future";
-                dateStatusBadge.className = "text-xs px-2.5 py-1 rounded-full font-medium bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300";
-            } else {
-                dateStatusBadge.textContent = "Settled";
-                dateStatusBadge.className = "text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
-            }
-        }
-
         function updateStatsFilterUI() {
-            const hasFilter = statsMonthFilter && statsMonthFilter.trim() !== '';
-            if (hasFilter) {
-                // month is active, All Time is inactive
-                statsAllTimeBtn.className = "text-xs px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600";
+            const value = statsMonthFilterInput.value;
+            const isMonth = !!value;
+            if (isMonth) {
+                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm";
+                statsMonthBtn.textContent = formatMonthShort(value);
             } else {
-                // All Time is active
-                statsAllTimeBtn.className = "text-xs px-3 py-1.5 rounded-lg font-medium transition bg-blue-500 text-white";
+                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm";
+                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+                statsMonthBtn.textContent = "Month";
             }
         }
 
@@ -746,33 +801,33 @@
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white";
             }
 
-            // 2. Stats chart — uses its own filter
+            // 2. Stats chart
             renderCategoryBreakdown();
 
-            // 3. History list — uses History filters
+            // 3. History list
             renderTransactionFeed();
         }
 
         function renderCategoryBreakdown() {
             const viewType = breakdownTypeFilter.value;
+            const filterMonth = statsMonthFilterInput.value;
             const allOfType = transactions.filter(t => t.type === viewType);
-            const list = statsMonthFilter
-                ? allOfType.filter(t => t.date.startsWith(statsMonthFilter))
+            const list = filterMonth
+                ? allOfType.filter(t => t.date.startsWith(filterMonth))
                 : allOfType;
             const total = list.reduce((acc, curr) => acc + curr.amount, 0);
 
             donutChartContainer.innerHTML = '';
             categoryBreakdownContainer.innerHTML = '';
+            donutPeriodLabel.textContent = filterMonth ? formatMonthLong(filterMonth) : 'All Time';
 
             if (total === 0) {
                 let title, subtitle;
                 if (allOfType.length === 0) {
-                    // No data at all
                     title = `No ${viewType} logged yet`;
                     subtitle = `Log your first ${viewType} in the Dashboard tab to see the breakdown.`;
                 } else {
-                    // Data exists but not in this month
-                    title = `No ${viewType} in ${formatMonthLabel(statsMonthFilter)}`;
+                    title = `No ${viewType} in ${formatMonthLong(filterMonth)}`;
                     subtitle = `Try a different month, or switch to All Time.`;
                 }
                 donutChartContainer.innerHTML = `
@@ -811,16 +866,14 @@
                 cumulative += percent;
             });
 
-            const centerLabel = statsMonthFilter ? formatMonthLabel(statsMonthFilter) : 'All Time';
             const centerSub = viewType === 'expense' ? 'Total Spent' : 'Total Earned';
 
             donutChartContainer.innerHTML = `
                 <svg viewBox="0 0 42 42" class="w-full h-full">
                     <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="currentColor" stroke-width="6" class="text-slate-100 dark:text-slate-700"></circle>
                     ${segments}
-                    <text x="21" y="19" text-anchor="middle" font-size="3.2" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
-                    <text x="21" y="23.5" text-anchor="middle" font-size="1.9" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerSub}</text>
-                    <text x="21" y="26.5" text-anchor="middle" font-size="1.7" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerLabel}</text>
+                    <text x="21" y="20" text-anchor="middle" font-size="3.4" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
+                    <text x="21" y="25" text-anchor="middle" font-size="2" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerSub}</text>
                 </svg>
             `;
 
@@ -933,7 +986,6 @@
         window.startEdit = function(id) {
             const t = transactions.find(item => item.id === id);
             if (!t) return;
-            // Remember where the user came from
             cameFromHistory = (currentTab === 'history');
             closeDetail();
             switchTab('dashboard');
@@ -945,12 +997,10 @@
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
             noteInput.value = t.note;
-            checkDateStatus();
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-blue-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
-            // Auto-scroll down to the form (after the tab switch paints)
             setTimeout(() => {
                 const formCard = document.getElementById('formCard');
                 if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -964,11 +1014,9 @@
             amountInput.value = '';
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
-            checkDateStatus();
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             setMode(currentMode);
-            // Return to History if that's where the user came from
             if (wasFromHistory) switchTab('history');
         }
 
@@ -1055,22 +1103,19 @@
         toggleExpenseBtn.addEventListener('click', () => setMode('expense'));
         toggleIncomeBtn.addEventListener('click', () => setMode('income'));
         categorySelect.addEventListener('change', populateSubcategories);
-        dateInput.addEventListener('change', checkDateStatus);
         cancelEditBtn.addEventListener('click', cancelEdit);
         sortModeSelect.addEventListener('change', (e) => {
             sortMode = e.target.value;
             updateDashboard();
         });
 
-        // Stats filter listeners
-        statsMonthFilterInput.addEventListener('change', (e) => {
-            statsMonthFilter = e.target.value || '';
+        // Stats period control
+        statsAllTimeBtn.addEventListener('click', () => {
+            statsMonthFilterInput.value = '';
             updateStatsFilterUI();
             renderCategoryBreakdown();
         });
-        statsAllTimeBtn.addEventListener('click', () => {
-            statsMonthFilter = '';
-            statsMonthFilterInput.value = '';
+        statsMonthFilterInput.addEventListener('change', () => {
             updateStatsFilterUI();
             renderCategoryBreakdown();
         });
@@ -1097,6 +1142,7 @@
                 transactions.unshift(newEntry);
                 sortMode = 'date-desc';
                 sortModeSelect.value = 'date-desc';
+                addToQuickAdd(currentMode, amount);
                 amountInput.value = '';
                 noteInput.value = '';
                 amountInput.focus();
@@ -1115,7 +1161,6 @@
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             storageSet(THEME_KEY, isDark ? 'dark' : 'light');
-            // Re-render stats so SVG text colors update
             renderCategoryBreakdown();
         }
         themeToggleBtn.addEventListener('click', toggleTheme);
@@ -1161,12 +1206,14 @@
         cancelResetBtn.addEventListener('click', () => { confirmModal.classList.add('hidden'); });
         confirmResetBtn.addEventListener('click', () => {
             transactions = [];
+            quickAdds = { expense: [], income: [] };
             sortMode = 'date-desc';
             sortModeSelect.value = 'date-desc';
-            statsMonthFilter = '';
             statsMonthFilterInput.value = '';
-            updateStatsFilterUI();
             saveData();
+            saveQuickAdds();
+            updateStatsFilterUI();
+            renderQuickAddButtons();
             updateDashboard();
             confirmModal.classList.add('hidden');
             showToast('All data cleared', 'error');
@@ -1181,9 +1228,9 @@
                 document.documentElement.classList.remove('dark');
             }
             dateInput.value = getFormattedDate(0);
-            checkDateStatus();
-            setMode('expense');
             loadData();
+            loadQuickAdds();
+            setMode('expense');
             updateStatsFilterUI();
             updateDashboard();
         });
