@@ -57,7 +57,6 @@
         .toast-enter { animation: slideUp 0.3s ease-out forwards; }
         .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
 
-        /* Date input overflow fix for iOS Safari */
         input[type="date"] {
             -webkit-appearance: none;
             appearance: none;
@@ -67,14 +66,8 @@
             box-sizing: border-box;
             display: block;
         }
-        input[type="date"]::-webkit-date-and-time-value {
-            text-align: left;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            margin-left: 4px;
-            padding: 0;
-            cursor: pointer;
-        }
+        input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+        input[type="date"]::-webkit-calendar-picker-indicator { margin-left: 4px; padding: 0; cursor: pointer; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
@@ -138,7 +131,7 @@
                         <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
                     </div>
                     <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-shield-halved text-slate-400"></i> Real-time balance
+                        <i class="fa-solid fa-shield-halved text-slate-400"></i> Lifetime total
                     </div>
                 </div>
 
@@ -266,7 +259,7 @@
                         </select>
 
                         <input type="month" id="monthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
-                        <input type="text" id="searchInput" placeholder="Search notes..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-32 sm:w-36">
+                        <input type="text" id="searchInput" placeholder="Search notes or dates..." class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none w-36 sm:w-44">
                         <button id="clearFiltersBtn" title="Reset Filters" class="p-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
@@ -288,7 +281,7 @@
         <!-- Tab 3: Stats -->
         <section id="stats-view" class="tab-view hidden">
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                     <h3 class="text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-indigo-500"></i> Category Distribution
                     </h3>
@@ -296,6 +289,13 @@
                         <option value="expense">Expense Breakdown</option>
                         <option value="income">Income Breakdown</option>
                     </select>
+                </div>
+
+                <!-- Period filter -->
+                <div class="flex flex-wrap items-center gap-2 mb-6 pb-5 border-b border-slate-100 dark:border-slate-700">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">Period</span>
+                    <input type="month" id="statsMonthFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none">
+                    <button id="statsAllTimeBtn" class="text-xs px-3 py-1.5 rounded-lg font-medium transition">All Time</button>
                 </div>
 
                 <div id="donutChartWrapper" class="mb-6">
@@ -486,6 +486,8 @@
         let currentTab = 'dashboard';
         let pendingDeleteId = null;
         let detailId = null;
+        let statsMonthFilter = '';       // '' means All Time
+        let cameFromHistory = false;     // used to redirect back after edit
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -530,6 +532,8 @@
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
         const donutChartContainer = document.getElementById('donutChartContainer');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
+        const statsMonthFilterInput = document.getElementById('statsMonthFilter');
+        const statsAllTimeBtn = document.getElementById('statsAllTimeBtn');
         const sortModeSelect = document.getElementById('sortModeSelect');
         const historySubtitle = document.getElementById('historySubtitle');
         const toastContainer = document.getElementById('toastContainer');
@@ -578,6 +582,17 @@
             if (abs >= 1000000) return 'HK$' + (amount / 1000000).toFixed(1) + 'M';
             if (abs >= 10000) return 'HK$' + (amount / 1000).toFixed(1) + 'k';
             return formatCurrency(amount);
+        }
+
+        function formatMonthLabel(ym) {
+            if (!ym) return 'All Time';
+            const parts = ym.split('-');
+            if (parts.length !== 2) return ym;
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            if (isNaN(year) || isNaN(month)) return ym;
+            const date = new Date(year, month - 1, 1);
+            return date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
         }
 
         function showToast(message, type = 'success') {
@@ -701,10 +716,21 @@
             }
         }
 
+        function updateStatsFilterUI() {
+            const hasFilter = statsMonthFilter && statsMonthFilter.trim() !== '';
+            if (hasFilter) {
+                // month is active, All Time is inactive
+                statsAllTimeBtn.className = "text-xs px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600";
+            } else {
+                // All Time is active
+                statsAllTimeBtn.className = "text-xs px-3 py-1.5 rounded-lg font-medium transition bg-blue-500 text-white";
+            }
+        }
+
         function updateDashboard() {
-            const filtered = getFilteredTransactions();
+            // 1. Summary cards — always lifetime totals
             let totalIncome = 0, totalExpense = 0, incomeCount = 0, expenseCount = 0;
-            filtered.forEach(t => {
+            transactions.forEach(t => {
                 if (t.type === 'income') { totalIncome += t.amount; incomeCount++; }
                 else { totalExpense += t.amount; expenseCount++; }
             });
@@ -719,31 +745,48 @@
             } else {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white";
             }
-            renderCategoryBreakdown(filtered);
-            renderTransactionFeed(filtered);
+
+            // 2. Stats chart — uses its own filter
+            renderCategoryBreakdown();
+
+            // 3. History list — uses History filters
+            renderTransactionFeed();
         }
 
-        function renderCategoryBreakdown(filtered) {
+        function renderCategoryBreakdown() {
             const viewType = breakdownTypeFilter.value;
-            const list = filtered.filter(t => t.type === viewType);
+            const allOfType = transactions.filter(t => t.type === viewType);
+            const list = statsMonthFilter
+                ? allOfType.filter(t => t.date.startsWith(statsMonthFilter))
+                : allOfType;
             const total = list.reduce((acc, curr) => acc + curr.amount, 0);
 
             donutChartContainer.innerHTML = '';
             categoryBreakdownContainer.innerHTML = '';
 
             if (total === 0) {
+                let title, subtitle;
+                if (allOfType.length === 0) {
+                    // No data at all
+                    title = `No ${viewType} logged yet`;
+                    subtitle = `Log your first ${viewType} in the Dashboard tab to see the breakdown.`;
+                } else {
+                    // Data exists but not in this month
+                    title = `No ${viewType} in ${formatMonthLabel(statsMonthFilter)}`;
+                    subtitle = `Try a different month, or switch to All Time.`;
+                }
                 donutChartContainer.innerHTML = `
-                    <div class="w-full h-full flex flex-col items-center justify-center text-center">
+                    <div class="w-full h-full flex flex-col items-center justify-center text-center px-4">
                         <div class="w-14 h-14 mb-2 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
                             <i class="fa-solid fa-chart-simple text-xl"></i>
                         </div>
-                        <p class="text-xs text-slate-400">No data to visualize</p>
+                        <p class="text-xs text-slate-400">Nothing to show</p>
                     </div>
                 `;
                 categoryBreakdownContainer.innerHTML = `
                     <div class="text-center py-4">
-                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No ${viewType} data yet</p>
-                        <p class="text-xs text-slate-400 mt-1">Log some ${viewType}s to see your breakdown here.</p>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">${title}</p>
+                        <p class="text-xs text-slate-400 mt-1">${subtitle}</p>
                     </div>
                 `;
                 return;
@@ -768,12 +811,16 @@
                 cumulative += percent;
             });
 
+            const centerLabel = statsMonthFilter ? formatMonthLabel(statsMonthFilter) : 'All Time';
+            const centerSub = viewType === 'expense' ? 'Total Spent' : 'Total Earned';
+
             donutChartContainer.innerHTML = `
                 <svg viewBox="0 0 42 42" class="w-full h-full">
                     <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="currentColor" stroke-width="6" class="text-slate-100 dark:text-slate-700"></circle>
                     ${segments}
-                    <text x="21" y="20" text-anchor="middle" font-size="3.2" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
-                    <text x="21" y="24.5" text-anchor="middle" font-size="2" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${viewType === 'expense' ? 'Total Spent' : 'Total Earned'}</text>
+                    <text x="21" y="19" text-anchor="middle" font-size="3.2" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
+                    <text x="21" y="23.5" text-anchor="middle" font-size="1.9" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerSub}</text>
+                    <text x="21" y="26.5" text-anchor="middle" font-size="1.7" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerLabel}</text>
                 </svg>
             `;
 
@@ -798,7 +845,23 @@
             });
         }
 
-        function renderTransactionFeed(filtered) {
+        function getHistoryFilteredTransactions() {
+            let result = [...transactions];
+            if (monthFilter.value) result = result.filter(t => t.date.startsWith(monthFilter.value));
+            const query = searchInput.value.trim().toLowerCase();
+            if (query) {
+                result = result.filter(t =>
+                    (t.category && t.category.toLowerCase().includes(query)) ||
+                    (t.subcategory && t.subcategory.toLowerCase().includes(query)) ||
+                    (t.note && t.note.toLowerCase().includes(query)) ||
+                    (t.date && t.date.includes(query))
+                );
+            }
+            return result;
+        }
+
+        function renderTransactionFeed() {
+            const filtered = getHistoryFilteredTransactions();
             transactionList.innerHTML = '';
             if (filtered.length === 0) { emptyState.classList.remove('hidden'); return; }
             else { emptyState.classList.add('hidden'); }
@@ -863,20 +926,6 @@
             });
         }
 
-        function getFilteredTransactions() {
-            let result = [...transactions];
-            if (monthFilter.value) result = result.filter(t => t.date.startsWith(monthFilter.value));
-            const query = searchInput.value.trim().toLowerCase();
-            if (query) {
-                result = result.filter(t =>
-                    (t.category && t.category.toLowerCase().includes(query)) ||
-                    (t.subcategory && t.subcategory.toLowerCase().includes(query)) ||
-                    (t.note && t.note.toLowerCase().includes(query))
-                );
-            }
-            return result;
-        }
-
         function escapeHtml(str) {
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
@@ -884,6 +933,8 @@
         window.startEdit = function(id) {
             const t = transactions.find(item => item.id === id);
             if (!t) return;
+            // Remember where the user came from
+            cameFromHistory = (currentTab === 'history');
             closeDetail();
             switchTab('dashboard');
             editingId = id;
@@ -899,9 +950,16 @@
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
+            // Auto-scroll down to the form (after the tab switch paints)
+            setTimeout(() => {
+                const formCard = document.getElementById('formCard');
+                if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 150);
         };
 
         function cancelEdit() {
+            const wasFromHistory = cameFromHistory;
+            cameFromHistory = false;
             editingId = null;
             amountInput.value = '';
             noteInput.value = '';
@@ -910,6 +968,8 @@
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             setMode(currentMode);
+            // Return to History if that's where the user came from
+            if (wasFromHistory) switchTab('history');
         }
 
         window.moveEntry = function(id, direction) {
@@ -1002,6 +1062,19 @@
             updateDashboard();
         });
 
+        // Stats filter listeners
+        statsMonthFilterInput.addEventListener('change', (e) => {
+            statsMonthFilter = e.target.value || '';
+            updateStatsFilterUI();
+            renderCategoryBreakdown();
+        });
+        statsAllTimeBtn.addEventListener('click', () => {
+            statsMonthFilter = '';
+            statsMonthFilterInput.value = '';
+            updateStatsFilterUI();
+            renderCategoryBreakdown();
+        });
+
         flowForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const amount = parseFloat(amountInput.value);
@@ -1035,14 +1108,15 @@
 
         monthFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
-        breakdownTypeFilter.addEventListener('change', updateDashboard);
+        breakdownTypeFilter.addEventListener('change', () => renderCategoryBreakdown());
         clearFiltersBtn.addEventListener('click', () => { monthFilter.value = ''; searchInput.value = ''; updateDashboard(); });
 
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             storageSet(THEME_KEY, isDark ? 'dark' : 'light');
-            renderCategoryBreakdown(getFilteredTransactions());
+            // Re-render stats so SVG text colors update
+            renderCategoryBreakdown();
         }
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
@@ -1071,7 +1145,6 @@
                     const imported = JSON.parse(event.target.result);
                     if (Array.isArray(imported)) {
                         transactions = imported;
-                        // Preserve exact order from the backup file
                         sortMode = 'custom';
                         sortModeSelect.value = 'custom';
                         saveData();
@@ -1090,6 +1163,9 @@
             transactions = [];
             sortMode = 'date-desc';
             sortModeSelect.value = 'date-desc';
+            statsMonthFilter = '';
+            statsMonthFilterInput.value = '';
+            updateStatsFilterUI();
             saveData();
             updateDashboard();
             confirmModal.classList.add('hidden');
@@ -1108,6 +1184,7 @@
             checkDateStatus();
             setMode('expense');
             loadData();
+            updateStatsFilterUI();
             updateDashboard();
         });
 
