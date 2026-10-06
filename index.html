@@ -111,10 +111,7 @@
         <!-- Storage warning banner -->
         <div id="storageWarning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-200 text-sm flex items-start gap-3">
             <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
-            <div>
-                <p class="font-semibold">Local storage is unavailable</p>
-                <p class="text-xs mt-0.5">Your entries cannot be saved and will disappear when you reload the page. This usually happens inside a preview window or private browsing mode. Open the page in a normal browser tab, or use Export Backup to keep your data.</p>
-            </div>
+            <p>Storage is unavailable. Entries won't be saved. Try opening this page in a normal browser tab.</p>
         </div>
 
         <!-- Tab 1: Dashboard -->
@@ -130,9 +127,6 @@
                     <div class="mt-2">
                         <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
                     </div>
-                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-shield-halved text-slate-400"></i> Lifetime total
-                    </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
@@ -145,9 +139,6 @@
                     <div class="mt-2">
                         <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400" id="totalIncomeDisplay">+HK$ 0.00</span>
                     </div>
-                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="incomeCountDisplay">
-                        0 entries
-                    </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
@@ -159,9 +150,6 @@
                     </div>
                     <div class="mt-2">
                         <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400" id="totalExpenseDisplay">-HK$ 0.00</span>
-                    </div>
-                    <div class="mt-2 text-xs text-slate-500 dark:text-slate-400" id="expenseCountDisplay">
-                        0 entries
                     </div>
                 </div>
             </div>
@@ -201,7 +189,7 @@
                         </div>
 
                         <div class="min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory (Optional)</label>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory</label>
                             <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
                         </div>
 
@@ -211,8 +199,8 @@
                         </div>
 
                         <div class="min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks / Custom Note (Optional)</label>
-                            <input type="text" id="noteInput" placeholder="e.g. Lunch at Tsui Wah, Tutoring Student A..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks (Optional)</label>
+                            <input type="text" id="noteInput" placeholder="Add a note..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
                         </div>
                     </div>
 
@@ -279,15 +267,13 @@
                 </div>
 
                 <!-- Segmented period control -->
-                <div class="inline-flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 gap-1 mb-5">
+                <div class="inline-flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 gap-1 mb-6">
                     <button id="statsAllTimeBtn" class="text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">All Time</button>
                     <label class="relative cursor-pointer">
                         <span id="statsMonthBtn" class="block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">Month</span>
                         <input type="month" id="statsMonthFilter" class="absolute inset-0 opacity-0 cursor-pointer" style="width:100%;height:100%;">
                     </label>
                 </div>
-
-                <p id="donutPeriodLabel" class="text-center text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-3">All Time</p>
 
                 <div id="donutChartWrapper" class="mb-6">
                     <div class="w-52 h-52 mx-auto" id="donutChartContainer"></div>
@@ -301,16 +287,14 @@
         <section id="settings-view" class="tab-view hidden">
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
                 <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-6">
-                    <i class="fa-solid fa-gear text-slate-400"></i> Settings & Data Management
+                    <i class="fa-solid fa-gear text-slate-400"></i> Settings
                 </h3>
 
-                <div class="space-y-6">
-                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                        <div>
-                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Appearance</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Toggle between light and dark mode</p>
-                        </div>
-                        <button id="themeToggleBtnSettings" class="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-sm font-semibold flex items-center gap-2">
+                <div class="space-y-5">
+                    <!-- Appearance -->
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Appearance</p>
+                        <button id="themeToggleBtnSettings" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition text-sm font-semibold flex items-center justify-center gap-2">
                             <i class="fa-solid fa-moon dark:hidden"></i>
                             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
                             <span class="dark:hidden">Dark Mode</span>
@@ -318,34 +302,28 @@
                         </button>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
-                        <div>
-                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Export Backup</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Download your data as a JSON file. Keep this safe!</p>
-                        </div>
-                        <button id="exportBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                    <!-- Export -->
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Export</p>
+                        <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-download"></i> Export Data
                         </button>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 gap-3">
-                        <div>
-                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Restore Backup</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Upload a previously exported JSON file to restore your data.</p>
-                        </div>
-                        <label for="importFileInput" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                    <!-- Import -->
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Import</p>
+                        <label for="importFileInput" class="w-full px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-upload"></i> Import Data
                             <input type="file" id="importFileInput" accept=".json" class="hidden">
                         </label>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-rose-50 dark:bg-rose-950/20 rounded-xl border border-rose-100 dark:border-rose-900/50 gap-3">
-                        <div>
-                            <p class="text-sm font-bold text-rose-700 dark:text-rose-400">Clear All Data</p>
-                            <p class="text-xs text-rose-500 dark:text-rose-400/80 mt-0.5">Permanently delete all logged entries. Cannot be undone.</p>
-                        </div>
-                        <button id="resetBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-trash-can"></i> Clear Data
+                    <!-- Danger Zone -->
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-rose-500 dark:text-rose-400 mb-2">Danger Zone</p>
+                        <button id="resetBtn" class="w-full px-4 py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-trash-can"></i> Clear All Data
                         </button>
                     </div>
                 </div>
@@ -452,22 +430,22 @@
 
     <script>
         const EXPENSE_CATEGORIES = {
-            "Transport": ["MTR", "Bus / Citybus / KMB", "Minibus", "Tram", "Ferry", "Taxi / Uber", "Others"],
-            "Food": ["Breakfast", "Lunch", "Dinner", "Groceries / Supermarket", "Coffee / Snacks", "Drinks / Tea", "Others"],
+            "Transport": ["MTR", "Bus", "Minibus", "Tram", "Ferry", "Taxi", "Others"],
+            "Food": ["Breakfast", "Lunch", "Dinner", "Groceries", "Coffee", "Drinks", "Others"],
             "Shopping": ["Clothing", "Electronics", "Household", "Personal Care", "Others"],
-            "Bills & Housing": ["Rent", "Electricity / Water / Gas", "Mobile & Internet", "Subscriptions", "Others"],
-            "Entertainment": ["Movies / Concerts", "Gaming", "Socializing", "Sports / Gym", "Others"],
-            "Health & Medical": ["Doctor / Clinic", "Pharmacy / Medicine", "Insurance", "Others"],
-            "Others": ["General Expense"]
+            "Bills & Housing": ["Rent", "Utilities", "Mobile", "Subscriptions", "Others"],
+            "Entertainment": ["Movies", "Gaming", "Socializing", "Sports", "Others"],
+            "Health & Medical": ["Doctor", "Pharmacy", "Insurance", "Others"],
+            "Others": ["General"]
         };
 
         const INCOME_CATEGORIES = {
-            "Salary / Main Job": ["Monthly Salary", "Bonus / Allowance", "Overtime (OT)", "Others"],
-            "Tutoring / Education": ["Private Tutoring (1-on-1)", "Agency / Center Teaching", "Assignment / Note Sales", "Others"],
-            "Side Hustles / Freelance": ["Part-time / Hourly", "Project Fee", "Online Sales / Resell", "Others"],
-            "Gifts & Luck": ["Cash Found / Lucky Money", "Red Packet (Lai See)", "Family Allowance / Gift"],
-            "Investments & Cash Back": ["Dividends", "Interest", "Credit Card Cash Back / Rebates"],
-            "Others": ["Refund / Return", "Custom Note"]
+            "Salary": ["Monthly Salary", "Bonus", "Overtime", "Others"],
+            "Tutoring": ["Private Tutoring", "Agency Teaching", "Note Sales", "Others"],
+            "Freelance": ["Part-time", "Project Fee", "Online Sales", "Others"],
+            "Gifts & Luck": ["Cash Found", "Red Packet", "Family Gift"],
+            "Investments": ["Dividends", "Interest", "Cash Back"],
+            "Others": ["Refund", "Custom"]
         };
 
         let transactions = [];
@@ -512,8 +490,6 @@
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
         const totalExpenseDisplay = document.getElementById('totalExpenseDisplay');
-        const incomeCountDisplay = document.getElementById('incomeCountDisplay');
-        const expenseCountDisplay = document.getElementById('expenseCountDisplay');
         const storageWarning = document.getElementById('storageWarning');
 
         const monthFilter = document.getElementById('monthFilter');
@@ -523,7 +499,6 @@
         const emptyState = document.getElementById('emptyState');
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
         const donutChartContainer = document.getElementById('donutChartContainer');
-        const donutPeriodLabel = document.getElementById('donutPeriodLabel');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
         const statsAllTimeBtn = document.getElementById('statsAllTimeBtn');
         const statsMonthBtn = document.getElementById('statsMonthBtn');
@@ -589,17 +564,6 @@
             return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
         }
 
-        function formatMonthLong(ym) {
-            if (!ym) return 'All Time';
-            const parts = ym.split('-');
-            if (parts.length !== 2) return ym;
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10);
-            if (isNaN(year) || isNaN(month)) return ym;
-            const date = new Date(year, month - 1, 1);
-            return date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-        }
-
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-rose-500 text-white';
@@ -652,7 +616,6 @@
             return ok;
         }
 
-        // ---------- QUICK ADD ----------
         function loadQuickAdds() {
             const stored = storageGet(QUICKADD_KEY);
             if (!stored) { quickAdds = { expense: [], income: [] }; return; }
@@ -672,9 +635,7 @@
         function addToQuickAdd(mode, amount) {
             const rounded = Math.round(amount * 100) / 100;
             const list = quickAdds[mode] || [];
-            // Remove existing duplicate (if any)
             const filtered = list.filter(v => Math.abs(v - rounded) > 0.001);
-            // Prepend new amount, cap at 3
             quickAdds[mode] = [rounded, ...filtered].slice(0, 3);
             saveQuickAdds();
             renderQuickAddButtons();
@@ -758,7 +719,7 @@
             subcategorySelect.innerHTML = '';
             const defaultOpt = document.createElement('option');
             defaultOpt.value = '';
-            defaultOpt.textContent = '-- General / None --';
+            defaultOpt.textContent = 'None';
             subcategorySelect.appendChild(defaultOpt);
             subcats.forEach(sub => {
                 const opt = document.createElement('option');
@@ -783,28 +744,21 @@
         }
 
         function updateDashboard() {
-            // 1. Summary cards — always lifetime totals
-            let totalIncome = 0, totalExpense = 0, incomeCount = 0, expenseCount = 0;
+            let totalIncome = 0, totalExpense = 0;
             transactions.forEach(t => {
-                if (t.type === 'income') { totalIncome += t.amount; incomeCount++; }
-                else { totalExpense += t.amount; expenseCount++; }
+                if (t.type === 'income') totalIncome += t.amount;
+                else totalExpense += t.amount;
             });
             const netBalance = totalIncome - totalExpense;
             netBalanceDisplay.textContent = formatCurrency(netBalance);
             totalIncomeDisplay.textContent = `+${formatCurrency(totalIncome)}`;
             totalExpenseDisplay.textContent = `-${formatCurrency(totalExpense)}`;
-            incomeCountDisplay.textContent = `${incomeCount} entries`;
-            expenseCountDisplay.textContent = `${expenseCount} entries`;
             if (netBalance < 0) {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400";
             } else {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white";
             }
-
-            // 2. Stats chart
             renderCategoryBreakdown();
-
-            // 3. History list
             renderTransactionFeed();
         }
 
@@ -819,7 +773,6 @@
 
             donutChartContainer.innerHTML = '';
             categoryBreakdownContainer.innerHTML = '';
-            donutPeriodLabel.textContent = filterMonth ? formatMonthLong(filterMonth) : 'All Time';
 
             if (total === 0) {
                 let title, subtitle;
@@ -827,7 +780,7 @@
                     title = `No ${viewType} logged yet`;
                     subtitle = `Log your first ${viewType} in the Dashboard tab to see the breakdown.`;
                 } else {
-                    title = `No ${viewType} in ${formatMonthLong(filterMonth)}`;
+                    title = `No ${viewType} in ${formatMonthShort(filterMonth)}`;
                     subtitle = `Try a different month, or switch to All Time.`;
                 }
                 donutChartContainer.innerHTML = `
@@ -1031,7 +984,6 @@
             updateDashboard();
         };
 
-        // ---------- DETAIL MODAL ----------
         window.openDetail = function(id) {
             const t = transactions.find(item => item.id === id);
             if (!t) return;
@@ -1109,7 +1061,6 @@
             updateDashboard();
         });
 
-        // Stats period control
         statsAllTimeBtn.addEventListener('click', () => {
             statsMonthFilterInput.value = '';
             updateStatsFilterUI();
@@ -1227,7 +1178,7 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
-            dateInput.value = getFormattedDate(0);
+            dateInput.value = getFormattedDate();
             loadData();
             loadQuickAdds();
             setMode('expense');
