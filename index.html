@@ -288,7 +288,6 @@
                     </select>
                 </div>
 
-                <!-- Mode segmented control -->
                 <div class="inline-flex bg-zinc-100 dark:bg-zinc-800 rounded-xl p-1 gap-1 mb-3">
                     <button type="button" data-stats-mode="all" id="statsModeAll" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">All</button>
                     <button type="button" data-stats-mode="year" id="statsModeYear" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">Year</button>
@@ -296,7 +295,6 @@
                     <button type="button" data-stats-mode="day" id="statsModeDay" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">Day</button>
                 </div>
 
-                <!-- Picker row (contextual) -->
                 <div id="statsPickerRow" class="hidden mb-3">
                     <select id="statsYearPicker" class="hidden text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100"></select>
                     <input type="month" id="statsMonthPicker" class="hidden text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
@@ -373,7 +371,6 @@
         </footer>
     </div>
 
-    <!-- Mobile Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden flex justify-around py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <button onclick="switchTab('dashboard')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-900 dark:text-white" data-tab="dashboard">
             <i class="fa-solid fa-house text-lg"></i>
@@ -395,7 +392,6 @@
 
     <div id="toastContainer" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full px-4"></div>
 
-    <!-- Clear Data Modal -->
     <div id="confirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Clear All Data?</h3>
@@ -407,7 +403,6 @@
         </div>
     </div>
 
-    <!-- Import Confirmation Modal -->
     <div id="importConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[65] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Replace All Data?</h3>
@@ -419,7 +414,6 @@
         </div>
     </div>
 
-    <!-- Recurring Rules Modal -->
     <div id="rulesModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[68] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
             <div class="flex items-start justify-between mb-4">
@@ -434,7 +428,6 @@
         </div>
     </div>
 
-    <!-- Prompt Modal (Ask-first mode) -->
     <div id="promptModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[75] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Recurring Transactions Due</h3>
@@ -446,7 +439,6 @@
         </div>
     </div>
 
-    <!-- Transaction Details Modal -->
     <div id="detailModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
             <div class="flex items-start justify-between mb-4">
@@ -492,7 +484,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Delete this entry?</h3>
@@ -841,7 +832,6 @@
             quickAddContainer.innerHTML = html;
         }
 
-        // ---------- RECURRENCE ----------
         function getRecurrenceFromForm() {
             const v = repeatSelect.value;
             if (!v) return null;
@@ -1002,7 +992,6 @@
             }
         }
 
-        // ---------- FORM MODE ----------
         function setMode(mode) {
             currentMode = mode;
             if (mode === 'expense') {
@@ -1055,34 +1044,27 @@
             });
         }
 
-        // ---------- STATS MODE / FILTER ----------
         function populateYearPicker() {
-            const years = new Set();
-            transactions.forEach(t => {
-                if (t.date && t.date.length >= 4) {
-                    years.add(t.date.substring(0, 4));
-                }
-            });
-            const sorted = Array.from(years).sort().reverse();
+            const MIN_YEAR = 1970;
+            const MAX_YEAR = 2100;
+            const now = new Date();
+            const currentYear = now.getFullYear();
             const prevValue = statsYearPicker.value;
             statsYearPicker.innerHTML = '';
-            if (sorted.length === 0) {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = 'No data';
-                statsYearPicker.appendChild(opt);
-                return;
+            const years = [];
+            for (let y = MAX_YEAR; y >= MIN_YEAR; y--) {
+                years.push(String(y));
             }
-            sorted.forEach(y => {
+            years.forEach(y => {
                 const opt = document.createElement('option');
                 opt.value = y;
                 opt.textContent = y;
                 statsYearPicker.appendChild(opt);
             });
-            if (prevValue && sorted.includes(prevValue)) {
+            if (prevValue && years.includes(prevValue)) {
                 statsYearPicker.value = prevValue;
             } else {
-                statsYearPicker.value = sorted[0];
+                statsYearPicker.value = String(currentYear);
             }
         }
 
@@ -1149,9 +1131,7 @@
 
             if (mode === 'year' && !statsYearPicker.value) {
                 const now = new Date();
-                const currentYear = String(now.getFullYear());
-                const hasCurrent = Array.from(statsYearPicker.options).some(o => o.value === currentYear);
-                statsYearPicker.value = hasCurrent ? currentYear : (statsYearPicker.options[0] && statsYearPicker.options[0].value) || '';
+                statsYearPicker.value = String(now.getFullYear());
             }
             if (mode === 'month' && !statsMonthPicker.value) {
                 const now = new Date();
@@ -1165,7 +1145,6 @@
             renderCategoryBreakdown();
         };
 
-        // ---------- DASHBOARD ----------
         function updateDashboard() {
             let totalIncome = 0, totalExpense = 0;
             transactions.forEach(t => {
@@ -1181,7 +1160,6 @@
             } else {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white";
             }
-            populateYearPicker();
             renderCategoryBreakdown();
             renderTransactionFeed();
             updateRulesCount();
@@ -1562,7 +1540,6 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
 
-        // ---------- RULES MANAGEMENT ----------
         function renderRulesList() {
             if (rules.length === 0) {
                 rulesList.innerHTML = `<p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center py-4">No recurring rules yet. Create one by setting "Repeat" when you log a new entry.</p>`;
@@ -1619,7 +1596,6 @@
             showToast(autoLog ? 'Auto-log enabled' : 'Ask-first mode enabled');
         });
 
-        // ---------- PROMPT MODAL ----------
         dismissPromptBtn.addEventListener('click', () => {
             pendingPromptRules = null;
             promptModal.classList.add('hidden');
@@ -1633,7 +1609,6 @@
             promptModal.classList.add('hidden');
         });
 
-        // ---------- EXPORT / IMPORT / RESET ----------
         exportBtn.addEventListener('click', () => {
             const payload = { transactions: transactions, rules: rules, exportedAt: new Date().toISOString() };
             const dataStr = JSON.stringify(payload, null, 2);
@@ -1763,4 +1738,4 @@
         }
     </script>
 </body>
-</html>
+</html>.
