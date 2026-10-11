@@ -7,9 +7,9 @@
     
     <!-- PWA Additions -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><text x='50' y='70' font-family='Arial, sans-serif' font-size='55' font-weight='bold' fill='%230f172a' text-anchor='middle'>T</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><text x='50' y='70' font-family='Arial, sans-serif' font-size='55' font-weight='bold' fill='%2318181b' text-anchor='middle'>T</text></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,10 +25,6 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        brand: { 50: '#f0fdf4', 500: '#22c55e', 600: '#16a34a' },
-                        expense: { 50: '#fef2f2', 500: '#ef4444', 600: '#dc2626' }
-                    },
                     fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
@@ -38,13 +34,13 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #3f3f46; }
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-        .tab-active { color: #3b82f6; }
-        .dark .tab-active { color: #60a5fa; }
+        .tab-active { color: #18181b; }
+        .dark .tab-active { color: #fafafa; }
 
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
@@ -70,22 +66,22 @@
         input[type="date"]::-webkit-calendar-picker-indicator { margin-left: 4px; padding: 0; cursor: pointer; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
+<body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
 
     <div id="app" class="max-w-4xl mx-auto px-4 py-6 md:py-8">
 
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                    <span class="w-9 h-9 md:w-10 md:h-10 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl flex items-center justify-center text-lg md:text-xl font-black leading-none flex-shrink-0">T</span>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
+                    <span class="w-9 h-9 md:w-10 md:h-10 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl flex items-center justify-center text-lg md:text-xl font-black leading-none flex-shrink-0">T</span>
                     Tally
                 </h1>
-                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Money Flow Tracker</p>
+                <p class="text-xs md:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Money Flow Tracker</p>
             </div>
 
             <div class="flex items-center gap-2">
-                <button id="themeToggleBtn" title="Toggle Theme" class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                <button id="themeToggleBtn" title="Toggle Theme" class="p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
                 </button>
@@ -93,17 +89,17 @@
         </header>
 
         <!-- Desktop Navigation Tabs -->
-        <nav class="hidden md:flex gap-2 mb-6 bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-            <button onclick="switchTab('dashboard')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-slate-50 dark:bg-slate-900" data-tab="dashboard">
+        <nav class="hidden md:flex gap-2 mb-6 bg-white dark:bg-zinc-900 p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <button onclick="switchTab('dashboard')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-zinc-100 dark:bg-zinc-950" data-tab="dashboard">
                 <i class="fa-solid fa-house"></i> Dashboard
             </button>
-            <button onclick="switchTab('history')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="history">
+            <button onclick="switchTab('history')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white" data-tab="history">
                 <i class="fa-solid fa-clock-rotate-left"></i> History
             </button>
-            <button onclick="switchTab('stats')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="stats">
+            <button onclick="switchTab('stats')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white" data-tab="stats">
                 <i class="fa-solid fa-chart-pie"></i> Stats
             </button>
-            <button onclick="switchTab('settings')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white" data-tab="settings">
+            <button onclick="switchTab('settings')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white" data-tab="settings">
                 <i class="fa-solid fa-gear"></i> Settings
             </button>
         </nav>
@@ -117,21 +113,21 @@
         <!-- Tab 1: Dashboard -->
         <section id="dashboard-view" class="tab-view block">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
+                <div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm relative overflow-hidden">
                     <div class="flex justify-between items-start">
-                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Net Cash Flow</span>
+                        <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500">Net Cash Flow</span>
                         <span id="balanceIcon" class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-scale-balanced"></i>
                         </span>
                     </div>
                     <div class="mt-2">
-                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
+                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white" id="netBalanceDisplay">HK$ 0.00</span>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
+                <div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm">
                     <div class="flex justify-between items-start">
-                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Income</span>
+                        <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500">Total Income</span>
                         <span class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-arrow-down-left"></i>
                         </span>
@@ -141,9 +137,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm">
+                <div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm">
                     <div class="flex justify-between items-start">
-                        <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500">Total Expenses</span>
+                        <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500">Total Expenses</span>
                         <span class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-arrow-up-right"></i>
                         </span>
@@ -154,20 +150,20 @@
                 </div>
             </div>
 
-            <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
-                <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-5">
+            <section class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
+                <h2 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2 mb-5">
                     <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
                     Log New Money Flow
                 </h2>
 
                 <form id="flowForm" onsubmit="return false;">
                     <div class="mb-5">
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Flow Type</label>
-                        <div class="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
+                        <label class="block text-xs font-semibold uppercase text-zinc-400 mb-2">Flow Type</label>
+                        <div class="grid grid-cols-2 p-1 bg-zinc-100 dark:bg-zinc-950 rounded-xl gap-1">
                             <button type="button" id="toggleExpenseBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm">
                                 <i class="fa-solid fa-minus text-xs"></i> Expense
                             </button>
-                            <button type="button" id="toggleIncomeBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                            <button type="button" id="toggleIncomeBtn" class="py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">
                                 <i class="fa-solid fa-plus text-xs"></i> Income
                             </button>
                         </div>
@@ -175,32 +171,32 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2 min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="amountInput">Amount (HKD)</label>
+                            <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="amountInput">Amount (HKD)</label>
                             <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400 dark:text-slate-500">HK$</span>
-                                <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-zinc-400 dark:text-zinc-500">HK$</span>
+                                <input type="number" id="amountInput" step="any" min="0.01" placeholder="0.00" required class="w-full pl-14 pr-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xl font-bold text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
                             </div>
                             <div id="quickAddContainer" class="hidden flex-wrap gap-1.5 mt-2.5"></div>
                         </div>
 
                         <div class="min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="categorySelect">Category</label>
-                            <select id="categorySelect" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                            <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="categorySelect">Category</label>
+                            <select id="categorySelect" required class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition"></select>
                         </div>
 
                         <div class="min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="subcategorySelect">Subcategory</label>
-                            <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"></select>
+                            <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="subcategorySelect">Subcategory</label>
+                            <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition"></select>
                         </div>
 
                         <div class="min-w-0 overflow-hidden">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="dateInput">Date</label>
-                            <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                            <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="dateInput">Date</label>
+                            <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
                         </div>
 
                         <div class="min-w-0">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5" for="noteInput">Remarks (Optional)</label>
-                            <input type="text" id="noteInput" placeholder="Add a note..." class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition">
+                            <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="noteInput">Remarks (Optional)</label>
+                            <input type="text" id="noteInput" placeholder="Add a note..." class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
                         </div>
                     </div>
 
@@ -208,7 +204,7 @@
                         <button type="submit" id="submitFlowBtn" class="flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-check"></i> Save Record
                         </button>
-                        <button type="button" id="cancelEditBtn" class="hidden px-5 py-3.5 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-sm shadow-sm transition-all duration-200 flex items-center justify-center">
+                        <button type="button" id="cancelEditBtn" class="hidden px-5 py-3.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-bold text-sm shadow-sm transition-all duration-200 flex items-center justify-center">
                             Cancel
                         </button>
                     </div>
@@ -218,24 +214,24 @@
 
         <!-- Tab 2: History -->
         <section id="history-view" class="tab-view hidden">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm p-5">
                 <div class="mb-4">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul text-slate-400"></i> Money Flow History
+                    <h3 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul text-zinc-400"></i> Money Flow History
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5" id="historySubtitle">Your logged cash transactions</p>
+                    <p class="text-xs text-zinc-400 mt-0.5" id="historySubtitle">Your logged cash transactions</p>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-2 mb-5">
-                    <input type="text" id="searchInput" placeholder="Search notes or dates..." class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:flex-1">
+                    <input type="text" id="searchInput" placeholder="Search notes or dates..." class="text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 w-full sm:flex-1">
                     <div class="flex items-center gap-2">
-                        <select id="sortModeSelect" class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 sm:flex-none">
+                        <select id="sortModeSelect" class="text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 flex-1 sm:flex-none">
                             <option value="date-desc">Date (Newest)</option>
                             <option value="date-asc">Date (Oldest)</option>
                             <option value="custom">Custom Order</option>
                         </select>
-                        <input type="month" id="monthFilter" class="text-xs px-3 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-xl text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 sm:flex-none">
-                        <button id="clearFiltersBtn" title="Reset Filters" class="p-2 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex-shrink-0">
+                        <input type="month" id="monthFilter" class="text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 flex-1 sm:flex-none">
+                        <button id="clearFiltersBtn" title="Reset Filters" class="p-2 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 flex-shrink-0">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
                     </div>
@@ -244,30 +240,30 @@
                 <div id="transactionList" class="space-y-2.5"></div>
 
                 <div id="emptyState" class="hidden py-12 text-center">
-                    <div class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                    <div class="w-12 h-12 mx-auto mb-3 text-zinc-300 dark:text-zinc-600 flex items-center justify-center rounded-full bg-zinc-50 dark:bg-zinc-950">
                         <i class="fa-solid fa-receipt text-xl"></i>
                     </div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">No transactions found</p>
-                    <p class="text-xs text-slate-400 mt-1">Add a transaction in the Dashboard tab to start tracking!</p>
+                    <p class="text-sm font-medium text-zinc-500 dark:text-zinc-400">No transactions found</p>
+                    <p class="text-xs text-zinc-400 mt-1">Add a transaction in the Dashboard tab to start tracking!</p>
                 </div>
             </div>
         </section>
 
         <!-- Tab 3: Stats -->
         <section id="stats-view" class="tab-view hidden">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm p-5">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <h3 class="text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-indigo-500"></i> Category Distribution
+                    <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-zinc-400"></i> Category Distribution
                     </h3>
-                    <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                     </select>
                 </div>
 
                 <!-- Segmented period control -->
-                <div class="inline-flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 gap-1 mb-6">
+                <div class="inline-flex bg-zinc-100 dark:bg-zinc-800 rounded-xl p-1 gap-1 mb-6">
                     <button id="statsAllTimeBtn" class="text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">All Time</button>
                     <label class="relative cursor-pointer">
                         <span id="statsMonthBtn" class="block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">Month</span>
@@ -285,16 +281,16 @@
 
         <!-- Tab 4: Settings -->
         <section id="settings-view" class="tab-view hidden">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/60 shadow-sm p-5">
-                <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-6">
-                    <i class="fa-solid fa-gear text-slate-400"></i> Settings
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm p-5">
+                <h3 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2 mb-6">
+                    <i class="fa-solid fa-gear text-zinc-400"></i> Settings
                 </h3>
 
                 <div class="space-y-5">
                     <!-- Appearance -->
                     <div>
-                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Appearance</p>
-                        <button id="themeToggleBtnSettings" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition text-sm font-semibold flex items-center justify-center gap-2">
+                        <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Appearance</p>
+                        <button id="themeToggleBtnSettings" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2">
                             <i class="fa-solid fa-moon dark:hidden"></i>
                             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
                             <span class="dark:hidden">Dark Mode</span>
@@ -304,16 +300,16 @@
 
                     <!-- Export -->
                     <div>
-                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Export</p>
-                        <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                        <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Export</p>
+                        <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-download"></i> Export Data
                         </button>
                     </div>
 
                     <!-- Import -->
                     <div>
-                        <p class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 mb-2">Import</p>
-                        <label for="importFileInput" class="w-full px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                        <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Import</p>
+                        <label for="importFileInput" class="w-full px-4 py-3 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-upload"></i> Import Data
                             <input type="file" id="importFileInput" accept=".json" class="hidden">
                         </label>
@@ -322,7 +318,7 @@
                     <!-- Danger Zone -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-rose-500 dark:text-rose-400 mb-2">Danger Zone</p>
-                        <button id="resetBtn" class="w-full px-4 py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                        <button id="resetBtn" class="w-full px-4 py-3 rounded-xl border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-semibold text-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-trash-can"></i> Clear All Data
                         </button>
                     </div>
@@ -330,26 +326,26 @@
             </div>
         </section>
 
-        <footer class="mt-8 text-center text-xs text-slate-400 dark:text-slate-600 py-4">
+        <footer class="mt-8 text-center text-xs text-zinc-400 dark:text-zinc-600 py-4">
             Tally • Stored Locally in Your Browser • Private & Safe
         </footer>
     </div>
 
     <!-- Mobile Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 md:hidden flex justify-around py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onclick="switchTab('dashboard')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400" data-tab="dashboard">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden flex justify-around py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onclick="switchTab('dashboard')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-900 dark:text-white" data-tab="dashboard">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] font-medium">Dashboard</span>
         </button>
-        <button onclick="switchTab('history')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="history">
+        <button onclick="switchTab('history')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" data-tab="history">
             <i class="fa-solid fa-clock-rotate-left text-lg"></i>
             <span class="text-[10px] font-medium">History</span>
         </button>
-        <button onclick="switchTab('stats')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="stats">
+        <button onclick="switchTab('stats')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" data-tab="stats">
             <i class="fa-solid fa-chart-pie text-lg"></i>
             <span class="text-[10px] font-medium">Stats</span>
         </button>
-        <button onclick="switchTab('settings')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-tab="settings">
+        <button onclick="switchTab('settings')" class="mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" data-tab="settings">
             <i class="fa-solid fa-gear text-lg"></i>
             <span class="text-[10px] font-medium">Settings</span>
         </button>
@@ -359,20 +355,20 @@
     <div id="toastContainer" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full px-4"></div>
 
     <!-- Clear Data Modal -->
-    <div id="confirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Clear All Data?</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">This will permanently delete all your logged money flow entries. This action cannot be undone unless you exported a JSON backup.</p>
+    <div id="confirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Clear All Data?</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will permanently delete all your logged money flow entries. This action cannot be undone unless you exported a JSON backup.</p>
             <div class="flex gap-3 justify-end">
-                <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition">Cancel</button>
+                <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmResetBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Clear All</button>
             </div>
         </div>
     </div>
 
     <!-- Transaction Details Modal -->
-    <div id="detailModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700 max-h-[85vh] overflow-y-auto">
+    <div id="detailModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
             <div class="flex items-start justify-between mb-4">
                 <div class="flex items-center gap-3">
                     <div id="detailIcon" class="w-11 h-11 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0"></div>
@@ -381,35 +377,35 @@
                         <p id="detailAmount" class="text-2xl font-extrabold tracking-tight leading-tight"></p>
                     </div>
                 </div>
-                <button id="closeDetailBtn" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                <button id="closeDetailBtn" class="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <div class="space-y-3 py-4 border-t border-b border-slate-100 dark:border-slate-700">
+            <div class="space-y-3 py-4 border-t border-b border-zinc-100 dark:border-zinc-800">
                 <div class="flex justify-between gap-4">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Category</span>
-                    <span id="detailCategory" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                    <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 flex-shrink-0">Category</span>
+                    <span id="detailCategory" class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 text-right"></span>
                 </div>
                 <div class="flex justify-between gap-4" id="detailSubcategoryRow">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Subcategory</span>
-                    <span id="detailSubcategory" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                    <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 flex-shrink-0">Subcategory</span>
+                    <span id="detailSubcategory" class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 text-right"></span>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 flex-shrink-0">Date</span>
-                    <span id="detailDate" class="text-sm font-semibold text-slate-800 dark:text-slate-100 text-right"></span>
+                    <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 flex-shrink-0">Date</span>
+                    <span id="detailDate" class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 text-right"></span>
                 </div>
-                <div class="pt-2 border-t border-slate-100 dark:border-slate-700">
-                    <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Note</span>
-                    <p id="detailNote" class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed break-words"></p>
+                <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 block mb-2">Note</span>
+                    <p id="detailNote" class="text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed break-words"></p>
                 </div>
             </div>
 
             <div class="flex gap-3 mt-5">
-                <button id="detailEditBtn" class="flex-1 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                <button id="detailEditBtn" class="flex-1 py-2.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-pen"></i> Edit
                 </button>
-                <button id="detailDeleteBtn" class="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                <button id="detailDeleteBtn" class="flex-1 py-2.5 rounded-xl border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-bold text-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-trash-can"></i> Delete
                 </button>
             </div>
@@ -417,12 +413,12 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 dark:border-slate-700">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Delete this entry?</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Are you sure you want to remove this transaction? This action cannot be undone.</p>
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Delete this entry?</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">Are you sure you want to remove this transaction? This action cannot be undone.</p>
             <div class="flex gap-3 justify-end">
-                <button id="cancelDeleteBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition">Cancel</button>
+                <button id="cancelDeleteBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmDeleteBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Delete</button>
             </div>
         </div>
@@ -566,7 +562,7 @@
 
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-rose-500 text-white';
+            const bgColor = type === 'success' ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900' : 'bg-rose-500 text-white';
             toast.className = `${bgColor} px-5 py-3 rounded-xl shadow-lg font-semibold text-sm toast-enter flex items-center gap-2`;
             const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
             toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${message}`;
@@ -586,16 +582,16 @@
 
             document.querySelectorAll('.desktop-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
-                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-slate-50 dark:bg-slate-900";
+                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-zinc-100 dark:bg-zinc-950";
                 } else {
-                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white";
+                    btn.className = "desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white";
                 }
             });
             document.querySelectorAll('.mobile-tab').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
-                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-blue-500 dark:text-blue-400";
+                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-900 dark:text-white";
                 } else {
-                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200";
+                    btn.className = "mobile-tab flex flex-col items-center gap-1 p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200";
                 }
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -663,12 +659,12 @@
             }
             quickAddContainer.classList.remove('hidden');
             quickAddContainer.classList.add('flex');
-            let html = '<span class="text-xs text-slate-400 self-center mr-1">Recent:</span>';
+            let html = '<span class="text-xs text-zinc-400 self-center mr-1">Recent:</span>';
             list.forEach(amt => {
                 html += `
-                    <button type="button" onclick="fillAmountFromQuickAdd(${amt})" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
+                    <button type="button" onclick="fillAmountFromQuickAdd(${amt})" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 transition">
                         <span>${amt}</span>
-                        <span onclick="event.stopPropagation(); removeQuickAdd('${currentMode}', ${amt})" class="text-slate-400 hover:text-rose-500 transition leading-none">
+                        <span onclick="event.stopPropagation(); removeQuickAdd('${currentMode}', ${amt})" class="text-zinc-400 hover:text-rose-500 transition leading-none">
                             <i class="fa-solid fa-xmark" style="font-size:9px;"></i>
                         </span>
                     </button>
@@ -681,7 +677,7 @@
             currentMode = mode;
             if (mode === 'expense') {
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm";
-                toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+                toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
                 if (editingId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Expense';
@@ -689,7 +685,7 @@
                 }
             } else {
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-emerald-500 text-white shadow-sm";
-                toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+                toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
                 if (editingId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Income';
@@ -733,12 +729,12 @@
             const value = statsMonthFilterInput.value;
             const isMonth = !!value;
             if (isMonth) {
-                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
-                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm";
+                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white";
+                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm";
                 statsMonthBtn.textContent = formatMonthShort(value);
             } else {
-                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm";
-                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm";
+                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white";
                 statsMonthBtn.textContent = "Month";
             }
         }
@@ -756,7 +752,7 @@
             if (netBalance < 0) {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400";
             } else {
-                netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white";
+                netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white";
             }
             renderCategoryBreakdown();
             renderTransactionFeed();
@@ -785,16 +781,16 @@
                 }
                 donutChartContainer.innerHTML = `
                     <div class="w-full h-full flex flex-col items-center justify-center text-center px-4">
-                        <div class="w-14 h-14 mb-2 text-slate-300 dark:text-slate-600 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900">
+                        <div class="w-14 h-14 mb-2 text-zinc-300 dark:text-zinc-600 flex items-center justify-center rounded-full bg-zinc-50 dark:bg-zinc-950">
                             <i class="fa-solid fa-chart-simple text-xl"></i>
                         </div>
-                        <p class="text-xs text-slate-400">Nothing to show</p>
+                        <p class="text-xs text-zinc-400">Nothing to show</p>
                     </div>
                 `;
                 categoryBreakdownContainer.innerHTML = `
                     <div class="text-center py-4">
-                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">${title}</p>
-                        <p class="text-xs text-slate-400 mt-1">${subtitle}</p>
+                        <p class="text-sm font-medium text-zinc-500 dark:text-zinc-400">${title}</p>
+                        <p class="text-xs text-zinc-400 mt-1">${subtitle}</p>
                     </div>
                 `;
                 return;
@@ -823,10 +819,10 @@
 
             donutChartContainer.innerHTML = `
                 <svg viewBox="0 0 42 42" class="w-full h-full">
-                    <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="currentColor" stroke-width="6" class="text-slate-100 dark:text-slate-700"></circle>
+                    <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="currentColor" stroke-width="6" class="text-zinc-100 dark:text-zinc-800"></circle>
                     ${segments}
-                    <text x="21" y="20" text-anchor="middle" font-size="3.4" font-weight="800" fill="currentColor" class="text-slate-900 dark:text-white">${formatCurrencyCompact(total)}</text>
-                    <text x="21" y="25" text-anchor="middle" font-size="2" font-weight="500" fill="currentColor" class="text-slate-400 dark:text-slate-500">${centerSub}</text>
+                    <text x="21" y="20" text-anchor="middle" font-size="3.4" font-weight="800" fill="currentColor" class="text-zinc-900 dark:text-white">${formatCurrencyCompact(total)}</text>
+                    <text x="21" y="25" text-anchor="middle" font-size="2" font-weight="500" fill="currentColor" class="text-zinc-400 dark:text-zinc-500">${centerSub}</text>
                 </svg>
             `;
 
@@ -839,11 +835,11 @@
                     <div class="flex justify-between text-xs font-medium">
                         <div class="flex items-center gap-2 min-w-0">
                             <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color};"></span>
-                            <span class="text-slate-700 dark:text-slate-200 truncate">${escapeHtml(cat)}</span>
+                            <span class="text-zinc-700 dark:text-zinc-200 truncate">${escapeHtml(cat)}</span>
                         </div>
-                        <span class="text-slate-500 dark:text-slate-400 flex-shrink-0 ml-2">${formatCurrency(sum)} (${percentage}%)</span>
+                        <span class="text-zinc-500 dark:text-zinc-400 flex-shrink-0 ml-2">${formatCurrency(sum)} (${percentage}%)</span>
                     </div>
-                    <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
                         <div class="h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${color};"></div>
                     </div>
                 `;
@@ -890,7 +886,7 @@
                 const amountColor = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 
                 const card = document.createElement('div');
-                card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition group gap-2 cursor-pointer";
+                card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-zinc-50 dark:bg-zinc-950/60 rounded-xl border border-zinc-100 dark:border-zinc-800/50 hover:border-zinc-300 dark:hover:border-zinc-700 transition group gap-2 cursor-pointer";
 
                 const masterIndex = transactions.findIndex(item => item.id === t.id);
                 const canMoveUp = masterIndex > 0;
@@ -905,12 +901,12 @@
                         </div>
                         <div class="min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(t.category)}</span>
+                                <span class="text-sm font-bold text-zinc-800 dark:text-zinc-100 truncate">${escapeHtml(t.category)}</span>
                                 ${t.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeColor} truncate">${escapeHtml(t.subcategory)}</span>` : ''}
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                            <div class="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
                                 <span><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
-                                ${t.note ? `<span>•</span><span class="italic text-slate-500 dark:text-slate-400 truncate">${escapeHtml(t.note)}</span>` : ''}
+                                ${t.note ? `<span>•</span><span class="italic text-zinc-500 dark:text-zinc-400 truncate">${escapeHtml(t.note)}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -918,10 +914,10 @@
                         <span class="text-base font-extrabold ${amountColor}">${amountPrefix}${formatCurrency(t.amount)}</span>
                         ${sortMode === 'custom' ? `
                             <div class="flex flex-col ml-2" onclick="event.stopPropagation()">
-                                <button onclick="moveEntry(${t.id}, -1)" class="p-0.5 ${canMoveUp ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveUp ? 'disabled' : ''}>
+                                <button onclick="moveEntry(${t.id}, -1)" class="p-0.5 ${canMoveUp ? 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200' : 'text-zinc-200 dark:text-zinc-700 cursor-not-allowed'}" ${!canMoveUp ? 'disabled' : ''}>
                                     <i class="fa-solid fa-chevron-up text-xs"></i>
                                 </button>
-                                <button onclick="moveEntry(${t.id}, 1)" class="p-0.5 ${canMoveDown ? 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200' : 'text-slate-200 dark:text-slate-700 cursor-not-allowed'}" ${!canMoveDown ? 'disabled' : ''}>
+                                <button onclick="moveEntry(${t.id}, 1)" class="p-0.5 ${canMoveDown ? 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200' : 'text-zinc-200 dark:text-zinc-700 cursor-not-allowed'}" ${!canMoveDown ? 'disabled' : ''}>
                                     <i class="fa-solid fa-chevron-down text-xs"></i>
                                 </button>
                             </div>
@@ -950,9 +946,9 @@
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
             noteInput.value = t.note;
-            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-blue-500" id="formHeaderIcon"></i> Edit Money Flow';
+            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-zinc-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
-            submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+            submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
             setTimeout(() => {
                 const formCard = document.getElementById('formCard');
@@ -1007,10 +1003,10 @@
 
             if (t.note && t.note.trim()) {
                 detailNote.textContent = t.note;
-                detailNote.className = 'text-sm text-slate-700 dark:text-slate-200 leading-relaxed break-words';
+                detailNote.className = 'text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed break-words';
             } else {
                 detailNote.textContent = 'No note added for this entry.';
-                detailNote.className = 'text-sm text-slate-400 dark:text-slate-500 italic leading-relaxed';
+                detailNote.className = 'text-sm text-zinc-400 dark:text-zinc-500 italic leading-relaxed';
             }
 
             detailModal.classList.remove('hidden');
