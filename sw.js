@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tally-v18';
+const CACHE_NAME = 'tally-v19';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
