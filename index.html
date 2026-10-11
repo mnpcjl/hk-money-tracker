@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tally — Money Flow Tracker</title>
     
-    <!-- PWA Additions -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><text x='50' y='70' font-family='Arial, sans-serif' font-size='55' font-weight='bold' fill='%2318181b' text-anchor='middle'>T</text></svg>">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -70,7 +66,6 @@
 
     <div id="app" class="max-w-4xl mx-auto px-4 py-6 md:py-8">
 
-        <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
@@ -88,7 +83,6 @@
             </div>
         </header>
 
-        <!-- Desktop Navigation Tabs -->
         <nav class="hidden md:flex gap-2 mb-6 bg-white dark:bg-zinc-900 p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
             <button onclick="switchTab('dashboard')" class="desktop-tab flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 tab-active bg-zinc-100 dark:bg-zinc-950" data-tab="dashboard">
                 <i class="fa-solid fa-house"></i> Dashboard
@@ -104,7 +98,6 @@
             </button>
         </nav>
 
-        <!-- Storage warning banner -->
         <div id="storageWarning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-200 text-sm flex items-start gap-3">
             <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
             <p>Storage is unavailable. Entries won't be saved. Try opening this page in a normal browser tab.</p>
@@ -189,9 +182,12 @@
                             <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition"></select>
                         </div>
 
-                        <div class="min-w-0 overflow-hidden">
+                        <div class="min-w-0">
                             <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="dateInput">Date</label>
-                            <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
+                            <div class="overflow-hidden">
+                                <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
+                            </div>
+                            <div id="quickDateContainer" class="flex flex-wrap gap-1.5 mt-2"></div>
                         </div>
 
                         <div class="min-w-0">
@@ -253,7 +249,7 @@
         <section id="stats-view" class="tab-view hidden">
             <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm p-5">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <h3 class="text-base font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                    <h3 class="text-base font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-400 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-zinc-400"></i> Category Distribution
                     </h3>
                     <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
@@ -262,7 +258,6 @@
                     </select>
                 </div>
 
-                <!-- Segmented period control -->
                 <div class="inline-flex bg-zinc-100 dark:bg-zinc-800 rounded-xl p-1 gap-1 mb-6">
                     <button id="statsAllTimeBtn" class="text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">All Time</button>
                     <label class="relative cursor-pointer">
@@ -287,7 +282,6 @@
                 </h3>
 
                 <div class="space-y-5">
-                    <!-- Appearance -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Appearance</p>
                         <button id="themeToggleBtnSettings" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2">
@@ -298,24 +292,21 @@
                         </button>
                     </div>
 
-                    <!-- Export -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Export</p>
-                        <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                        <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2">
                             <i class="fa-solid fa-download"></i> Export Data
                         </button>
                     </div>
 
-                    <!-- Import -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Import</p>
-                        <label for="importFileInput" class="w-full px-4 py-3 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                        <label for="importFileInput" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-upload"></i> Import Data
                             <input type="file" id="importFileInput" accept=".json" class="hidden">
                         </label>
                     </div>
 
-                    <!-- Danger Zone -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-rose-500 dark:text-rose-400 mb-2">Danger Zone</p>
                         <button id="resetBtn" class="w-full px-4 py-3 rounded-xl border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-semibold text-sm transition flex items-center justify-center gap-2">
@@ -351,7 +342,6 @@
         </button>
     </nav>
 
-    <!-- Toast Container -->
     <div id="toastContainer" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full px-4"></div>
 
     <!-- Clear Data Modal -->
@@ -362,6 +352,18 @@
             <div class="flex gap-3 justify-end">
                 <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmResetBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Confirmation Modal -->
+    <div id="importConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[65] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Replace All Data?</h3>
+            <p id="importConfirmText" class="text-sm text-zinc-500 dark:text-zinc-400 mb-6"></p>
+            <div class="flex gap-3 justify-end">
+                <button id="cancelImportBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
+                <button id="confirmImportBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Replace All</button>
             </div>
         </div>
     </div>
@@ -453,6 +455,7 @@
         let pendingDeleteId = null;
         let detailId = null;
         let cameFromHistory = false;
+        let pendingImportData = null;
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -482,6 +485,7 @@
         const submitFlowBtn = document.getElementById('submitFlowBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const quickAddContainer = document.getElementById('quickAddContainer');
+        const quickDateContainer = document.getElementById('quickDateContainer');
 
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
@@ -511,6 +515,11 @@
         const confirmModal = document.getElementById('confirmModal');
         const cancelResetBtn = document.getElementById('cancelResetBtn');
         const confirmResetBtn = document.getElementById('confirmResetBtn');
+
+        const importConfirmModal = document.getElementById('importConfirmModal');
+        const importConfirmText = document.getElementById('importConfirmText');
+        const cancelImportBtn = document.getElementById('cancelImportBtn');
+        const confirmImportBtn = document.getElementById('confirmImportBtn');
 
         const detailModal = document.getElementById('detailModal');
         const closeDetailBtn = document.getElementById('closeDetailBtn');
@@ -671,6 +680,31 @@
                 `;
             });
             quickAddContainer.innerHTML = html;
+        }
+
+        window.setQuickDate = function(offset) {
+            dateInput.value = getFormattedDate(offset);
+            renderQuickDateButtons();
+        };
+
+        function renderQuickDateButtons() {
+            const current = dateInput.value;
+            const offsets = [
+                { label: 'Today', offset: 0 },
+                { label: 'Yesterday', offset: -1 },
+                { label: '2d ago', offset: -2 },
+                { label: '3d ago', offset: -3 }
+            ];
+            let html = '';
+            offsets.forEach(o => {
+                const dateStr = getFormattedDate(o.offset);
+                const isActive = current === dateStr;
+                const cls = isActive
+                    ? 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 transition'
+                    : 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 transition';
+                html += `<button type="button" onclick="setQuickDate(${o.offset})" class="${cls}">${o.label}</button>`;
+            });
+            quickDateContainer.innerHTML = html;
         }
 
         function setMode(mode) {
@@ -945,6 +979,7 @@
             populateSubcategories();
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
+            renderQuickDateButtons();
             noteInput.value = t.note;
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-zinc-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
@@ -963,6 +998,7 @@
             amountInput.value = '';
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
+            renderQuickDateButtons();
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             setMode(currentMode);
@@ -1057,6 +1093,8 @@
             updateDashboard();
         });
 
+        dateInput.addEventListener('change', renderQuickDateButtons);
+
         statsAllTimeBtn.addEventListener('click', () => {
             statsMonthFilterInput.value = '';
             updateStatsFilterUI();
@@ -1092,6 +1130,8 @@
                 addToQuickAdd(currentMode, amount);
                 amountInput.value = '';
                 noteInput.value = '';
+                dateInput.value = getFormattedDate(0);
+                renderQuickDateButtons();
                 amountInput.focus();
                 showToast('Entry saved successfully');
             }
@@ -1136,17 +1176,37 @@
                 try {
                     const imported = JSON.parse(event.target.result);
                     if (Array.isArray(imported)) {
-                        transactions = imported;
-                        sortMode = 'custom';
-                        sortModeSelect.value = 'custom';
-                        saveData();
-                        updateDashboard();
-                        showToast('Backup restored successfully');
-                    } else { alert("Invalid file format."); }
-                } catch (err) { alert("Error loading backup: " + err.message); }
+                        pendingImportData = imported;
+                        const currentCount = transactions.length;
+                        const incomingCount = imported.length;
+                        importConfirmText.textContent = `You currently have ${currentCount} ${currentCount === 1 ? 'entry' : 'entries'}. This backup contains ${incomingCount} ${incomingCount === 1 ? 'entry' : 'entries'}. All current entries will be permanently replaced.`;
+                        importConfirmModal.classList.remove('hidden');
+                    } else {
+                        showToast('Invalid backup file', 'error');
+                    }
+                } catch (err) {
+                    showToast('Could not read backup file', 'error');
+                }
             };
             reader.readAsText(file);
             importFileInput.value = '';
+        });
+
+        cancelImportBtn.addEventListener('click', () => {
+            pendingImportData = null;
+            importConfirmModal.classList.add('hidden');
+        });
+
+        confirmImportBtn.addEventListener('click', () => {
+            if (!pendingImportData) return;
+            transactions = pendingImportData;
+            pendingImportData = null;
+            sortMode = 'custom';
+            sortModeSelect.value = 'custom';
+            saveData();
+            updateDashboard();
+            importConfirmModal.classList.add('hidden');
+            showToast('Backup restored successfully');
         });
 
         resetBtn.addEventListener('click', () => { confirmModal.classList.remove('hidden'); });
@@ -1174,10 +1234,11 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
-            dateInput.value = getFormattedDate();
+            dateInput.value = getFormattedDate(0);
             loadData();
             loadQuickAdds();
             setMode('expense');
+            renderQuickDateButtons();
             updateStatsFilterUI();
             updateDashboard();
         });
