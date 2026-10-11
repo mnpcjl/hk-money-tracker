@@ -49,7 +49,8 @@
         .toast-enter { animation: slideUp 0.3s ease-out forwards; }
         .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
 
-        input[type="date"] {
+        input[type="date"],
+        input[type="month"] {
             -webkit-appearance: none;
             appearance: none;
             min-width: 0;
@@ -58,8 +59,10 @@
             box-sizing: border-box;
             display: block;
         }
-        input[type="date"]::-webkit-date-and-time-value { text-align: left; }
-        input[type="date"]::-webkit-calendar-picker-indicator { margin-left: 4px; padding: 0; cursor: pointer; }
+        input[type="date"]::-webkit-date-and-time-value,
+        input[type="month"]::-webkit-date-and-time-value { text-align: left; }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="month"]::-webkit-calendar-picker-indicator { margin-left: 4px; padding: 0; cursor: pointer; }
     </style>
 </head>
 <body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-100 min-h-screen transition-colors duration-200 pb-20 md:pb-0">
@@ -187,7 +190,6 @@
                             <div class="overflow-hidden">
                                 <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
                             </div>
-                            <div id="quickDateContainer" class="flex flex-wrap gap-1.5 mt-2"></div>
                         </div>
 
                         <div class="min-w-0">
@@ -204,10 +206,10 @@
                                 <select id="repeatSelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
                                     <option value="">Never</option>
                                     <option value="daily">Daily</option>
-                                    <option value="weekdays">Weekdays (Mon–Fri)</option>
+                                    <option value="weekdays">Weekdays</option>
                                     <option value="weekends">Weekends</option>
                                     <option value="weekly">Weekly</option>
-                                    <option value="biweekly">Every 2 weeks</option>
+                                    <option value="biweekly">Biweekly</option>
                                     <option value="monthly">Monthly</option>
                                     <option value="yearly">Yearly</option>
                                     <option value="custom">Custom…</option>
@@ -280,7 +282,7 @@
         <section id="stats-view" class="tab-view hidden">
             <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-sm p-5">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <h3 class="text-base font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-400 flex items-center gap-2">
+                    <h3 class="text-base font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-400 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-zinc-400"></i> Category Distribution
                     </h3>
                     <select id="breakdownTypeFilter" class="text-xs px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
@@ -323,7 +325,6 @@
                         </button>
                     </div>
 
-                    <!-- Recurring -->
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Recurring</p>
                         <div class="space-y-2">
@@ -564,7 +565,6 @@
         const submitFlowBtn = document.getElementById('submitFlowBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const quickAddContainer = document.getElementById('quickAddContainer');
-        const quickDateContainer = document.getElementById('quickDateContainer');
         const repeatSection = document.getElementById('repeatSection');
         const repeatSelect = document.getElementById('repeatSelect');
         const customRepeatRow = document.getElementById('customRepeatRow');
@@ -821,7 +821,7 @@
             }
             quickAddContainer.classList.remove('hidden');
             quickAddContainer.classList.add('flex');
-            let html = '<span class="text-xs text-zinc-400 self-center mr-1">Recent:</span>';
+            let html = '';
             list.forEach(amt => {
                 html += `
                     <button type="button" onclick="fillAmountFromQuickAdd(${amt})" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 transition">
@@ -833,31 +833,6 @@
                 `;
             });
             quickAddContainer.innerHTML = html;
-        }
-
-        window.setQuickDate = function(offset) {
-            dateInput.value = getFormattedDate(offset);
-            renderQuickDateButtons();
-        };
-
-        function renderQuickDateButtons() {
-            const current = dateInput.value;
-            const offsets = [
-                { label: 'Today', offset: 0 },
-                { label: 'Yesterday', offset: -1 },
-                { label: '2d ago', offset: -2 },
-                { label: '3d ago', offset: -3 }
-            ];
-            let html = '';
-            offsets.forEach(o => {
-                const dateStr = getFormattedDate(o.offset);
-                const isActive = current === dateStr;
-                const cls = isActive
-                    ? 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 transition'
-                    : 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 transition';
-                html += `<button type="button" onclick="setQuickDate(${o.offset})" class="${cls}">${o.label}</button>`;
-            });
-            quickDateContainer.innerHTML = html;
         }
 
         // ---------- RECURRENCE ----------
@@ -884,7 +859,7 @@
             if (freq === 'weekdays') return 'Weekdays';
             if (freq === 'weekends') return 'Weekends';
             if (freq === 'weekly' && interval === 1) return 'Weekly';
-            if (freq === 'weekly' && interval === 2) return 'Every 2 weeks';
+            if (freq === 'weekly' && interval === 2) return 'Biweekly';
             const unit = { daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' }[freq] || 'day';
             if (interval === 1) {
                 if (freq === 'daily') return 'Daily';
@@ -894,7 +869,6 @@
             return `Every ${interval} ${unit}s`;
         }
 
-        // Compute the Nth occurrence (0-indexed) of a rule from its anchor
         function nthOccurrence(anchorDate, recurrence, n) {
             if (n < 0) return anchorDate;
             const { freq, interval } = recurrence;
@@ -903,7 +877,6 @@
             if (freq === 'monthly') return addMonthsStr(anchorDate, n * interval);
             if (freq === 'yearly') return addYearsStr(anchorDate, n * interval);
             if (freq === 'weekdays' || freq === 'weekends') {
-                // Iterate day-by-day from anchor, counting occurrences
                 let current = anchorDate;
                 let count = 0;
                 let guard = 0;
@@ -938,12 +911,11 @@
                 note: noteInput.value.trim(),
                 recurrence: recurrence,
                 anchorDate: anchorDate,
-                lastOccurrenceIndex: 0, // occurrence 0 = anchorDate, already logged with the initial transaction
+                lastOccurrenceIndex: 0,
                 createdAt: Date.now()
             };
         }
 
-        // Find all pending occurrences for a rule (not yet logged)
         function getPendingOccurrences(rule) {
             const today = todayStr();
             const cap = addDaysStr(today, -90);
@@ -951,13 +923,11 @@
             let idx = (rule.lastOccurrenceIndex || 0) + 1;
             let occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
             let guard = 0;
-            // Skip past occurrences older than the 90-day cap
             while (occurrence < cap && guard < 5000) {
                 idx++;
                 occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
                 guard++;
             }
-            // Collect everything from here up to today
             while (occurrence <= today && guard < 5000) {
                 pending.push({ index: idx, date: occurrence });
                 idx++;
@@ -982,7 +952,6 @@
         }
 
         function applyRules(pendingList) {
-            // pendingList: [{rule, occurrences:[{index, date}]}]
             let totalLogged = 0;
             pendingList.forEach(item => {
                 const { rule, occurrences } = item;
@@ -1021,7 +990,6 @@
                     showToast(`Logged ${logged} recurring ${logged === 1 ? 'entry' : 'entries'}`);
                 }
             } else {
-                // Ask-first mode
                 pendingPromptRules = pendingList;
                 promptModalText.textContent = `${totalPending} recurring ${totalPending === 1 ? 'transaction is' : 'transactions are'} due. Log ${totalPending === 1 ? 'it' : 'them'} now?`;
                 promptModal.classList.remove('hidden');
@@ -1310,7 +1278,6 @@
             populateSubcategories();
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
-            renderQuickDateButtons();
             noteInput.value = t.note;
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-zinc-500" id="formHeaderIcon"></i> Edit Money Flow';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
@@ -1330,7 +1297,6 @@
             amountInput.value = '';
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
-            renderQuickDateButtons();
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             repeatSelect.value = '';
@@ -1423,8 +1389,6 @@
             updateDashboard();
         });
 
-        dateInput.addEventListener('change', renderQuickDateButtons);
-
         repeatSelect.addEventListener('change', () => {
             const v = repeatSelect.value;
             customRepeatRow.classList.toggle('hidden', v !== 'custom');
@@ -1475,7 +1439,6 @@
                 amountInput.value = '';
                 noteInput.value = '';
                 dateInput.value = getFormattedDate(0);
-                renderQuickDateButtons();
                 repeatSelect.value = '';
                 customRepeatRow.classList.add('hidden');
                 amountInput.focus();
@@ -1593,7 +1556,6 @@
             reader.onload = function(event) {
                 try {
                     const parsed = JSON.parse(event.target.result);
-                    // Support both old format (array of transactions) and new format ({transactions, rules})
                     let importedTxs, importedRules;
                     if (Array.isArray(parsed)) {
                         importedTxs = parsed;
@@ -1674,10 +1636,8 @@
             loadAutoLogPref();
             loadQuickAdds();
             setMode('expense');
-            renderQuickDateButtons();
             updateStatsFilterUI();
             updateDashboard();
-            // Process recurring rules after everything is loaded
             setTimeout(processRecurringRules, 500);
         });
 
