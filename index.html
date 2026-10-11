@@ -196,6 +196,37 @@
                         </div>
                     </div>
 
+                    <!-- Repeat (only visible for new entries) -->
+                    <div id="repeatSection" class="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="min-w-0 flex-1">
+                                <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="repeatSelect">Repeat</label>
+                                <select id="repeatSelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
+                                    <option value="">Never</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekdays">Weekdays (Mon–Fri)</option>
+                                    <option value="weekends">Weekends</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="biweekly">Every 2 weeks</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                    <option value="custom">Custom…</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="customRepeatRow" class="hidden mt-2 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
+                            <span class="text-xs">Every</span>
+                            <input type="number" id="customInterval" min="1" max="365" value="3" class="w-16 px-2 py-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
+                            <select id="customUnit" class="px-2 py-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
+                                <option value="daily">day(s)</option>
+                                <option value="weekly">week(s)</option>
+                                <option value="monthly">month(s)</option>
+                                <option value="yearly">year(s)</option>
+                            </select>
+                        </div>
+                        <p id="repeatHint" class="text-[10px] text-zinc-400 mt-1.5">A recurring rule will auto-log future entries. Manage rules in Settings.</p>
+                    </div>
+
                     <div class="flex gap-3 mt-5">
                         <button type="submit" id="submitFlowBtn" class="flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-check"></i> Save Record
@@ -292,6 +323,21 @@
                         </button>
                     </div>
 
+                    <!-- Recurring -->
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Recurring</p>
+                        <div class="space-y-2">
+                            <button id="recurringRulesBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-rotate"></i> Recurring Rules</span>
+                                <span id="recurringRulesCount" class="text-xs text-zinc-500 dark:text-zinc-400">0</span>
+                            </button>
+                            <button id="autoLogToggleBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Auto-log</span>
+                                <span id="autoLogState" class="text-xs text-zinc-500 dark:text-zinc-400">On</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Export</p>
                         <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2">
@@ -348,7 +394,7 @@
     <div id="confirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Clear All Data?</h3>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will permanently delete all your logged money flow entries. This action cannot be undone unless you exported a JSON backup.</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will permanently delete all your logged money flow entries and recurring rules. This action cannot be undone unless you exported a JSON backup.</p>
             <div class="flex gap-3 justify-end">
                 <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmResetBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Clear All</button>
@@ -364,6 +410,33 @@
             <div class="flex gap-3 justify-end">
                 <button id="cancelImportBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmImportBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Replace All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recurring Rules Modal -->
+    <div id="rulesModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[68] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-start justify-between mb-4">
+                <h3 class="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-rotate text-zinc-400"></i> Recurring Rules
+                </h3>
+                <button id="closeRulesBtn" class="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="rulesList" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <!-- Prompt Modal (Ask-first mode) -->
+    <div id="promptModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[75] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Recurring Transactions Due</h3>
+            <p id="promptModalText" class="text-sm text-zinc-500 dark:text-zinc-400 mb-6"></p>
+            <div class="flex gap-3 justify-end">
+                <button id="dismissPromptBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Not Now</button>
+                <button id="confirmPromptBtn" class="px-4 py-2 text-sm font-semibold text-white bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 hover:bg-black dark:hover:bg-white rounded-xl transition">Log All</button>
             </div>
         </div>
     </div>
@@ -447,6 +520,7 @@
         };
 
         let transactions = [];
+        let rules = [];
         let quickAdds = { expense: [], income: [] };
         let currentMode = 'expense';
         let editingId = null;
@@ -456,10 +530,15 @@
         let detailId = null;
         let cameFromHistory = false;
         let pendingImportData = null;
+        let pendingImportRules = null;
+        let autoLog = true;
+        let pendingPromptRules = null;
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
         const QUICKADD_KEY = 'hk_tracker_quickadd_v1';
+        const RULES_KEY = 'hk_tracker_rules_v1';
+        const AUTOLOG_KEY = 'hk_tracker_autolog_v1';
 
         let storageUsable = true;
 
@@ -486,6 +565,11 @@
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const quickAddContainer = document.getElementById('quickAddContainer');
         const quickDateContainer = document.getElementById('quickDateContainer');
+        const repeatSection = document.getElementById('repeatSection');
+        const repeatSelect = document.getElementById('repeatSelect');
+        const customRepeatRow = document.getElementById('customRepeatRow');
+        const customInterval = document.getElementById('customInterval');
+        const customUnit = document.getElementById('customUnit');
 
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
@@ -521,6 +605,19 @@
         const cancelImportBtn = document.getElementById('cancelImportBtn');
         const confirmImportBtn = document.getElementById('confirmImportBtn');
 
+        const rulesModal = document.getElementById('rulesModal');
+        const closeRulesBtn = document.getElementById('closeRulesBtn');
+        const rulesList = document.getElementById('rulesList');
+        const recurringRulesBtn = document.getElementById('recurringRulesBtn');
+        const recurringRulesCount = document.getElementById('recurringRulesCount');
+        const autoLogToggleBtn = document.getElementById('autoLogToggleBtn');
+        const autoLogState = document.getElementById('autoLogState');
+
+        const promptModal = document.getElementById('promptModal');
+        const promptModalText = document.getElementById('promptModalText');
+        const dismissPromptBtn = document.getElementById('dismissPromptBtn');
+        const confirmPromptBtn = document.getElementById('confirmPromptBtn');
+
         const detailModal = document.getElementById('detailModal');
         const closeDetailBtn = document.getElementById('closeDetailBtn');
         const detailIcon = document.getElementById('detailIcon');
@@ -538,13 +635,41 @@
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
+        function pad(n) { return String(n).padStart(2, '0'); }
+        function formatDate(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+        function parseDate(str) { const [y,m,d] = str.split('-').map(Number); return new Date(y, m-1, d); }
+        function todayStr() { return formatDate(new Date()); }
+
+        function addDaysStr(dateStr, n) {
+            const d = parseDate(dateStr);
+            d.setDate(d.getDate() + n);
+            return formatDate(d);
+        }
+
+        function addMonthsStr(dateStr, n) {
+            const d = parseDate(dateStr);
+            const day = d.getDate();
+            d.setDate(1);
+            d.setMonth(d.getMonth() + n);
+            const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+            d.setDate(Math.min(day, lastDay));
+            return formatDate(d);
+        }
+
+        function addYearsStr(dateStr, n) {
+            const d = parseDate(dateStr);
+            const day = d.getDate();
+            d.setDate(1);
+            d.setFullYear(d.getFullYear() + n);
+            const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+            d.setDate(Math.min(day, lastDay));
+            return formatDate(d);
+        }
+
         function getFormattedDate(offsetDays = 0) {
             const date = new Date();
             date.setDate(date.getDate() + offsetDays);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return formatDate(date);
         }
 
         function formatCurrency(amount) {
@@ -567,6 +692,12 @@
             if (isNaN(year) || isNaN(month)) return 'Month';
             const date = new Date(year, month - 1, 1);
             return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '';
+            const d = parseDate(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
         function showToast(message, type = 'success') {
@@ -619,6 +750,28 @@
             const ok = storageSet(STORAGE_KEY, JSON.stringify(transactions));
             if (!ok) storageWarning.classList.remove('hidden');
             return ok;
+        }
+
+        function loadRules() {
+            const stored = storageGet(RULES_KEY);
+            if (!stored) { rules = []; return; }
+            try {
+                const parsed = JSON.parse(stored);
+                rules = Array.isArray(parsed) ? parsed : [];
+            } catch (e) { rules = []; }
+        }
+
+        function saveRules() {
+            storageSet(RULES_KEY, JSON.stringify(rules));
+        }
+
+        function loadAutoLogPref() {
+            const stored = storageGet(AUTOLOG_KEY);
+            autoLog = stored === null ? true : stored === 'true';
+        }
+
+        function saveAutoLogPref() {
+            storageSet(AUTOLOG_KEY, autoLog ? 'true' : 'false');
         }
 
         function loadQuickAdds() {
@@ -707,6 +860,175 @@
             quickDateContainer.innerHTML = html;
         }
 
+        // ---------- RECURRENCE ----------
+        function getRecurrenceFromForm() {
+            const v = repeatSelect.value;
+            if (!v) return null;
+            if (v === 'daily') return { freq: 'daily', interval: 1 };
+            if (v === 'weekdays') return { freq: 'weekdays', interval: 1 };
+            if (v === 'weekends') return { freq: 'weekends', interval: 1 };
+            if (v === 'weekly') return { freq: 'weekly', interval: 1 };
+            if (v === 'biweekly') return { freq: 'weekly', interval: 2 };
+            if (v === 'monthly') return { freq: 'monthly', interval: 1 };
+            if (v === 'yearly') return { freq: 'yearly', interval: 1 };
+            if (v === 'custom') {
+                const n = Math.min(365, Math.max(1, parseInt(customInterval.value, 10) || 1));
+                return { freq: customUnit.value, interval: n };
+            }
+            return null;
+        }
+
+        function formatRecurrenceLabel(r) {
+            if (!r) return '';
+            const { freq, interval } = r;
+            if (freq === 'weekdays') return 'Weekdays';
+            if (freq === 'weekends') return 'Weekends';
+            if (freq === 'weekly' && interval === 1) return 'Weekly';
+            if (freq === 'weekly' && interval === 2) return 'Every 2 weeks';
+            const unit = { daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' }[freq] || 'day';
+            if (interval === 1) {
+                if (freq === 'daily') return 'Daily';
+                if (freq === 'monthly') return 'Monthly';
+                if (freq === 'yearly') return 'Yearly';
+            }
+            return `Every ${interval} ${unit}s`;
+        }
+
+        // Compute the Nth occurrence (0-indexed) of a rule from its anchor
+        function nthOccurrence(anchorDate, recurrence, n) {
+            if (n < 0) return anchorDate;
+            const { freq, interval } = recurrence;
+            if (freq === 'daily') return addDaysStr(anchorDate, n * interval);
+            if (freq === 'weekly') return addDaysStr(anchorDate, n * interval * 7);
+            if (freq === 'monthly') return addMonthsStr(anchorDate, n * interval);
+            if (freq === 'yearly') return addYearsStr(anchorDate, n * interval);
+            if (freq === 'weekdays' || freq === 'weekends') {
+                // Iterate day-by-day from anchor, counting occurrences
+                let current = anchorDate;
+                let count = 0;
+                let guard = 0;
+                while (guard < 5000) {
+                    const day = parseDate(current).getDay();
+                    const isWeekday = day !== 0 && day !== 6;
+                    const isWeekend = day === 0 || day === 6;
+                    if ((freq === 'weekdays' && isWeekday) || (freq === 'weekends' && isWeekend)) {
+                        if (count === n) return current;
+                        count++;
+                    }
+                    current = addDaysStr(current, 1);
+                    guard++;
+                }
+                return current;
+            }
+            return anchorDate;
+        }
+
+        function createRuleFromForm() {
+            const recurrence = getRecurrenceFromForm();
+            if (!recurrence) return null;
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) return null;
+            const anchorDate = dateInput.value || todayStr();
+            return {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                type: currentMode,
+                amount: amount,
+                category: categorySelect.value,
+                subcategory: subcategorySelect.value || '',
+                note: noteInput.value.trim(),
+                recurrence: recurrence,
+                anchorDate: anchorDate,
+                lastOccurrenceIndex: 0, // occurrence 0 = anchorDate, already logged with the initial transaction
+                createdAt: Date.now()
+            };
+        }
+
+        // Find all pending occurrences for a rule (not yet logged)
+        function getPendingOccurrences(rule) {
+            const today = todayStr();
+            const cap = addDaysStr(today, -90);
+            const pending = [];
+            let idx = (rule.lastOccurrenceIndex || 0) + 1;
+            let occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
+            let guard = 0;
+            // Skip past occurrences older than the 90-day cap
+            while (occurrence < cap && guard < 5000) {
+                idx++;
+                occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
+                guard++;
+            }
+            // Collect everything from here up to today
+            while (occurrence <= today && guard < 5000) {
+                pending.push({ index: idx, date: occurrence });
+                idx++;
+                occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
+                guard++;
+            }
+            return pending;
+        }
+
+        function logOccurrence(rule, date) {
+            transactions.unshift({
+                id: Date.now() + Math.floor(Math.random() * 100000),
+                date: date,
+                type: rule.type,
+                category: rule.category,
+                subcategory: rule.subcategory || '',
+                amount: rule.amount,
+                note: rule.note || '',
+                isRecurring: true,
+                ruleId: rule.id
+            });
+        }
+
+        function applyRules(pendingList) {
+            // pendingList: [{rule, occurrences:[{index, date}]}]
+            let totalLogged = 0;
+            pendingList.forEach(item => {
+                const { rule, occurrences } = item;
+                occurrences.forEach(o => {
+                    logOccurrence(rule, o.date);
+                    totalLogged++;
+                });
+                if (occurrences.length > 0) {
+                    rule.lastOccurrenceIndex = occurrences[occurrences.length - 1].index;
+                }
+            });
+            if (totalLogged > 0) {
+                saveData();
+                saveRules();
+                updateDashboard();
+            }
+            return totalLogged;
+        }
+
+        function processRecurringRules() {
+            if (rules.length === 0) return;
+            const pendingList = [];
+            rules.forEach(rule => {
+                const occurrences = getPendingOccurrences(rule);
+                if (occurrences.length > 0) {
+                    pendingList.push({ rule, occurrences });
+                }
+            });
+            if (pendingList.length === 0) return;
+
+            const totalPending = pendingList.reduce((sum, item) => sum + item.occurrences.length, 0);
+
+            if (autoLog) {
+                const logged = applyRules(pendingList);
+                if (logged > 0) {
+                    showToast(`Logged ${logged} recurring ${logged === 1 ? 'entry' : 'entries'}`);
+                }
+            } else {
+                // Ask-first mode
+                pendingPromptRules = pendingList;
+                promptModalText.textContent = `${totalPending} recurring ${totalPending === 1 ? 'transaction is' : 'transactions are'} due. Log ${totalPending === 1 ? 'it' : 'them'} now?`;
+                promptModal.classList.remove('hidden');
+            }
+        }
+
+        // ---------- FORM MODE ----------
         function setMode(mode) {
             currentMode = mode;
             if (mode === 'expense') {
@@ -790,6 +1112,12 @@
             }
             renderCategoryBreakdown();
             renderTransactionFeed();
+            updateRulesCount();
+        }
+
+        function updateRulesCount() {
+            recurringRulesCount.textContent = rules.length + (rules.length === 1 ? ' rule' : ' rules');
+            autoLogState.textContent = autoLog ? 'On' : 'Off';
         }
 
         function renderCategoryBreakdown() {
@@ -928,6 +1256,8 @@
 
                 card.setAttribute('onclick', `openDetail(${t.id})`);
 
+                const recurringBadge = t.isRecurring ? `<span class="text-[10px] px-1.5 py-0.5 rounded-md font-semibold bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300" title="Auto-logged"><i class="fa-solid fa-rotate text-[8px] mr-0.5"></i>auto</span>` : '';
+
                 card.innerHTML = `
                     <div class="flex items-center gap-3 flex-1 min-w-0">
                         <div class="w-10 h-10 rounded-xl ${isIncome ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400'} flex items-center justify-center text-sm font-bold flex-shrink-0">
@@ -937,6 +1267,7 @@
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="text-sm font-bold text-zinc-800 dark:text-zinc-100 truncate">${escapeHtml(t.category)}</span>
                                 ${t.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeColor} truncate">${escapeHtml(t.subcategory)}</span>` : ''}
+                                ${recurringBadge}
                             </div>
                             <div class="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
                                 <span><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
@@ -985,6 +1316,7 @@
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
+            repeatSection.classList.add('hidden');
             setTimeout(() => {
                 const formCard = document.getElementById('formCard');
                 if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1001,6 +1333,9 @@
             renderQuickDateButtons();
             document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
+            repeatSelect.value = '';
+            customRepeatRow.classList.add('hidden');
+            repeatSection.classList.remove('hidden');
             setMode(currentMode);
             if (wasFromHistory) switchTab('history');
         }
@@ -1067,11 +1402,6 @@
             deleteConfirmModal.classList.remove('hidden');
         });
 
-        window.deleteTransaction = function(id) {
-            pendingDeleteId = id;
-            deleteConfirmModal.classList.remove('hidden');
-        };
-
         cancelDeleteBtn.addEventListener('click', () => { pendingDeleteId = null; deleteConfirmModal.classList.add('hidden'); });
         confirmDeleteBtn.addEventListener('click', () => {
             if (pendingDeleteId === null) return;
@@ -1094,6 +1424,11 @@
         });
 
         dateInput.addEventListener('change', renderQuickDateButtons);
+
+        repeatSelect.addEventListener('change', () => {
+            const v = repeatSelect.value;
+            customRepeatRow.classList.toggle('hidden', v !== 'custom');
+        });
 
         statsAllTimeBtn.addEventListener('click', () => {
             statsMonthFilterInput.value = '';
@@ -1123,8 +1458,17 @@
                 cancelEdit();
                 showToast('Entry updated successfully');
             } else {
+                const newRule = createRuleFromForm();
                 const newEntry = { id: Date.now(), ...entryData };
                 transactions.unshift(newEntry);
+                if (newRule) {
+                    rules.push(newRule);
+                    saveRules();
+                    updateRulesCount();
+                    showToast('Entry saved • Rule created');
+                } else {
+                    showToast('Entry saved successfully');
+                }
                 sortMode = 'date-desc';
                 sortModeSelect.value = 'date-desc';
                 addToQuickAdd(currentMode, amount);
@@ -1132,8 +1476,9 @@
                 noteInput.value = '';
                 dateInput.value = getFormattedDate(0);
                 renderQuickDateButtons();
+                repeatSelect.value = '';
+                customRepeatRow.classList.add('hidden');
                 amountInput.focus();
-                showToast('Entry saved successfully');
             }
             saveData();
             updateDashboard();
@@ -1153,8 +1498,81 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
 
+        // ---------- RULES MANAGEMENT ----------
+        function renderRulesList() {
+            if (rules.length === 0) {
+                rulesList.innerHTML = `<p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center py-4">No recurring rules yet. Create one by setting "Repeat" when you log a new entry.</p>`;
+                return;
+            }
+            rulesList.innerHTML = rules.map(r => {
+                const isIncome = r.type === 'income';
+                const amountColor = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+                const amountPrefix = isIncome ? '+' : '-';
+                return `
+                    <div class="flex items-center justify-between gap-3 p-3 bg-zinc-50 dark:bg-zinc-950/60 rounded-xl border border-zinc-100 dark:border-zinc-800/50">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-sm font-bold text-zinc-800 dark:text-zinc-100 truncate">${escapeHtml(r.category)}</span>
+                                ${r.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">${escapeHtml(r.subcategory)}</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
+                                <span class="font-semibold ${amountColor}">${amountPrefix}${formatCurrency(r.amount)}</span>
+                                <span>·</span>
+                                <span>${escapeHtml(formatRecurrenceLabel(r.recurrence))}</span>
+                                <span>·</span>
+                                <span>from ${formatDateDisplay(r.anchorDate)}</span>
+                            </div>
+                        </div>
+                        <button onclick="deleteRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-rose-500 transition flex-shrink-0" title="Delete rule">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.deleteRule = function(id) {
+            const rule = rules.find(r => r.id === id);
+            if (!rule) return;
+            rules = rules.filter(r => r.id !== id);
+            saveRules();
+            updateRulesCount();
+            renderRulesList();
+            showToast('Rule deleted • Past entries kept', 'error');
+        };
+
+        recurringRulesBtn.addEventListener('click', () => {
+            renderRulesList();
+            rulesModal.classList.remove('hidden');
+        });
+        closeRulesBtn.addEventListener('click', () => rulesModal.classList.add('hidden'));
+        rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) rulesModal.classList.add('hidden'); });
+
+        autoLogToggleBtn.addEventListener('click', () => {
+            autoLog = !autoLog;
+            saveAutoLogPref();
+            updateRulesCount();
+            showToast(autoLog ? 'Auto-log enabled' : 'Ask-first mode enabled');
+        });
+
+        // ---------- PROMPT MODAL ----------
+        dismissPromptBtn.addEventListener('click', () => {
+            pendingPromptRules = null;
+            promptModal.classList.add('hidden');
+        });
+        confirmPromptBtn.addEventListener('click', () => {
+            if (pendingPromptRules) {
+                const logged = applyRules(pendingPromptRules);
+                if (logged > 0) showToast(`Logged ${logged} recurring ${logged === 1 ? 'entry' : 'entries'}`);
+            }
+            pendingPromptRules = null;
+            promptModal.classList.add('hidden');
+        });
+
+        // ---------- EXPORT / IMPORT / RESET ----------
         exportBtn.addEventListener('click', () => {
-            const dataStr = JSON.stringify(transactions, null, 2);
+            const payload = { transactions: transactions, rules: rules, exportedAt: new Date().toISOString() };
+            const dataStr = JSON.stringify(payload, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const downloadAnchor = document.createElement('a');
@@ -1174,16 +1592,26 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
-                    const imported = JSON.parse(event.target.result);
-                    if (Array.isArray(imported)) {
-                        pendingImportData = imported;
-                        const currentCount = transactions.length;
-                        const incomingCount = imported.length;
-                        importConfirmText.textContent = `You currently have ${currentCount} ${currentCount === 1 ? 'entry' : 'entries'}. This backup contains ${incomingCount} ${incomingCount === 1 ? 'entry' : 'entries'}. All current entries will be permanently replaced.`;
-                        importConfirmModal.classList.remove('hidden');
+                    const parsed = JSON.parse(event.target.result);
+                    // Support both old format (array of transactions) and new format ({transactions, rules})
+                    let importedTxs, importedRules;
+                    if (Array.isArray(parsed)) {
+                        importedTxs = parsed;
+                        importedRules = [];
+                    } else if (parsed && Array.isArray(parsed.transactions)) {
+                        importedTxs = parsed.transactions;
+                        importedRules = Array.isArray(parsed.rules) ? parsed.rules : [];
                     } else {
                         showToast('Invalid backup file', 'error');
+                        return;
                     }
+                    pendingImportData = importedTxs;
+                    pendingImportRules = importedRules;
+                    const currentCount = transactions.length;
+                    const incomingCount = importedTxs.length;
+                    const ruleNote = importedRules.length > 0 ? ` and ${importedRules.length} recurring ${importedRules.length === 1 ? 'rule' : 'rules'}` : '';
+                    importConfirmText.textContent = `You currently have ${currentCount} ${currentCount === 1 ? 'entry' : 'entries'}. This backup contains ${incomingCount} ${incomingCount === 1 ? 'entry' : 'entries'}${ruleNote}. All current entries will be permanently replaced.`;
+                    importConfirmModal.classList.remove('hidden');
                 } catch (err) {
                     showToast('Could not read backup file', 'error');
                 }
@@ -1194,16 +1622,20 @@
 
         cancelImportBtn.addEventListener('click', () => {
             pendingImportData = null;
+            pendingImportRules = null;
             importConfirmModal.classList.add('hidden');
         });
 
         confirmImportBtn.addEventListener('click', () => {
             if (!pendingImportData) return;
             transactions = pendingImportData;
+            rules = pendingImportRules || [];
             pendingImportData = null;
+            pendingImportRules = null;
             sortMode = 'custom';
             sortModeSelect.value = 'custom';
             saveData();
+            saveRules();
             updateDashboard();
             importConfirmModal.classList.add('hidden');
             showToast('Backup restored successfully');
@@ -1213,11 +1645,13 @@
         cancelResetBtn.addEventListener('click', () => { confirmModal.classList.add('hidden'); });
         confirmResetBtn.addEventListener('click', () => {
             transactions = [];
+            rules = [];
             quickAdds = { expense: [], income: [] };
             sortMode = 'date-desc';
             sortModeSelect.value = 'date-desc';
             statsMonthFilterInput.value = '';
             saveData();
+            saveRules();
             saveQuickAdds();
             updateStatsFilterUI();
             renderQuickAddButtons();
@@ -1236,11 +1670,21 @@
             }
             dateInput.value = getFormattedDate(0);
             loadData();
+            loadRules();
+            loadAutoLogPref();
             loadQuickAdds();
             setMode('expense');
             renderQuickDateButtons();
             updateStatsFilterUI();
             updateDashboard();
+            // Process recurring rules after everything is loaded
+            setTimeout(processRecurringRules, 500);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                setTimeout(processRecurringRules, 300);
+            }
         });
 
         if ('serviceWorker' in navigator) {
