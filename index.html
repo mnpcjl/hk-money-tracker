@@ -1125,20 +1125,56 @@
             return '';
         }
 
+        function getCurrentReferenceDate() {
+            const now = new Date();
+            const tY = now.getFullYear();
+            const tM = now.getMonth() + 1;
+            const tD = now.getDate();
+
+            if (statsMode === 'year') {
+                const y = parseInt(statsYearPicker.value, 10);
+                return { year: isNaN(y) ? tY : y, month: tM, day: tD };
+            }
+            if (statsMode === 'month') {
+                const m = statsMonthPicker.value;
+                if (!m) return { year: tY, month: tM, day: tD };
+                const parts = m.split('-');
+                return {
+                    year: parseInt(parts[0], 10) || tY,
+                    month: parseInt(parts[1], 10) || tM,
+                    day: tD
+                };
+            }
+            if (statsMode === 'day') {
+                const d = statsDayPicker.value;
+                if (!d) return { year: tY, month: tM, day: tD };
+                const parts = d.split('-');
+                return {
+                    year: parseInt(parts[0], 10) || tY,
+                    month: parseInt(parts[1], 10) || tM,
+                    day: parseInt(parts[2], 10) || tD
+                };
+            }
+            return { year: tY, month: tM, day: tD };
+        }
+
         window.switchStatsMode = function(mode) {
             if (statsMode === mode) return;
+            const ref = getCurrentReferenceDate();
             statsMode = mode;
 
-            if (mode === 'year' && !statsYearPicker.value) {
-                const now = new Date();
-                statsYearPicker.value = String(now.getFullYear());
+            if (mode === 'year') {
+                const yStr = String(ref.year);
+                const exists = Array.from(statsYearPicker.options).some(o => o.value === yStr);
+                statsYearPicker.value = exists ? yStr : ((statsYearPicker.options[0] && statsYearPicker.options[0].value) || '');
             }
-            if (mode === 'month' && !statsMonthPicker.value) {
-                const now = new Date();
-                statsMonthPicker.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+            if (mode === 'month') {
+                statsMonthPicker.value = `${ref.year}-${pad(ref.month)}`;
             }
-            if (mode === 'day' && !statsDayPicker.value) {
-                statsDayPicker.value = todayStr();
+            if (mode === 'day') {
+                const daysInMonth = new Date(ref.year, ref.month, 0).getDate();
+                const clampedDay = Math.min(ref.day, daysInMonth);
+                statsDayPicker.value = `${ref.year}-${pad(ref.month)}-${pad(clampedDay)}`;
             }
 
             updateStatsModeUI();
@@ -1738,4 +1774,4 @@
         }
     </script>
 </body>
-</html>.
+</html>
