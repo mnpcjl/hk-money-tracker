@@ -198,7 +198,6 @@
                         </div>
                     </div>
 
-                    <!-- Repeat (only visible for new entries) -->
                     <div id="repeatSection" class="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
                         <div class="flex items-center justify-between gap-3">
                             <div class="min-w-0 flex-1">
@@ -291,12 +290,19 @@
                     </select>
                 </div>
 
-                <div class="inline-flex bg-zinc-100 dark:bg-zinc-800 rounded-xl p-1 gap-1 mb-6">
-                    <button id="statsAllTimeBtn" class="text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">All Time</button>
-                    <label class="relative cursor-pointer">
-                        <span id="statsMonthBtn" class="block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all">Month</span>
-                        <input type="month" id="statsMonthFilter" class="absolute inset-0 opacity-0 cursor-pointer" style="width:100%;height:100%;">
-                    </label>
+                <!-- Mode segmented control -->
+                <div class="inline-flex bg-zinc-100 dark:bg-zinc-800 rounded-xl p-1 gap-1 mb-3">
+                    <button type="button" data-stats-mode="all" id="statsModeAll" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">All</button>
+                    <button type="button" data-stats-mode="year" id="statsModeYear" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">Year</button>
+                    <button type="button" data-stats-mode="month" id="statsModeMonth" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">Month</button>
+                    <button type="button" data-stats-mode="day" id="statsModeDay" class="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all">Day</button>
+                </div>
+
+                <!-- Picker row (contextual) -->
+                <div id="statsPickerRow" class="hidden mb-3">
+                    <select id="statsYearPicker" class="hidden text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100"></select>
+                    <input type="month" id="statsMonthPicker" class="hidden text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
+                    <input type="date" id="statsDayPicker" class="hidden text-xs px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-0 rounded-xl text-zinc-700 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
                 </div>
 
                 <div id="donutChartWrapper" class="mb-6">
@@ -534,6 +540,7 @@
         let pendingImportRules = null;
         let autoLog = true;
         let pendingPromptRules = null;
+        let statsMode = 'all';
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
@@ -584,9 +591,10 @@
         const categoryBreakdownContainer = document.getElementById('categoryBreakdownContainer');
         const donutChartContainer = document.getElementById('donutChartContainer');
         const breakdownTypeFilter = document.getElementById('breakdownTypeFilter');
-        const statsAllTimeBtn = document.getElementById('statsAllTimeBtn');
-        const statsMonthBtn = document.getElementById('statsMonthBtn');
-        const statsMonthFilterInput = document.getElementById('statsMonthFilter');
+        const statsPickerRow = document.getElementById('statsPickerRow');
+        const statsYearPicker = document.getElementById('statsYearPicker');
+        const statsMonthPicker = document.getElementById('statsMonthPicker');
+        const statsDayPicker = document.getElementById('statsDayPicker');
         const sortModeSelect = document.getElementById('sortModeSelect');
         const historySubtitle = document.getElementById('historySubtitle');
         const toastContainer = document.getElementById('toastContainer');
@@ -698,6 +706,12 @@
             if (!dateStr) return '';
             const d = parseDate(dateStr);
             return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function formatDateShort(dateStr) {
+            if (!dateStr) return '';
+            const d = parseDate(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
         function showToast(message, type = 'success') {
@@ -1049,20 +1063,118 @@
             });
         }
 
-        function updateStatsFilterUI() {
-            const value = statsMonthFilterInput.value;
-            const isMonth = !!value;
-            if (isMonth) {
-                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white";
-                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm";
-                statsMonthBtn.textContent = formatMonthShort(value);
+        // ---------- STATS MODE / FILTER ----------
+        function populateYearPicker() {
+            const years = new Set();
+            transactions.forEach(t => {
+                if (t.date && t.date.length >= 4) {
+                    years.add(t.date.substring(0, 4));
+                }
+            });
+            const sorted = Array.from(years).sort().reverse();
+            const prevValue = statsYearPicker.value;
+            statsYearPicker.innerHTML = '';
+            if (sorted.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'No data';
+                statsYearPicker.appendChild(opt);
+                return;
+            }
+            sorted.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                statsYearPicker.appendChild(opt);
+            });
+            // Preserve previous selection if still valid
+            if (prevValue && sorted.includes(prevValue)) {
+                statsYearPicker.value = prevValue;
             } else {
-                statsAllTimeBtn.className = "text-xs px-4 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm";
-                statsMonthBtn.className = "block text-xs px-4 py-1.5 rounded-lg font-semibold transition-all text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white";
-                statsMonthBtn.textContent = "Month";
+                statsYearPicker.value = sorted[0];
             }
         }
 
+        function updateStatsModeUI() {
+            document.querySelectorAll('[data-stats-mode]').forEach(btn => {
+                if (btn.dataset.statsMode === statsMode) {
+                    btn.className = "text-xs px-3 py-1.5 rounded-lg font-semibold transition-all bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white shadow-sm";
+                } else {
+                    btn.className = "text-xs px-3 py-1.5 rounded-lg font-semibold transition-all text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white";
+                }
+            });
+
+            if (statsMode === 'all') {
+                statsPickerRow.classList.add('hidden');
+            } else {
+                statsPickerRow.classList.remove('hidden');
+                statsYearPicker.classList.toggle('hidden', statsMode !== 'year');
+                statsMonthPicker.classList.toggle('hidden', statsMode !== 'month');
+                statsDayPicker.classList.toggle('hidden', statsMode !== 'day');
+            }
+        }
+
+        function getFilteredStatsList(viewType) {
+            const allOfType = transactions.filter(t => t.type === viewType);
+            if (statsMode === 'all') return allOfType;
+            if (statsMode === 'year') {
+                const y = statsYearPicker.value;
+                if (!y) return allOfType;
+                return allOfType.filter(t => t.date.startsWith(y + '-'));
+            }
+            if (statsMode === 'month') {
+                const m = statsMonthPicker.value;
+                if (!m) return allOfType;
+                return allOfType.filter(t => t.date.startsWith(m));
+            }
+            if (statsMode === 'day') {
+                const d = statsDayPicker.value;
+                if (!d) return allOfType;
+                return allOfType.filter(t => t.date === d);
+            }
+            return allOfType;
+        }
+
+        function getStatsModeLabel() {
+            if (statsMode === 'all') return 'All Time';
+            if (statsMode === 'year') {
+                const y = statsYearPicker.value;
+                return y ? y : 'Year';
+            }
+            if (statsMode === 'month') {
+                const m = statsMonthPicker.value;
+                return m ? formatMonthShort(m) : 'Month';
+            }
+            if (statsMode === 'day') {
+                const d = statsDayPicker.value;
+                return d ? formatDateDisplay(d) : 'Day';
+            }
+            return '';
+        }
+
+        window.switchStatsMode = function(mode) {
+            if (statsMode === mode) return;
+            statsMode = mode;
+
+            if (mode === 'year' && !statsYearPicker.value) {
+                const now = new Date();
+                const currentYear = String(now.getFullYear());
+                const hasCurrent = Array.from(statsYearPicker.options).some(o => o.value === currentYear);
+                statsYearPicker.value = hasCurrent ? currentYear : (statsYearPicker.options[0] && statsYearPicker.options[0].value) || '';
+            }
+            if (mode === 'month' && !statsMonthPicker.value) {
+                const now = new Date();
+                statsMonthPicker.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+            }
+            if (mode === 'day' && !statsDayPicker.value) {
+                statsDayPicker.value = todayStr();
+            }
+
+            updateStatsModeUI();
+            renderCategoryBreakdown();
+        };
+
+        // ---------- DASHBOARD ----------
         function updateDashboard() {
             let totalIncome = 0, totalExpense = 0;
             transactions.forEach(t => {
@@ -1078,6 +1190,7 @@
             } else {
                 netBalanceDisplay.className = "text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white";
             }
+            populateYearPicker();
             renderCategoryBreakdown();
             renderTransactionFeed();
             updateRulesCount();
@@ -1090,11 +1203,8 @@
 
         function renderCategoryBreakdown() {
             const viewType = breakdownTypeFilter.value;
-            const filterMonth = statsMonthFilterInput.value;
             const allOfType = transactions.filter(t => t.type === viewType);
-            const list = filterMonth
-                ? allOfType.filter(t => t.date.startsWith(filterMonth))
-                : allOfType;
+            const list = getFilteredStatsList(viewType);
             const total = list.reduce((acc, curr) => acc + curr.amount, 0);
 
             donutChartContainer.innerHTML = '';
@@ -1106,8 +1216,9 @@
                     title = `No ${viewType} logged yet`;
                     subtitle = `Log your first ${viewType} in the Dashboard tab to see the breakdown.`;
                 } else {
-                    title = `No ${viewType} in ${formatMonthShort(filterMonth)}`;
-                    subtitle = `Try a different month, or switch to All Time.`;
+                    const periodLabel = getStatsModeLabel();
+                    title = `No ${viewType} in ${periodLabel}`;
+                    subtitle = `Try a different period.`;
                 }
                 donutChartContainer.innerHTML = `
                     <div class="w-full h-full flex flex-col items-center justify-center text-center px-4">
@@ -1394,15 +1505,15 @@
             customRepeatRow.classList.toggle('hidden', v !== 'custom');
         });
 
-        statsAllTimeBtn.addEventListener('click', () => {
-            statsMonthFilterInput.value = '';
-            updateStatsFilterUI();
-            renderCategoryBreakdown();
-        });
-        statsMonthFilterInput.addEventListener('change', () => {
-            updateStatsFilterUI();
-            renderCategoryBreakdown();
-        });
+        // Stats mode buttons
+        document.getElementById('statsModeAll').addEventListener('click', () => switchStatsMode('all'));
+        document.getElementById('statsModeYear').addEventListener('click', () => switchStatsMode('year'));
+        document.getElementById('statsModeMonth').addEventListener('click', () => switchStatsMode('month'));
+        document.getElementById('statsModeDay').addEventListener('click', () => switchStatsMode('day'));
+
+        statsYearPicker.addEventListener('change', () => renderCategoryBreakdown());
+        statsMonthPicker.addEventListener('change', () => renderCategoryBreakdown());
+        statsDayPicker.addEventListener('change', () => renderCategoryBreakdown());
 
         flowForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1596,9 +1707,11 @@
             pendingImportRules = null;
             sortMode = 'custom';
             sortModeSelect.value = 'custom';
+            statsMode = 'all';
             saveData();
             saveRules();
             updateDashboard();
+            updateStatsModeUI();
             importConfirmModal.classList.add('hidden');
             showToast('Backup restored successfully');
         });
@@ -1611,11 +1724,14 @@
             quickAdds = { expense: [], income: [] };
             sortMode = 'date-desc';
             sortModeSelect.value = 'date-desc';
-            statsMonthFilterInput.value = '';
+            statsMode = 'all';
+            statsYearPicker.value = '';
+            statsMonthPicker.value = '';
+            statsDayPicker.value = '';
             saveData();
             saveRules();
             saveQuickAdds();
-            updateStatsFilterUI();
+            updateStatsModeUI();
             renderQuickAddButtons();
             updateDashboard();
             confirmModal.classList.add('hidden');
@@ -1636,7 +1752,8 @@
             loadAutoLogPref();
             loadQuickAdds();
             setMode('expense');
-            updateStatsFilterUI();
+            populateYearPicker();
+            updateStatsModeUI();
             updateDashboard();
             setTimeout(processRecurringRules, 500);
         });
