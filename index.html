@@ -55,9 +55,7 @@
             appearance: none;
             min-width: 0;
             max-width: 100%;
-            width: 100%;
             box-sizing: border-box;
-            display: block;
         }
         input[type="date"]::-webkit-date-and-time-value,
         input[type="month"]::-webkit-date-and-time-value { text-align: left; }
@@ -708,12 +706,6 @@
             return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
-        function formatDateShort(dateStr) {
-            if (!dateStr) return '';
-            const d = parseDate(dateStr);
-            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        }
-
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900' : 'bg-rose-500 text-white';
@@ -1087,7 +1079,6 @@
                 opt.textContent = y;
                 statsYearPicker.appendChild(opt);
             });
-            // Preserve previous selection if still valid
             if (prevValue && sorted.includes(prevValue)) {
                 statsYearPicker.value = prevValue;
             } else {
@@ -1505,7 +1496,6 @@
             customRepeatRow.classList.toggle('hidden', v !== 'custom');
         });
 
-        // Stats mode buttons
         document.getElementById('statsModeAll').addEventListener('click', () => switchStatsMode('all'));
         document.getElementById('statsModeYear').addEventListener('click', () => switchStatsMode('year'));
         document.getElementById('statsModeMonth').addEventListener('click', () => switchStatsMode('month'));
