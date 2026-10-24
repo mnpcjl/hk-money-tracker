@@ -167,7 +167,7 @@
             <section class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800/60 shadow-md p-5 md:p-6 mb-8 transition-all duration-300" id="formCard">
                 <h2 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2 mb-5">
                     <i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i>
-                    Log New Money Flow
+                    <span id="formHeaderText">Log New Money Flow</span>
                 </h2>
 
                 <form id="flowForm" onsubmit="return false;">
@@ -203,7 +203,7 @@
                             <select id="subcategorySelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition"></select>
                         </div>
 
-                        <div class="min-w-0">
+                        <div class="min-w-0" id="dateInputWrapper">
                             <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="dateInput">Date</label>
                             <div class="overflow-hidden">
                                 <input type="date" id="dateInput" required class="w-full min-w-0 px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
@@ -368,9 +368,14 @@
                                 <span class="flex items-center gap-2"><i class="fa-solid fa-rotate"></i> Recurring Rules</span>
                                 <span id="recurringRulesCount" class="text-xs text-zinc-500 dark:text-zinc-400">0</span>
                             </button>
-                            <button id="autoLogToggleBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Auto-log</span>
-                                <span id="autoLogState" class="text-xs text-zinc-500 dark:text-zinc-400">On</span>
+                            <button id="autoLogToggleBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2 text-left">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <div>
+                                        <div>Auto-log</div>
+                                        <div id="autoLogState" class="text-xs text-zinc-500 dark:text-zinc-400 font-normal mt-0.5">Log automatically</div>
+                                    </div>
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -427,6 +432,7 @@
 
     <div id="toastContainer" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full px-4"></div>
 
+    <!-- Clear Data Modal -->
     <div id="confirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Clear All Data?</h3>
@@ -438,6 +444,7 @@
         </div>
     </div>
 
+    <!-- Import Confirmation Modal -->
     <div id="importConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[65] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Replace All Data?</h3>
@@ -449,6 +456,7 @@
         </div>
     </div>
 
+    <!-- Recurring Rules Modal -->
     <div id="rulesModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[68] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
             <div class="flex items-start justify-between mb-4">
@@ -463,6 +471,19 @@
         </div>
     </div>
 
+    <!-- Delete Rule Confirmation Modal (Z-index Fixed) -->
+    <div id="ruleDeleteModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[85] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Delete this rule?</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will stop future transactions from being logged. Your past entries will remain untouched.</p>
+            <div class="flex gap-3 justify-end">
+                <button id="cancelRuleDeleteBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
+                <button id="confirmRuleDeleteBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Delete Rule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Modal (Ask-first mode) -->
     <div id="promptModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[75] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Recurring Transactions Due</h3>
@@ -474,6 +495,7 @@
         </div>
     </div>
 
+    <!-- Transaction Details Modal -->
     <div id="detailModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
             <div class="flex items-start justify-between mb-4">
@@ -519,6 +541,7 @@
         </div>
     </div>
 
+    <!-- Delete Transaction Confirmation Modal -->
     <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Delete this entry?</h3>
@@ -555,9 +578,11 @@
         let quickAdds = { expense: [], income: [] };
         let currentMode = 'expense';
         let editingId = null;
+        let editingRuleId = null;
         let sortMode = 'date-desc';
         let currentTab = 'dashboard';
         let pendingDeleteId = null;
+        let pendingRuleDeleteId = null;
         let detailId = null;
         let cameFromHistory = false;
         let pendingImportData = null;
@@ -587,6 +612,7 @@
         }
 
         const formHeaderIcon = document.getElementById('formHeaderIcon');
+        const formHeaderText = document.getElementById('formHeaderText');
         const toggleExpenseBtn = document.getElementById('toggleExpenseBtn');
         const toggleIncomeBtn = document.getElementById('toggleIncomeBtn');
         const flowForm = document.getElementById('flowForm');
@@ -594,6 +620,7 @@
         const categorySelect = document.getElementById('categorySelect');
         const subcategorySelect = document.getElementById('subcategorySelect');
         const dateInput = document.getElementById('dateInput');
+        const dateInputWrapper = document.getElementById('dateInputWrapper');
         const noteInput = document.getElementById('noteInput');
         const submitFlowBtn = document.getElementById('submitFlowBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
@@ -640,6 +667,10 @@
         const importConfirmText = document.getElementById('importConfirmText');
         const cancelImportBtn = document.getElementById('cancelImportBtn');
         const confirmImportBtn = document.getElementById('confirmImportBtn');
+
+        const ruleDeleteModal = document.getElementById('ruleDeleteModal');
+        const cancelRuleDeleteBtn = document.getElementById('cancelRuleDeleteBtn');
+        const confirmRuleDeleteBtn = document.getElementById('confirmRuleDeleteBtn');
 
         const rulesModal = document.getElementById('rulesModal');
         const closeRulesBtn = document.getElementById('closeRulesBtn');
@@ -1002,26 +1033,6 @@
             return anchorDate;
         }
 
-        function createRuleFromForm() {
-            const recurrence = getRecurrenceFromForm();
-            if (!recurrence) return null;
-            const amount = parseFloat(amountInput.value);
-            if (isNaN(amount) || amount <= 0) return null;
-            const anchorDate = dateInput.value || todayStr();
-            return {
-                id: Date.now() + Math.floor(Math.random() * 1000),
-                type: currentMode,
-                amount: amount,
-                category: categorySelect.value,
-                subcategory: subcategorySelect.value || '',
-                note: noteInput.value.trim(),
-                recurrence: recurrence,
-                anchorDate: anchorDate,
-                lastOccurrenceIndex: 0,
-                createdAt: Date.now()
-            };
-        }
-
         function getPendingOccurrences(rule) {
             const today = todayStr();
             const cap = addDaysStr(today, -90);
@@ -1108,7 +1119,7 @@
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm";
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                if (editingId === null) {
+                if (editingId === null && editingRuleId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Expense';
                     formHeaderIcon.className = "fa-solid fa-minus-circle text-rose-500";
                 }
@@ -1116,7 +1127,7 @@
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-emerald-500 text-white shadow-sm";
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                if (editingId === null) {
+                if (editingId === null && editingRuleId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Income';
                     formHeaderIcon.className = "fa-solid fa-plus-circle text-emerald-500";
                 }
@@ -1313,7 +1324,7 @@
 
         function updateRulesCount() {
             recurringRulesCount.textContent = rules.length + (rules.length === 1 ? ' rule' : ' rules');
-            autoLogState.textContent = autoLog ? 'On' : 'Off';
+            autoLogState.textContent = autoLog ? 'Log automatically' : 'Ask before logging';
         }
 
         function renderCategoryBreakdown() {
@@ -1498,6 +1509,8 @@
             closeDetail();
             switchTab('dashboard');
             editingId = id;
+            editingRuleId = null;
+            dateInputWrapper.classList.remove('hidden');
             setMode(t.type);
             amountInput.value = t.amount;
             categorySelect.value = t.category;
@@ -1505,7 +1518,8 @@
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
             noteInput.value = t.note;
-            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-pen text-zinc-500" id="formHeaderIcon"></i> Edit Money Flow';
+            formHeaderText.textContent = 'Edit Money Flow';
+            formHeaderIcon.className = 'fa-solid fa-pen text-zinc-500';
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
@@ -1516,14 +1530,68 @@
             }, 150);
         };
 
+        window.startEditRule = function(id) {
+            const r = rules.find(item => item.id === id);
+            if (!r) return;
+            closeRulesModal();
+            switchTab('dashboard');
+            editingRuleId = id;
+            editingId = null;
+            dateInputWrapper.classList.add('hidden'); // Hide date for rules
+            setMode(r.type);
+            amountInput.value = r.amount;
+            categorySelect.value = r.category;
+            populateSubcategories();
+            subcategorySelect.value = r.subcategory || '';
+            noteInput.value = r.note;
+            formHeaderText.textContent = 'Edit Recurring Rule';
+            formHeaderIcon.className = 'fa-solid fa-rotate text-zinc-500';
+            submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Rule';
+            submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+            cancelEditBtn.classList.remove('hidden');
+            repeatSection.classList.remove('hidden');
+
+            // Populate Recurrence
+            resetRepeatUI();
+            const rec = r.recurrence;
+            if (rec.freq === 'daily') repeatSelect.value = 'daily';
+            else if (rec.freq === 'weekdays') repeatSelect.value = 'weekdays';
+            else if (rec.freq === 'weekends') repeatSelect.value = 'weekends';
+            else if (rec.freq === 'weekly' && rec.interval === 1) repeatSelect.value = 'weekly';
+            else if (rec.freq === 'weekly' && rec.interval === 2) repeatSelect.value = 'biweekly';
+            else if (rec.freq === 'monthly' && rec.interval === 1) repeatSelect.value = 'monthly';
+            else if (rec.freq === 'monthly' && rec.interval === 3) repeatSelect.value = 'quarterly';
+            else if (rec.freq === 'monthly' && rec.interval === 6) repeatSelect.value = 'halfyearly';
+            else if (rec.freq === 'yearly') repeatSelect.value = 'yearly';
+            else if (rec.freq === 'daysOfWeek') {
+                repeatSelect.value = 'daysOfWeek';
+                currentSpecificDays = [...rec.days];
+            } else {
+                repeatSelect.value = 'custom';
+                customInterval.value = rec.interval;
+                customUnit.value = rec.freq;
+            }
+            
+            // Trigger UI changes
+            repeatSelect.dispatchEvent(new Event('change'));
+            renderDaysOfWeekButtons();
+
+            setTimeout(() => {
+                const formCard = document.getElementById('formCard');
+                if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 150);
+        };
+
         function cancelEdit() {
             const wasFromHistory = cameFromHistory;
             cameFromHistory = false;
             editingId = null;
+            editingRuleId = null;
             amountInput.value = '';
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
-            document.querySelector('#formCard h2').innerHTML = '<i class="fa-solid fa-plus-circle text-rose-500" id="formHeaderIcon"></i> Log New Money Flow';
+            dateInputWrapper.classList.remove('hidden');
+            formHeaderText.textContent = 'Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
             resetRepeatUI();
             repeatSection.classList.remove('hidden');
@@ -1639,31 +1707,67 @@
                 return;
             }
 
-            const entryData = {
-                date: dateInput.value,
-                type: currentMode,
-                category: categorySelect.value,
-                subcategory: subcategorySelect.value || '',
-                amount: amount,
-                note: noteInput.value.trim()
-            };
-            if (editingId !== null) {
+            if (editingRuleId !== null) {
+                // Update existing rule
+                const index = rules.findIndex(r => r.id === editingRuleId);
+                if (index !== -1) {
+                    rules[index].type = currentMode;
+                    rules[index].amount = amount;
+                    rules[index].category = categorySelect.value;
+                    rules[index].subcategory = subcategorySelect.value || '';
+                    rules[index].note = noteInput.value.trim();
+                    rules[index].recurrence = getRecurrenceFromForm();
+                }
+                saveRules();
+                cancelEdit();
+                showToast('Recurring rule updated');
+            } else if (editingId !== null) {
+                // Update existing transaction
+                const entryData = {
+                    date: dateInput.value,
+                    type: currentMode,
+                    category: categorySelect.value,
+                    subcategory: subcategorySelect.value || '',
+                    amount: amount,
+                    note: noteInput.value.trim()
+                };
                 const index = transactions.findIndex(t => t.id === editingId);
                 if (index !== -1) transactions[index] = { ...transactions[index], ...entryData };
                 cancelEdit();
                 showToast('Entry updated successfully');
             } else {
-                const newRule = createRuleFromForm();
+                // Create new
+                const recurrence = getRecurrenceFromForm();
+                const entryData = {
+                    date: dateInput.value,
+                    type: currentMode,
+                    category: categorySelect.value,
+                    subcategory: subcategorySelect.value || '',
+                    amount: amount,
+                    note: noteInput.value.trim()
+                };
                 const newEntry = { id: Date.now(), ...entryData };
                 transactions.unshift(newEntry);
-                if (newRule) {
-                    rules.push(newRule);
+                
+                if (recurrence) {
+                    rules.push({
+                        id: Date.now() + Math.floor(Math.random() * 1000),
+                        type: currentMode,
+                        amount: amount,
+                        category: categorySelect.value,
+                        subcategory: subcategorySelect.value || '',
+                        note: noteInput.value.trim(),
+                        recurrence: recurrence,
+                        anchorDate: dateInput.value || todayStr(),
+                        lastOccurrenceIndex: 0,
+                        createdAt: Date.now()
+                    });
                     saveRules();
-                    updateRulesCount();
                     showToast('Entry saved • Rule created');
                 } else {
                     showToast('Entry saved successfully');
                 }
+                
                 sortMode = 'date-desc';
                 sortModeSelect.value = 'date-desc';
                 addToQuickAdd(currentMode, amount);
@@ -1715,30 +1819,50 @@
                                 <span>from ${formatDateDisplay(r.anchorDate)}</span>
                             </div>
                         </div>
-                        <button onclick="deleteRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-rose-500 transition flex-shrink-0" title="Delete rule">
-                            <i class="fa-solid fa-trash-can text-sm"></i>
-                        </button>
+                        <div class="flex items-center gap-1 flex-shrink-0">
+                            <button onclick="startEditRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition" title="Edit rule">
+                                <i class="fa-solid fa-pen text-sm"></i>
+                            </button>
+                            <button onclick="deleteRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-rose-500 transition" title="Delete rule">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
         window.deleteRule = function(id) {
-            const rule = rules.find(r => r.id === id);
-            if (!rule) return;
-            rules = rules.filter(r => r.id !== id);
+            pendingRuleDeleteId = id;
+            ruleDeleteModal.classList.remove('hidden');
+        };
+
+        cancelRuleDeleteBtn.addEventListener('click', () => {
+            pendingRuleDeleteId = null;
+            ruleDeleteModal.classList.add('hidden');
+        });
+
+        confirmRuleDeleteBtn.addEventListener('click', () => {
+            if (pendingRuleDeleteId === null) return;
+            rules = rules.filter(r => r.id !== pendingRuleDeleteId);
             saveRules();
             updateRulesCount();
             renderRulesList();
+            pendingRuleDeleteId = null;
+            ruleDeleteModal.classList.add('hidden');
             showToast('Rule deleted • Past entries kept', 'error');
-        };
+        });
+
+        function closeRulesModal() {
+            rulesModal.classList.add('hidden');
+        }
 
         recurringRulesBtn.addEventListener('click', () => {
             renderRulesList();
             rulesModal.classList.remove('hidden');
         });
-        closeRulesBtn.addEventListener('click', () => rulesModal.classList.add('hidden'));
-        rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) rulesModal.classList.add('hidden'); });
+        closeRulesBtn.addEventListener('click', closeRulesModal);
+        rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
 
         autoLogToggleBtn.addEventListener('click', () => {
             autoLog = !autoLog;
@@ -1748,9 +1872,20 @@
         });
 
         dismissPromptBtn.addEventListener('click', () => {
+            if (pendingPromptRules) {
+                // Skip these occurrences permanently
+                pendingPromptRules.forEach(item => {
+                    const { rule, occurrences } = item;
+                    if (occurrences.length > 0) {
+                        rule.lastOccurrenceIndex = occurrences[occurrences.length - 1].index;
+                    }
+                });
+                saveRules();
+            }
             pendingPromptRules = null;
             promptModal.classList.add('hidden');
         });
+        
         confirmPromptBtn.addEventListener('click', () => {
             if (pendingPromptRules) {
                 const logged = applyRules(pendingPromptRules);
