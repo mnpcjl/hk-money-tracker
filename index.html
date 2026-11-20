@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tally — Money Flow Tracker</title>
+    <title>Tally — Money Flow</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)">
@@ -62,25 +62,6 @@
         input[type="date"]::-webkit-calendar-picker-indicator,
         input[type="month"]::-webkit-calendar-picker-indicator { margin-left: 4px; padding: 0; cursor: pointer; }
 
-        .weekday-btn {
-            width: 2rem; height: 2rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: all 0.15s ease;
-            display: inline-flex; align-items: center; justify-content: center;
-            border: none; cursor: pointer;
-        }
-        .weekday-btn.inactive {
-            background: #f4f4f5; color: #52525b;
-        }
-        .dark .weekday-btn.inactive { background: #27272a; color: #a1a1aa; }
-        .weekday-btn.inactive:hover { background: #e4e4e7; }
-        .dark .weekday-btn.inactive:hover { background: #3f3f46; }
-        .weekday-btn.active {
-            background: #18181b; color: #ffffff;
-        }
-        .dark .weekday-btn.active { background: #fafafa; color: #09090b; }
     </style>
 </head>
 <body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-100 h-[100dvh] overflow-hidden transition-colors duration-200 flex flex-col">
@@ -93,7 +74,6 @@
                     <span class="w-9 h-9 md:w-10 md:h-10 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl flex items-center justify-center text-lg md:text-xl font-black leading-none flex-shrink-0">T</span>
                     Tally
                 </h1>
-                <p class="text-xs md:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Money Flow Tracker</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -216,49 +196,6 @@
                         </div>
                     </div>
 
-                    <div id="repeatSection" class="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                        <div class="flex items-center justify-between gap-3">
-                            <div class="min-w-0 flex-1">
-                                <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1.5" for="repeatSelect">Repeat</label>
-                                <select id="repeatSelect" class="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition">
-                                    <option value="">Never</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekdays">Weekdays</option>
-                                    <option value="weekends">Weekends</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="biweekly">Biweekly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="quarterly">Quarterly</option>
-                                    <option value="halfyearly">Half-yearly</option>
-                                    <option value="yearly">Yearly</option>
-                                    <option value="daysOfWeek">Days of week</option>
-                                    <option value="custom">Custom</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="daysOfWeekRow" class="hidden mt-2">
-                            <div class="flex gap-1.5" id="daysOfWeekPicker">
-                                <button type="button" class="weekday-btn inactive" data-weekday="0">S</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="1">M</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="2">T</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="3">W</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="4">T</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="5">F</button>
-                                <button type="button" class="weekday-btn inactive" data-weekday="6">S</button>
-                            </div>
-                        </div>
-                        <div id="customRepeatRow" class="hidden mt-2 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
-                            <span class="text-xs">Every</span>
-                            <input type="number" id="customInterval" min="1" max="365" value="3" class="w-16 px-2 py-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
-                            <select id="customUnit" class="px-2 py-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100">
-                                <option value="daily">day(s)</option>
-                                <option value="weekly">week(s)</option>
-                                <option value="monthly">month(s)</option>
-                                <option value="yearly">year(s)</option>
-                            </select>
-                        </div>
-                        <p id="repeatHint" class="text-[10px] text-zinc-400 mt-1.5">A recurring rule will auto-log future entries. Manage rules in Settings.</p>
-                    </div>
 
                     <div class="flex gap-3 mt-5">
                         <button type="submit" id="submitFlowBtn" class="flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2">
@@ -362,25 +299,6 @@
                     </div>
 
                     <div>
-                        <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Recurring</p>
-                        <div class="space-y-2">
-                            <button id="recurringRulesBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-rotate"></i> Recurring Rules</span>
-                                <span id="recurringRulesCount" class="text-xs text-zinc-500 dark:text-zinc-400">0</span>
-                            </button>
-                            <button id="autoLogToggleBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-between gap-2 text-left">
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid fa-bolt"></i>
-                                    <div>
-                                        <div>Auto-log</div>
-                                        <div id="autoLogState" class="text-xs text-zinc-500 dark:text-zinc-400 font-normal mt-0.5">Log automatically</div>
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
                         <p class="text-xs uppercase font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">Export</p>
                         <button id="exportBtn" class="w-full px-4 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition text-sm font-semibold flex items-center justify-center gap-2">
                             <i class="fa-solid fa-download"></i> Export Data
@@ -396,7 +314,7 @@
                     </div>
 
                     <div>
-                        <p class="text-xs uppercase font-semibold tracking-wider text-rose-500 dark:text-rose-400 mb-2">Danger Zone</p>
+                        <p class="text-xs uppercase font-semibold tracking-wider text-rose-500 dark:text-rose-400 mb-2">Reset</p>
                         <button id="resetBtn" class="w-full px-4 py-3 rounded-xl border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-semibold text-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-trash-can"></i> Clear All Data
                         </button>
@@ -405,9 +323,6 @@
             </div>
         </section>
 
-        <footer class="mt-8 text-center text-xs text-zinc-400 dark:text-zinc-600 py-4">
-            Tally • Stored Locally in Your Browser • Private & Safe
-        </footer>
     </div>
 
     <!-- Mobile Bottom Navigation -->
@@ -436,7 +351,7 @@
     <div id="confirmModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
             <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Clear All Data?</h3>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will permanently delete all your logged money flow entries and recurring rules. This action cannot be undone unless you exported a JSON backup.</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will permanently delete all your logged money flow entries. This action cannot be undone unless you exported a JSON backup.</p>
             <div class="flex gap-3 justify-end">
                 <button id="cancelResetBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmResetBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Yes, Clear All</button>
@@ -452,45 +367,6 @@
             <div class="flex gap-3 justify-end">
                 <button id="cancelImportBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
                 <button id="confirmImportBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Replace All</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recurring Rules Modal -->
-    <div id="rulesModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[68] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800 max-h-[85vh] overflow-y-auto">
-            <div class="flex items-start justify-between mb-4">
-                <h3 class="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-rotate text-zinc-400"></i> Recurring Rules
-                </h3>
-                <button id="closeRulesBtn" class="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div id="rulesList" class="space-y-2"></div>
-        </div>
-    </div>
-
-    <!-- Delete Rule Confirmation Modal (Z-index Fixed) -->
-    <div id="ruleDeleteModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[85] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
-            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Delete this rule?</h3>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This will stop future transactions from being logged. Your past entries will remain untouched.</p>
-            <div class="flex gap-3 justify-end">
-                <button id="cancelRuleDeleteBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Cancel</button>
-                <button id="confirmRuleDeleteBtn" class="px-4 py-2 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition">Delete Rule</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Prompt Modal (Ask-first mode) -->
-    <div id="promptModal" class="hidden fixed inset-0 bg-zinc-950/50 backdrop-blur-sm z-[75] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-zinc-900 rounded-2xl max-w-sm w-full p-6 shadow-xl border border-zinc-100 dark:border-zinc-800">
-            <h3 class="text-lg font-bold text-zinc-900 dark:text-white mb-2">Recurring Transactions Due</h3>
-            <p id="promptModalText" class="text-sm text-zinc-500 dark:text-zinc-400 mb-6"></p>
-            <div class="flex gap-3 justify-end">
-                <button id="dismissPromptBtn" class="px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition">Not Now</button>
-                <button id="confirmPromptBtn" class="px-4 py-2 text-sm font-semibold text-white bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 hover:bg-black dark:hover:bg-white rounded-xl transition">Log All</button>
             </div>
         </div>
     </div>
@@ -555,48 +431,39 @@
 
     <script>
         const EXPENSE_CATEGORIES = {
-            "Transport": ["MTR", "Bus", "Minibus", "Tram", "Ferry", "Taxi", "Others"],
-            "Food": ["Breakfast", "Lunch", "Dinner", "Groceries", "Coffee", "Drinks", "Others"],
-            "Shopping": ["Clothing", "Electronics", "Household", "Personal Care", "Others"],
-            "Bills & Housing": ["Rent", "Utilities", "Mobile", "Subscriptions", "Others"],
-            "Entertainment": ["Movies", "Gaming", "Socializing", "Sports", "Others"],
-            "Health & Medical": ["Doctor", "Pharmacy", "Insurance", "Others"],
+            "Transport": ["MTR", "Bus", "Minibus", "Taxi", "Others"],
+            "Food": ["Meals", "Groceries", "Coffee & Drinks", "Other"],
+            "Shopping": ["Clothing", "Electronics", "Home", "Other"],
+            "Bills & Housing": ["Rent", "Utilities", "Phone", "Subscriptions", "Other"],
+            "Entertainment": ["Movies", "Gaming", "Social", "Sports", "Other"],
+            "Health & Medical": ["Medical", "Pharmacy", "Insurance", "Other"],
             "Others": ["General"]
         };
 
         const INCOME_CATEGORIES = {
-            "Salary": ["Monthly Salary", "Bonus", "Overtime", "Others"],
+            "Salary": ["Salary", "Bonus", "Other"],
             "Tutoring": ["Private Tutoring", "Agency Teaching", "Note Sales", "Others"],
-            "Freelance": ["Part-time", "Project Fee", "Online Sales", "Others"],
-            "Gifts & Luck": ["Cash Found", "Red Packet", "Family Gift"],
+            "Freelance": ["Projects", "Sales", "Other"],
+            "Gifts & Luck": ["Family Gift", "Red Packet", "Voucher", "Other"],
             "Investments": ["Dividends", "Interest", "Cash Back"],
             "Others": ["Refund", "Custom"]
         };
 
         let transactions = [];
-        let rules = [];
         let quickAdds = { expense: [], income: [] };
         let currentMode = 'expense';
         let editingId = null;
-        let editingRuleId = null;
         let sortMode = 'date-desc';
         let currentTab = 'dashboard';
         let pendingDeleteId = null;
-        let pendingRuleDeleteId = null;
         let detailId = null;
         let cameFromHistory = false;
         let pendingImportData = null;
-        let pendingImportRules = null;
-        let autoLog = true;
-        let pendingPromptRules = null;
         let statsMode = 'all';
-        let currentSpecificDays = [];
 
         const STORAGE_KEY = 'hk_tracker_data_v2';
         const THEME_KEY = 'hk_tracker_theme';
         const QUICKADD_KEY = 'hk_tracker_quickadd_v1';
-        const RULES_KEY = 'hk_tracker_rules_v1';
-        const AUTOLOG_KEY = 'hk_tracker_autolog_v1';
         const MAX_VISIBLE_TOASTS = 3;
 
         let storageUsable = true;
@@ -625,13 +492,6 @@
         const submitFlowBtn = document.getElementById('submitFlowBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const quickAddContainer = document.getElementById('quickAddContainer');
-        const repeatSection = document.getElementById('repeatSection');
-        const repeatSelect = document.getElementById('repeatSelect');
-        const customRepeatRow = document.getElementById('customRepeatRow');
-        const customInterval = document.getElementById('customInterval');
-        const customUnit = document.getElementById('customUnit');
-        const daysOfWeekRow = document.getElementById('daysOfWeekRow');
-        const daysOfWeekPicker = document.getElementById('daysOfWeekPicker');
 
         const netBalanceDisplay = document.getElementById('netBalanceDisplay');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
@@ -668,23 +528,6 @@
         const cancelImportBtn = document.getElementById('cancelImportBtn');
         const confirmImportBtn = document.getElementById('confirmImportBtn');
 
-        const ruleDeleteModal = document.getElementById('ruleDeleteModal');
-        const cancelRuleDeleteBtn = document.getElementById('cancelRuleDeleteBtn');
-        const confirmRuleDeleteBtn = document.getElementById('confirmRuleDeleteBtn');
-
-        const rulesModal = document.getElementById('rulesModal');
-        const closeRulesBtn = document.getElementById('closeRulesBtn');
-        const rulesList = document.getElementById('rulesList');
-        const recurringRulesBtn = document.getElementById('recurringRulesBtn');
-        const recurringRulesCount = document.getElementById('recurringRulesCount');
-        const autoLogToggleBtn = document.getElementById('autoLogToggleBtn');
-        const autoLogState = document.getElementById('autoLogState');
-
-        const promptModal = document.getElementById('promptModal');
-        const promptModalText = document.getElementById('promptModalText');
-        const dismissPromptBtn = document.getElementById('dismissPromptBtn');
-        const confirmPromptBtn = document.getElementById('confirmPromptBtn');
-
         const detailModal = document.getElementById('detailModal');
         const closeDetailBtn = document.getElementById('closeDetailBtn');
         const detailIcon = document.getElementById('detailIcon');
@@ -705,34 +548,6 @@
         function pad(n) { return String(n).padStart(2, '0'); }
         function formatDate(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
         function parseDate(str) { const [y,m,d] = str.split('-').map(Number); return new Date(y, m-1, d); }
-        function todayStr() { return formatDate(new Date()); }
-
-        function addDaysStr(dateStr, n) {
-            const d = parseDate(dateStr);
-            d.setDate(d.getDate() + n);
-            return formatDate(d);
-        }
-
-        function addMonthsStr(dateStr, n) {
-            const d = parseDate(dateStr);
-            const day = d.getDate();
-            d.setDate(1);
-            d.setMonth(d.getMonth() + n);
-            const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-            d.setDate(Math.min(day, lastDay));
-            return formatDate(d);
-        }
-
-        function addYearsStr(dateStr, n) {
-            const d = parseDate(dateStr);
-            const day = d.getDate();
-            d.setDate(1);
-            d.setFullYear(d.getFullYear() + n);
-            const lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-            d.setDate(Math.min(day, lastDay));
-            return formatDate(d);
-        }
-
         function getFormattedDate(offsetDays = 0) {
             const date = new Date();
             date.setDate(date.getDate() + offsetDays);
@@ -824,28 +639,6 @@
             return ok;
         }
 
-        function loadRules() {
-            const stored = storageGet(RULES_KEY);
-            if (!stored) { rules = []; return; }
-            try {
-                const parsed = JSON.parse(stored);
-                rules = Array.isArray(parsed) ? parsed : [];
-            } catch (e) { rules = []; }
-        }
-
-        function saveRules() {
-            storageSet(RULES_KEY, JSON.stringify(rules));
-        }
-
-        function loadAutoLogPref() {
-            const stored = storageGet(AUTOLOG_KEY);
-            autoLog = stored === null ? true : stored === 'true';
-        }
-
-        function saveAutoLogPref() {
-            storageSet(AUTOLOG_KEY, autoLog ? 'true' : 'false');
-        }
-
         function loadQuickAdds() {
             const stored = storageGet(QUICKADD_KEY);
             if (!stored) { quickAdds = { expense: [], income: [] }; return; }
@@ -907,219 +700,13 @@
             quickAddContainer.innerHTML = html;
         }
 
-        function renderDaysOfWeekButtons() {
-            daysOfWeekPicker.querySelectorAll('.weekday-btn').forEach(b => {
-                const day = parseInt(b.dataset.weekday, 10);
-                if (currentSpecificDays.includes(day)) {
-                    b.classList.add('active');
-                    b.classList.remove('inactive');
-                } else {
-                    b.classList.add('inactive');
-                    b.classList.remove('active');
-                }
-            });
-        }
-
-        daysOfWeekPicker.addEventListener('click', (e) => {
-            const btn = e.target.closest('.weekday-btn');
-            if (!btn) return;
-            const day = parseInt(btn.dataset.weekday, 10);
-            if (isNaN(day)) return;
-            if (currentSpecificDays.includes(day)) {
-                currentSpecificDays = currentSpecificDays.filter(d => d !== day);
-            } else {
-                currentSpecificDays.push(day);
-                currentSpecificDays.sort((a, b) => a - b);
-            }
-            renderDaysOfWeekButtons();
-        });
-
-        function resetRepeatUI() {
-            repeatSelect.value = '';
-            customRepeatRow.classList.add('hidden');
-            daysOfWeekRow.classList.add('hidden');
-            currentSpecificDays = [];
-            renderDaysOfWeekButtons();
-        }
-
-        function getRecurrenceFromForm() {
-            const v = repeatSelect.value;
-            if (!v) return null;
-            if (v === 'daily') return { freq: 'daily', interval: 1 };
-            if (v === 'weekdays') return { freq: 'weekdays', interval: 1 };
-            if (v === 'weekends') return { freq: 'weekends', interval: 1 };
-            if (v === 'weekly') return { freq: 'weekly', interval: 1 };
-            if (v === 'biweekly') return { freq: 'weekly', interval: 2 };
-            if (v === 'monthly') return { freq: 'monthly', interval: 1 };
-            if (v === 'quarterly') return { freq: 'monthly', interval: 3 };
-            if (v === 'halfyearly') return { freq: 'monthly', interval: 6 };
-            if (v === 'yearly') return { freq: 'yearly', interval: 1 };
-            if (v === 'daysOfWeek') {
-                if (currentSpecificDays.length === 0) return null;
-                return { freq: 'daysOfWeek', days: [...currentSpecificDays] };
-            }
-            if (v === 'custom') {
-                const n = Math.min(365, Math.max(1, parseInt(customInterval.value, 10) || 1));
-                return { freq: customUnit.value, interval: n };
-            }
-            return null;
-        }
-
-        function formatRecurrenceLabel(r) {
-            if (!r) return '';
-            const { freq, interval } = r;
-            if (freq === 'weekdays') return 'Weekdays';
-            if (freq === 'weekends') return 'Weekends';
-            if (freq === 'daysOfWeek') {
-                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                const names = (r.days || []).map(d => dayNames[d]).filter(Boolean);
-                return names.length > 0 ? names.join(', ') : 'Days of week';
-            }
-            if (freq === 'weekly' && interval === 1) return 'Weekly';
-            if (freq === 'weekly' && interval === 2) return 'Biweekly';
-            if (freq === 'monthly' && interval === 3) return 'Quarterly';
-            if (freq === 'monthly' && interval === 6) return 'Half-yearly';
-            const unit = { daily: 'day', weekly: 'week', monthly: 'month', yearly: 'year' }[freq] || 'day';
-            if (interval === 1) {
-                if (freq === 'daily') return 'Daily';
-                if (freq === 'monthly') return 'Monthly';
-                if (freq === 'yearly') return 'Yearly';
-            }
-            return `Every ${interval} ${unit}s`;
-        }
-
-        function nthOccurrence(anchorDate, recurrence, n) {
-            if (n < 0) return anchorDate;
-            const { freq, interval } = recurrence;
-            if (freq === 'daily') return addDaysStr(anchorDate, n * interval);
-            if (freq === 'weekly') return addDaysStr(anchorDate, n * interval * 7);
-            if (freq === 'monthly') return addMonthsStr(anchorDate, n * interval);
-            if (freq === 'yearly') return addYearsStr(anchorDate, n * interval);
-            if (freq === 'daysOfWeek') {
-                if (n === 0) return anchorDate;
-                const days = recurrence.days || [];
-                if (days.length === 0) return anchorDate;
-                let current = anchorDate;
-                let count = 0;
-                let guard = 0;
-                while (guard < 50000) {
-                    current = addDaysStr(current, 1);
-                    const day = parseDate(current).getDay();
-                    if (days.includes(day)) {
-                        count++;
-                        if (count === n) return current;
-                    }
-                    guard++;
-                }
-                return current;
-            }
-            if (freq === 'weekdays' || freq === 'weekends') {
-                let current = anchorDate;
-                let count = 0;
-                let guard = 0;
-                while (guard < 5000) {
-                    const day = parseDate(current).getDay();
-                    const isWeekday = day !== 0 && day !== 6;
-                    const isWeekend = day === 0 || day === 6;
-                    if ((freq === 'weekdays' && isWeekday) || (freq === 'weekends' && isWeekend)) {
-                        if (count === n) return current;
-                        count++;
-                    }
-                    current = addDaysStr(current, 1);
-                    guard++;
-                }
-                return current;
-            }
-            return anchorDate;
-        }
-
-        function getPendingOccurrences(rule) {
-            const today = todayStr();
-            const cap = addDaysStr(today, -90);
-            const pending = [];
-            let idx = (rule.lastOccurrenceIndex || 0) + 1;
-            let occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
-            let guard = 0;
-            while (occurrence < cap && guard < 5000) {
-                idx++;
-                occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
-                guard++;
-            }
-            while (occurrence <= today && guard < 5000) {
-                pending.push({ index: idx, date: occurrence });
-                idx++;
-                occurrence = nthOccurrence(rule.anchorDate, rule.recurrence, idx);
-                guard++;
-            }
-            return pending;
-        }
-
-        function logOccurrence(rule, date) {
-            transactions.unshift({
-                id: Date.now() + Math.floor(Math.random() * 100000),
-                date: date,
-                type: rule.type,
-                category: rule.category,
-                subcategory: rule.subcategory || '',
-                amount: rule.amount,
-                note: rule.note || '',
-                isRecurring: true,
-                ruleId: rule.id
-            });
-        }
-
-        function applyRules(pendingList) {
-            let totalLogged = 0;
-            pendingList.forEach(item => {
-                const { rule, occurrences } = item;
-                occurrences.forEach(o => {
-                    logOccurrence(rule, o.date);
-                    totalLogged++;
-                });
-                if (occurrences.length > 0) {
-                    rule.lastOccurrenceIndex = occurrences[occurrences.length - 1].index;
-                }
-            });
-            if (totalLogged > 0) {
-                saveData();
-                saveRules();
-                updateDashboard();
-            }
-            return totalLogged;
-        }
-
-        function processRecurringRules() {
-            if (rules.length === 0) return;
-            const pendingList = [];
-            rules.forEach(rule => {
-                const occurrences = getPendingOccurrences(rule);
-                if (occurrences.length > 0) {
-                    pendingList.push({ rule, occurrences });
-                }
-            });
-            if (pendingList.length === 0) return;
-
-            const totalPending = pendingList.reduce((sum, item) => sum + item.occurrences.length, 0);
-
-            if (autoLog) {
-                const logged = applyRules(pendingList);
-                if (logged > 0) {
-                    showToast(`Logged ${logged} recurring ${logged === 1 ? 'entry' : 'entries'}`);
-                }
-            } else {
-                pendingPromptRules = pendingList;
-                promptModalText.textContent = `${totalPending} recurring ${totalPending === 1 ? 'transaction is' : 'transactions are'} due. Log ${totalPending === 1 ? 'it' : 'them'} now?`;
-                promptModal.classList.remove('hidden');
-            }
-        }
-
         function setMode(mode) {
             currentMode = mode;
             if (mode === 'expense') {
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-rose-500 text-white shadow-sm";
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                if (editingId === null && editingRuleId === null) {
+                if (editingId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Expense';
                     formHeaderIcon.className = "fa-solid fa-minus-circle text-rose-500";
                 }
@@ -1127,7 +714,7 @@
                 toggleIncomeBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 bg-emerald-500 text-white shadow-sm";
                 toggleExpenseBtn.className = "py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white";
                 submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-                if (editingId === null && editingRuleId === null) {
+                if (editingId === null) {
                     submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Income';
                     formHeaderIcon.className = "fa-solid fa-plus-circle text-emerald-500";
                 }
@@ -1319,12 +906,6 @@
             }
             renderCategoryBreakdown();
             renderTransactionFeed();
-            updateRulesCount();
-        }
-
-        function updateRulesCount() {
-            recurringRulesCount.textContent = rules.length + (rules.length === 1 ? ' rule' : ' rules');
-            autoLogState.textContent = autoLog ? 'Log automatically' : 'Ask before logging';
         }
 
         function renderCategoryBreakdown() {
@@ -1461,8 +1042,6 @@
 
                 card.setAttribute('onclick', `openDetail(${t.id})`);
 
-                const recurringBadge = t.isRecurring ? `<span class="text-[10px] px-1.5 py-0.5 rounded-md font-semibold bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300" title="Auto-logged"><i class="fa-solid fa-rotate text-[8px] mr-0.5"></i>auto</span>` : '';
-
                 card.innerHTML = `
                     <div class="flex items-center gap-3 flex-1 min-w-0">
                         <div class="w-10 h-10 rounded-xl ${isIncome ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400'} flex items-center justify-center text-sm font-bold flex-shrink-0">
@@ -1472,7 +1051,6 @@
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="text-sm font-bold text-zinc-800 dark:text-zinc-100 truncate">${escapeHtml(t.category)}</span>
                                 ${t.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${badgeColor} truncate">${escapeHtml(t.subcategory)}</span>` : ''}
-                                ${recurringBadge}
                             </div>
                             <div class="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
                                 <span><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
@@ -1509,12 +1087,17 @@
             closeDetail();
             switchTab('dashboard');
             editingId = id;
-            editingRuleId = null;
             dateInputWrapper.classList.remove('hidden');
             setMode(t.type);
             amountInput.value = t.amount;
             categorySelect.value = t.category;
             populateSubcategories();
+            if (t.subcategory && !Array.from(subcategorySelect.options).some(option => option.value === t.subcategory)) {
+                const legacyOption = document.createElement('option');
+                legacyOption.value = t.subcategory;
+                legacyOption.textContent = t.subcategory;
+                subcategorySelect.appendChild(legacyOption);
+            }
             subcategorySelect.value = t.subcategory || '';
             dateInput.value = t.date;
             noteInput.value = t.note;
@@ -1523,59 +1106,6 @@
             submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Record';
             submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
             cancelEditBtn.classList.remove('hidden');
-            repeatSection.classList.add('hidden');
-            setTimeout(() => {
-                const formCard = document.getElementById('formCard');
-                if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
-        };
-
-        window.startEditRule = function(id) {
-            const r = rules.find(item => item.id === id);
-            if (!r) return;
-            closeRulesModal();
-            switchTab('dashboard');
-            editingRuleId = id;
-            editingId = null;
-            dateInputWrapper.classList.add('hidden'); // Hide date for rules
-            setMode(r.type);
-            amountInput.value = r.amount;
-            categorySelect.value = r.category;
-            populateSubcategories();
-            subcategorySelect.value = r.subcategory || '';
-            noteInput.value = r.note;
-            formHeaderText.textContent = 'Edit Recurring Rule';
-            formHeaderIcon.className = 'fa-solid fa-rotate text-zinc-500';
-            submitFlowBtn.innerHTML = '<i class="fa-solid fa-check"></i> Update Rule';
-            submitFlowBtn.className = "flex-1 py-3.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2";
-            cancelEditBtn.classList.remove('hidden');
-            repeatSection.classList.remove('hidden');
-
-            // Populate Recurrence
-            resetRepeatUI();
-            const rec = r.recurrence;
-            if (rec.freq === 'daily') repeatSelect.value = 'daily';
-            else if (rec.freq === 'weekdays') repeatSelect.value = 'weekdays';
-            else if (rec.freq === 'weekends') repeatSelect.value = 'weekends';
-            else if (rec.freq === 'weekly' && rec.interval === 1) repeatSelect.value = 'weekly';
-            else if (rec.freq === 'weekly' && rec.interval === 2) repeatSelect.value = 'biweekly';
-            else if (rec.freq === 'monthly' && rec.interval === 1) repeatSelect.value = 'monthly';
-            else if (rec.freq === 'monthly' && rec.interval === 3) repeatSelect.value = 'quarterly';
-            else if (rec.freq === 'monthly' && rec.interval === 6) repeatSelect.value = 'halfyearly';
-            else if (rec.freq === 'yearly') repeatSelect.value = 'yearly';
-            else if (rec.freq === 'daysOfWeek') {
-                repeatSelect.value = 'daysOfWeek';
-                currentSpecificDays = [...rec.days];
-            } else {
-                repeatSelect.value = 'custom';
-                customInterval.value = rec.interval;
-                customUnit.value = rec.freq;
-            }
-            
-            // Trigger UI changes
-            repeatSelect.dispatchEvent(new Event('change'));
-            renderDaysOfWeekButtons();
-
             setTimeout(() => {
                 const formCard = document.getElementById('formCard');
                 if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1586,15 +1116,12 @@
             const wasFromHistory = cameFromHistory;
             cameFromHistory = false;
             editingId = null;
-            editingRuleId = null;
             amountInput.value = '';
             noteInput.value = '';
             dateInput.value = getFormattedDate(0);
             dateInputWrapper.classList.remove('hidden');
             formHeaderText.textContent = 'Log New Money Flow';
             cancelEditBtn.classList.add('hidden');
-            resetRepeatUI();
-            repeatSection.classList.remove('hidden');
             setMode(currentMode);
             if (wasFromHistory) switchTab('history');
         }
@@ -1682,12 +1209,6 @@
             updateDashboard();
         });
 
-        repeatSelect.addEventListener('change', () => {
-            const v = repeatSelect.value;
-            customRepeatRow.classList.toggle('hidden', v !== 'custom');
-            daysOfWeekRow.classList.toggle('hidden', v !== 'daysOfWeek');
-        });
-
         document.getElementById('statsModeAll').addEventListener('click', () => switchStatsMode('all'));
         document.getElementById('statsModeYear').addEventListener('click', () => switchStatsMode('year'));
         document.getElementById('statsModeMonth').addEventListener('click', () => switchStatsMode('month'));
@@ -1702,26 +1223,7 @@
             const amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) return;
 
-            if (repeatSelect.value === 'daysOfWeek' && currentSpecificDays.length === 0) {
-                showToast('Pick at least one day of the week', 'error');
-                return;
-            }
-
-            if (editingRuleId !== null) {
-                // Update existing rule
-                const index = rules.findIndex(r => r.id === editingRuleId);
-                if (index !== -1) {
-                    rules[index].type = currentMode;
-                    rules[index].amount = amount;
-                    rules[index].category = categorySelect.value;
-                    rules[index].subcategory = subcategorySelect.value || '';
-                    rules[index].note = noteInput.value.trim();
-                    rules[index].recurrence = getRecurrenceFromForm();
-                }
-                saveRules();
-                cancelEdit();
-                showToast('Recurring rule updated');
-            } else if (editingId !== null) {
+            if (editingId !== null) {
                 // Update existing transaction
                 const entryData = {
                     date: dateInput.value,
@@ -1737,7 +1239,6 @@
                 showToast('Entry updated successfully');
             } else {
                 // Create new
-                const recurrence = getRecurrenceFromForm();
                 const entryData = {
                     date: dateInput.value,
                     type: currentMode,
@@ -1748,33 +1249,14 @@
                 };
                 const newEntry = { id: Date.now(), ...entryData };
                 transactions.unshift(newEntry);
-                
-                if (recurrence) {
-                    rules.push({
-                        id: Date.now() + Math.floor(Math.random() * 1000),
-                        type: currentMode,
-                        amount: amount,
-                        category: categorySelect.value,
-                        subcategory: subcategorySelect.value || '',
-                        note: noteInput.value.trim(),
-                        recurrence: recurrence,
-                        anchorDate: dateInput.value || todayStr(),
-                        lastOccurrenceIndex: 0,
-                        createdAt: Date.now()
-                    });
-                    saveRules();
-                    showToast('Entry saved • Rule created');
-                } else {
-                    showToast('Entry saved successfully');
-                }
-                
+                showToast('Entry saved successfully');
+
                 sortMode = 'date-desc';
                 sortModeSelect.value = 'date-desc';
                 addToQuickAdd(currentMode, amount);
                 amountInput.value = '';
                 noteInput.value = '';
                 dateInput.value = getFormattedDate(0);
-                resetRepeatUI();
                 amountInput.focus();
             }
             saveData();
@@ -1795,108 +1277,9 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnSettings.addEventListener('click', toggleTheme);
 
-        function renderRulesList() {
-            if (rules.length === 0) {
-                rulesList.innerHTML = `<p class="text-sm text-zinc-500 dark:text-zinc-400 italic text-center py-4">No recurring rules yet. Create one by setting "Repeat" when you log a new entry.</p>`;
-                return;
-            }
-            rulesList.innerHTML = rules.map(r => {
-                const isIncome = r.type === 'income';
-                const amountColor = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-                const amountPrefix = isIncome ? '+' : '-';
-                return `
-                    <div class="flex items-center justify-between gap-3 p-3 bg-zinc-50 dark:bg-zinc-950/60 rounded-xl border border-zinc-100 dark:border-zinc-800/50">
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="text-sm font-bold text-zinc-800 dark:text-zinc-100 truncate">${escapeHtml(r.category)}</span>
-                                ${r.subcategory ? `<span class="text-[10px] px-2 py-0.5 rounded-md font-semibold bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">${escapeHtml(r.subcategory)}</span>` : ''}
-                            </div>
-                            <div class="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
-                                <span class="font-semibold ${amountColor}">${amountPrefix}${formatCurrency(r.amount)}</span>
-                                <span>·</span>
-                                <span>${escapeHtml(formatRecurrenceLabel(r.recurrence))}</span>
-                                <span>·</span>
-                                <span>from ${formatDateDisplay(r.anchorDate)}</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-1 flex-shrink-0">
-                            <button onclick="startEditRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition" title="Edit rule">
-                                <i class="fa-solid fa-pen text-sm"></i>
-                            </button>
-                            <button onclick="deleteRule(${r.id})" class="p-1.5 text-zinc-400 hover:text-rose-500 transition" title="Delete rule">
-                                <i class="fa-solid fa-trash-can text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.deleteRule = function(id) {
-            pendingRuleDeleteId = id;
-            ruleDeleteModal.classList.remove('hidden');
-        };
-
-        cancelRuleDeleteBtn.addEventListener('click', () => {
-            pendingRuleDeleteId = null;
-            ruleDeleteModal.classList.add('hidden');
-        });
-
-        confirmRuleDeleteBtn.addEventListener('click', () => {
-            if (pendingRuleDeleteId === null) return;
-            rules = rules.filter(r => r.id !== pendingRuleDeleteId);
-            saveRules();
-            updateRulesCount();
-            renderRulesList();
-            pendingRuleDeleteId = null;
-            ruleDeleteModal.classList.add('hidden');
-            showToast('Rule deleted • Past entries kept', 'error');
-        });
-
-        function closeRulesModal() {
-            rulesModal.classList.add('hidden');
-        }
-
-        recurringRulesBtn.addEventListener('click', () => {
-            renderRulesList();
-            rulesModal.classList.remove('hidden');
-        });
-        closeRulesBtn.addEventListener('click', closeRulesModal);
-        rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
-
-        autoLogToggleBtn.addEventListener('click', () => {
-            autoLog = !autoLog;
-            saveAutoLogPref();
-            updateRulesCount();
-            showToast(autoLog ? 'Auto-log enabled' : 'Ask-first mode enabled');
-        });
-
-        dismissPromptBtn.addEventListener('click', () => {
-            if (pendingPromptRules) {
-                // Skip these occurrences permanently
-                pendingPromptRules.forEach(item => {
-                    const { rule, occurrences } = item;
-                    if (occurrences.length > 0) {
-                        rule.lastOccurrenceIndex = occurrences[occurrences.length - 1].index;
-                    }
-                });
-                saveRules();
-            }
-            pendingPromptRules = null;
-            promptModal.classList.add('hidden');
-        });
-        
-        confirmPromptBtn.addEventListener('click', () => {
-            if (pendingPromptRules) {
-                const logged = applyRules(pendingPromptRules);
-                if (logged > 0) showToast(`Logged ${logged} recurring ${logged === 1 ? 'entry' : 'entries'}`);
-            }
-            pendingPromptRules = null;
-            promptModal.classList.add('hidden');
-        });
 
         exportBtn.addEventListener('click', () => {
-            const payload = { transactions: transactions, rules: rules, exportedAt: new Date().toISOString() };
+            const payload = { transactions: transactions, exportedAt: new Date().toISOString() };
             const dataStr = JSON.stringify(payload, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -1918,23 +1301,19 @@
             reader.onload = function(event) {
                 try {
                     const parsed = JSON.parse(event.target.result);
-                    let importedTxs, importedRules;
+                    let importedTxs;
                     if (Array.isArray(parsed)) {
                         importedTxs = parsed;
-                        importedRules = [];
                     } else if (parsed && Array.isArray(parsed.transactions)) {
                         importedTxs = parsed.transactions;
-                        importedRules = Array.isArray(parsed.rules) ? parsed.rules : [];
                     } else {
                         showToast('Invalid backup file', 'error');
                         return;
                     }
                     pendingImportData = importedTxs;
-                    pendingImportRules = importedRules;
                     const currentCount = transactions.length;
                     const incomingCount = importedTxs.length;
-                    const ruleNote = importedRules.length > 0 ? ` and ${importedRules.length} recurring ${importedRules.length === 1 ? 'rule' : 'rules'}` : '';
-                    importConfirmText.textContent = `You currently have ${currentCount} ${currentCount === 1 ? 'entry' : 'entries'}. This backup contains ${incomingCount} ${incomingCount === 1 ? 'entry' : 'entries'}${ruleNote}. All current entries will be permanently replaced.`;
+                    importConfirmText.textContent = `You currently have ${currentCount} ${currentCount === 1 ? 'entry' : 'entries'}. This backup contains ${incomingCount} ${incomingCount === 1 ? 'entry' : 'entries'}. All current entries will be permanently replaced.`;
                     importConfirmModal.classList.remove('hidden');
                 } catch (err) {
                     showToast('Could not read backup file', 'error');
@@ -1946,21 +1325,17 @@
 
         cancelImportBtn.addEventListener('click', () => {
             pendingImportData = null;
-            pendingImportRules = null;
             importConfirmModal.classList.add('hidden');
         });
 
         confirmImportBtn.addEventListener('click', () => {
             if (!pendingImportData) return;
             transactions = pendingImportData;
-            rules = pendingImportRules || [];
             pendingImportData = null;
-            pendingImportRules = null;
             sortMode = 'custom';
             sortModeSelect.value = 'custom';
             statsMode = 'all';
             saveData();
-            saveRules();
             updateDashboard();
             updateStatsModeUI();
             importConfirmModal.classList.add('hidden');
@@ -1971,7 +1346,6 @@
         cancelResetBtn.addEventListener('click', () => { confirmModal.classList.add('hidden'); });
         confirmResetBtn.addEventListener('click', () => {
             transactions = [];
-            rules = [];
             quickAdds = { expense: [], income: [] };
             sortMode = 'date-desc';
             sortModeSelect.value = 'date-desc';
@@ -1980,7 +1354,6 @@
             statsMonthPicker.value = '';
             statsDayPicker.value = '';
             saveData();
-            saveRules();
             saveQuickAdds();
             updateStatsModeUI();
             renderQuickAddButtons();
@@ -1999,20 +1372,11 @@
             }
             dateInput.value = getFormattedDate(0);
             loadData();
-            loadRules();
-            loadAutoLogPref();
             loadQuickAdds();
             setMode('expense');
             populateYearPicker();
             updateStatsModeUI();
             updateDashboard();
-            setTimeout(processRecurringRules, 500);
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                setTimeout(processRecurringRules, 300);
-            }
         });
 
         if ('serviceWorker' in navigator) {
